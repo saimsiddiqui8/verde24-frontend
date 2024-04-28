@@ -1,23 +1,23 @@
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import { Toaster } from "react-hot-toast";
+import { useMutation, useQuery, useQueryClient } from "react-query";
+import { useSelector } from "react-redux";
+import { z } from "zod";
+import {
+  getPatientById,
+  updatePatientById
+} from "../../../../api/apiCalls/patientsApi";
 import {
   Button,
   DashboardSection,
   InputField,
-  PhoneInputComp,
+  PhoneInputComp
 } from "../../../../components";
-import { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { isPhoneValid, notifySuccess } from "../../../../utils/Utils";
-import { useSelector } from "react-redux";
 import { RootState } from "../../../../redux/store";
-import { useMutation, useQuery, useQueryClient } from "react-query";
+import { isPhoneValid, notifySuccess } from "../../../../utils/Utils";
 import { FIND_PATIENT_QUERY, UPDATE_PATIENT_QUERY } from "./queries";
-import { Toaster } from "react-hot-toast";
-import {
-  getPatientById,
-  updatePatientById,
-} from "../../../../api/apiCalls/patientsApi";
 
 const inputs = [
   {
@@ -95,7 +95,7 @@ export default function PatientProfile() {
     register,
     handleSubmit,
     reset,
-    getValues,
+    // getValues,
     formState: { errors },
   } = useForm({
     resolver: zodResolver(FormSchema),

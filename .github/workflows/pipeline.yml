@@ -1,0 +1,62 @@
+name: "Build and Deploy Verde24 Frontend"
+
+on:
+  workflow_dispatch:
+    inputs:
+      type:
+        description: "Type of Dispatch, e.g. deploy-S3"
+        required: false
+        default: "deploy-s3"
+  push:
+    branches: [main]
+
+  pull_request_target:
+    branches: [main]
+
+env:
+  CI: true
+  WORKING_DIR: "./"
+  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  AWS_PROFILE: ${{ secrets.AWS_PROFILE }}
+  S3_BUCKET: ${{ secrets.S3_BUCKET }}
+
+jobs:
+  tasks:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+          persist-credentials: false # important for semantic-release
+
+      - uses: actions/setup-node@v2
+        with:
+          node-version: "20"
+
+      - name: Install Packages
+        run: npm ci
+        # working-directory: ${{env.WORKING_DIR}}
+
+      - name: Linting
+        run: npm run lintNoFix
+
+      - name: Typescript Check, check that code compiles
+        run: npm run tsc
+
+      - name: Build Projct
+        run: npm run build
+
+      - name: Deploy to S3
+        uses: reggionick/s3-deploy@v3
+        if: success() && github.event_name == 'workflow_dispatch'
+        with:
+          folder: "./dist"
+          bucket: ${{ secrets.S3_BUCKET }}
+          bucket-region: ${{ secrets.S3_BUCKET_REGION }}
+          # dist-id: ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }}
+          invalidation: /
+          delete-removed: true
+          no-cache: true

@@ -1,10 +1,10 @@
+import { Typography } from "@material-tailwind/react";
 import {
   Button,
   DashboardSection,
   DropdownField,
-  InputField,
+  InputField
 } from "../../../../components";
-import { Card, Typography } from "@material-tailwind/react";
 
 const TABLE_HEAD = [
   "Doctor Name",
