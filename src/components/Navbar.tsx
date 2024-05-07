@@ -1,13 +1,13 @@
-import logo from "../assets/Logo.png";
-import { FiPhoneCall } from "react-icons/fi";
-import { FaUserAlt } from "react-icons/fa";
-import { BiChevronDown } from "react-icons/bi";
 import { useState } from "react";
+import { BiChevronDown } from "react-icons/bi";
+import { FaUserAlt } from "react-icons/fa";
+import { FiPhoneCall } from "react-icons/fi";
 import { useDispatch, useSelector } from "react-redux";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { USER_ROLES } from "../api/roles.ts";
+import logo from "../assets/Logo.png";
 import { flushUser } from "../redux/slices/userSlice.ts";
 import { RootState } from "../redux/store.ts";
-import { USER_ROLES } from "../api/roles.ts";
-import { Link, useLocation, useNavigate } from "react-router-dom";
 
 export default function Navbar() {
   const [showDropdown, setShowDropdown] = useState(false);
@@ -47,7 +47,7 @@ export default function Navbar() {
         {location.pathname === "/" ? (
           <div className="gap-3 items-center hidden lg:flex">
             <Link className="flex gap-1 items-center" to="#">
-              For Corp-orates <BiChevronDown size={20} />
+              For Corporate <BiChevronDown size={20} />
             </Link>
             <Link className="flex gap-1 items-center" to="#">
               For Providers <BiChevronDown size={20} />

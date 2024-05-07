@@ -177,7 +177,7 @@ export default function Homepage() {
             </div>
             <div className="flex gap-2">
               <img src={pillImg} alt="" className="w-5" />
-              <p className="text-white">No more Medications anymore</p>
+              <p className="text-white">No more Medications</p>
             </div>
           </div>
           <div className="w-40 mx-auto sm:mx-0">
