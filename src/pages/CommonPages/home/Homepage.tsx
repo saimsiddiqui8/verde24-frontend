@@ -1,36 +1,36 @@
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { FaApple, FaGooglePlay } from "react-icons/fa";
 import { Link } from "react-router-dom";
+import { z } from "zod";
+import appImg1 from "../../../assets/appointment/image1.png";
+import appImg2 from "../../../assets/appointment/image2.png";
+import appImg3 from "../../../assets/appointment/image3.png";
+import appImg4 from "../../../assets/appointment/image4.png";
+import consultImg4 from "../../../assets/consult/Baby.png";
+import consultImg2 from "../../../assets/consult/CamoCream.png";
+import consultImg6 from "../../../assets/consult/Coughing.png";
+import consultImg3 from "../../../assets/consult/Male.png";
+import consultImg5 from "../../../assets/consult/Psychotherapy.png";
+import consultImg1 from "../../../assets/consult/Uterus.png";
 import doctorsImg from "../../../assets/doctors.png";
-import whiteLogoImg from "../../../assets/whiteLogo.png";
-import syringeImg from "../../../assets/syringe.png";
-import pillImg from "../../../assets/pill.png";
 import cardImg1 from "../../../assets/homeCards/card1.png";
 import cardImg2 from "../../../assets/homeCards/card2.png";
 import cardImg3 from "../../../assets/homeCards/card3.png";
 import cardImg4 from "../../../assets/homeCards/card4.png";
 import cardImg5 from "../../../assets/homeCards/card5.png";
-import consultImg1 from "../../../assets/consult/Uterus.png";
-import consultImg2 from "../../../assets/consult/CamoCream.png";
-import consultImg3 from "../../../assets/consult/Male.png";
-import consultImg4 from "../../../assets/consult/Baby.png";
-import consultImg5 from "../../../assets/consult/Psychotherapy.png";
-import consultImg6 from "../../../assets/consult/Coughing.png";
-import appImg1 from "../../../assets/appointment/image1.png";
-import appImg2 from "../../../assets/appointment/image2.png";
-import appImg3 from "../../../assets/appointment/image3.png";
-import appImg4 from "../../../assets/appointment/image4.png";
+import pillImg from "../../../assets/pill.png";
+import syringeImg from "../../../assets/syringe.png";
 import verdeAppImg1 from "../../../assets/verdeApp/image1.png";
 import verdeAppImg2 from "../../../assets/verdeApp/image2.png";
+import whiteLogoImg from "../../../assets/whiteLogo.png";
 import {
   Button,
   Footer,
   GooglePlayButton,
   InputField,
 } from "../../../components";
-import { FaApple, FaGooglePlay } from "react-icons/fa";
 import DropdownField from "../../../components/DropdownField";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
 
 const cards = [
   {
@@ -177,7 +177,7 @@ export default function Homepage() {
             </div>
             <div className="flex gap-2">
               <img src={pillImg} alt="" className="w-5" />
-              <p className="text-white">No more Medications</p>
+              <p className="text-white">No more Medications anymore</p>
             </div>
           </div>
           <div className="w-40 mx-auto sm:mx-0">
