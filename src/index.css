@@ -1,0 +1,74 @@
+@import url("https://fonts.googleapis.com/css2?family=Raleway:wght@400;500;600;700&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  font-family: "Raleway", sans-serif;
+  color: #125db9;
+}
+
+/* Hide the increment arrows for number input */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* input[type="number"] {
+  -moz-appearance: textfield;
+} */
+
+.btn-back {
+  background: linear-gradient(180deg, #3fb946 0%, #125db9 100%);
+}
+
+.bg-primary {
+  @apply bg-[#125DB9];
+}
+
+.text-primary {
+  @apply text-[#125DB9];
+}
+
+.border-primary {
+  @apply border-[#125DB9];
+}
+
+.text-selected {
+  @apply text-[#3FB946];
+}
+
+.form-btn {
+  background: linear-gradient(180deg, #125db9 0%, #092f5d 100%);
+  border-radius: 20px;
+  color: #fff;
+  font-weight: 600;
+  border: none;
+  padding: 8px 10px;
+  width: 100%;
+}
+
+.google-btn-bg {
+  background: linear-gradient(180deg, #e02020 0%, #701010 155%),
+    linear-gradient(0deg, #eeeeee, #eeeeee);
+}
+
+.facebook-btn-bg {
+  background: linear-gradient(180deg, #314dd8 0%, #19276c 137.2%),
+    linear-gradient(0deg, #eeeeee, #eeeeee);
+}
+
+.react-international-phone-input-container .react-international-phone-input {
+  border: none !important;
+  color: #125db9;
+}
+
+.react-international-phone-country-selector-button {
+  border: none !important;
+}
+
+.react-international-phone-country-selector-dropdown {
+  z-index: 10;
+}

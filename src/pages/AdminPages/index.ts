@@ -1,0 +1,11 @@
+export { default as AdminDashboardHome } from "./adminDashboard/AdminDashboardHome";
+export { default as AdminDoctors } from "./adminDashboard/doctors/AdminDoctors/AdminDoctors";
+export { default as AdminPatients } from "./adminDashboard/patients/AdminPatients";
+export { default as AdminHospitals } from "./adminDashboard/hospitals/AdminHospitals/AdminHospitals";
+export { default as AdminNewDoctor } from "./adminDashboard/doctors/AdminNewDoctor/AdminNewDoctor";
+export { default as AdminNewHospital } from "./adminDashboard/hospitals/AdminNewHospital/AdminNewHospital";
+export { default as AdminDoctorProfile } from "./adminDashboard/doctors/AdminDoctorProfile/AdminDoctorProfile";
+export { default as AdminHospitalProfile } from "./adminDashboard/hospitals/AdminHospitalProfile/AdminHospitalProfile";
+export { default as AdminPatientProfile } from "./adminDashboard/patients/AdminPatientProfile";
+export { default as AdminEditPatient } from "./adminDashboard/patients/AdminEditPatient/AdminEditPatient";
+export { default as AdminSignIn } from "./adminSignIn/AdminSignIn";
