@@ -74,7 +74,7 @@ export default function AddSlots() {
     setWeekdays((prev) =>
       prev?.map((day) => {
         if (day?.title === selectedDay?.title) {
-          return { ...day, slots: [...day?.slots, data?.slot_time] };
+          return { ...day, slots: [...day.slots, data.slot_time] };
         } else {
           return { ...day };
         }

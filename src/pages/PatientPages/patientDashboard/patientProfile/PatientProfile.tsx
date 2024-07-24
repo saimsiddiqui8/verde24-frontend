@@ -128,7 +128,7 @@ export default function PatientProfile() {
       weight,
       blood_group,
       other_history,
-    } = patientData?.data;
+    } = patientData.data;
     return {
       patient_name: `${first_name} ${last_name}`,
       patient_age: age,

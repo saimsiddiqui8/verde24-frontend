@@ -1,7 +1,7 @@
 import { SyntheticEvent, KeyboardEvent, useState } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 
-export default function eld({
+export default function Eld({
   label,
   type,
   name,
