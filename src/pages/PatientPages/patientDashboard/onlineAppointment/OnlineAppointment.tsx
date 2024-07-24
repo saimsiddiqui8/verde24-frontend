@@ -38,27 +38,27 @@ export default function OnlineAppointment() {
     }).catch(err => {
       console.log(err.toString());
     });
-  }, []);
+  }, [dispatch]);
   if (!hospitals) {
     return <div>Loading or no hospital data available...</div>;
   }
   return (
     <DashboardSection>
-  <div className="flex justify-between my-4 flex-wrap">
-    <h2 className="text-2xl md:text-3xl font-semibold w-full md:w-auto">Get Appointment</h2>
-    <div className="flex gap-2 mt-2 md:mt-0">
-      <Button title="Recently Viewed" className="w-fit" secondary={true} />
-      <Button title="Reset" className="w-fit" secondary={true} />
-    </div>
-  </div>
-  <div className="flex gap-2 items-center my-4 flex-wrap">
-    <InputField label="Location" className="flex-grow" />
-    <div className="w-fit mt-2 md:mt-0">
-      <Button title="Search" secondary={true} />
-    </div>
-  </div>
-  {hospitals.map((hospital: any) =>
-          <div key={hospital?.id} className="flex flex-col gap-4">
+      <div className="flex justify-between my-4 flex-wrap">
+        <h2 className="text-2xl md:text-3xl font-semibold w-full md:w-auto">Get Appointment</h2>
+        <div className="flex gap-2 mt-2 md:mt-0">
+          <Button title="Recently Viewed" className="w-fit" secondary={true} />
+          <Button title="Reset" className="w-fit" secondary={true} />
+        </div>
+      </div>
+      <div className="flex gap-2 items-center my-4 flex-wrap">
+        <InputField label="Location" className="flex-grow" />
+        <div className="w-fit mt-2 md:mt-0">
+          <Button title="Search" secondary={true} />
+        </div>
+      </div>
+      {hospitals.map((hospital: any) =>
+        <div key={hospital?.id} className="flex flex-col gap-4">
           <Link to={`/patient-dashboard/online-appointment/online-hospital-profile/${hospital?.id}`}>
             <div className="border-primary border rounded-lg p-3 cursor-pointer">
               <div className="flex flex-col md:flex-row justify-between gap-2 my-2">
@@ -70,7 +70,7 @@ export default function OnlineAppointment() {
                   />
                 </div>
                 <div className="w-full md:w-3/5">
-              <h2 className="text-xl md:text-3xl font-medium">{hospital?.name}</h2>
+                  <h2 className="text-xl md:text-3xl font-medium">{hospital?.name}</h2>
                   <p>BDS (Gold Medalist) FCPS Res. (Orthodontics), RDS</p>
                   <p>Dentist</p>
                   <div className="flex flex-col gap-2 lg:flex-row justify-between">
@@ -112,9 +112,9 @@ export default function OnlineAppointment() {
             </div>
           </Link>
         </div>
-          )}
-  
-</DashboardSection>
+      )}
+
+    </DashboardSection>
 
   );
 }

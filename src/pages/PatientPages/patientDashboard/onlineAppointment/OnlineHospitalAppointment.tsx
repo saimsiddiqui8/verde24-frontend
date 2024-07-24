@@ -54,7 +54,7 @@ export default function OnlineHospitalAppointment() {
     if (id) { 
       getHospital();
     }
-  }, [id]);
+  }, [id, getHospital]);
 
   if (!hospital) {
     return <div>Loading or no hospital data available...</div>; 

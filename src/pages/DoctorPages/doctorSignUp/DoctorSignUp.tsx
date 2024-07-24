@@ -224,7 +224,7 @@ export default function DoctorSignUp() {
       }
       dispatch(loadingEnd());
     }
-  }, [data]);
+  }, [data, dispatch, navigate, reset]);
 
   const handleOTPSubmit = async () => {
     dispatch(loadingStart());
@@ -242,136 +242,136 @@ export default function DoctorSignUp() {
 
   return (
     <main className="grid grid-cols-1 md:grid-cols-12 items-center my-8">
-  <section className="col-span-1 md:col-start-2 md:col-span-6 order-2 md:order-1">
-    <div className="mx-4 md:mx-8 w-full md:w-4/5 justify-self-center rounded-lg">
-      <div className="text-primary my-3 pt-2 pb-4 px-5 flex justify-between items-center">
-        <h3 className="text-3xl font-bold">Create Account</h3>
-        <small className="font-medium">
-          Not a Doctor?{" "}
-          <Link to="/patient/sign-up" className="font-bold">
-            Sign Up
-          </Link>
-        </small>
-      </div>
-      <form onSubmit={handleSubmit(onSubmit)} className="pt-2 pb-6 pr-7 lg:px-5">
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4">
-          {inputs?.map((input, index) => (
-            <div key={index} className="col-span-1">
-              {input.type === "radio" ? (
-                <RadioInput
-                  label={input?.label}
-                  name={input?.name}
-                  options={input?.options}
-                  properties={{ ...register(input?.name) }}
-                  error={errors[input?.name]}
-                />
-              ) : input.type === "number" ? (
-                <PhoneInputComp
-                  properties={{ ...register(input?.name) }}
-                  error={errors[input?.name]}
-                />
-              ) : (
-                <InputField
-                  label={input.label}
-                  name={input.name}
-                  type={input.type}
-                  placeholder={input.placeholder}
-                  properties={{ ...register(input?.name) }}
-                  error={errors[input?.name]}
-                />
-              )}
-            </div>
-          ))}
-        </div>
-        <div className="mb-5">
-          <small className="text-primary">
-            <span className="font-bold">Note:</span>&nbsp;Password must be
-            greater than 8 characters, with at least 1 uppercase letter, 1
-            lowercase letter, 1 numeric character, and 1 special character.
-            Avoid using palindromes.
-          </small>
-        </div>
-        <div className="flex items-start justify-start my-2">
-          <div className="flex items-center ms-4">
-            <input
-              id="loggedIn"
-              type="checkbox"
-              value=""
-              className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-            />
-            <label
-              htmlFor="loggedIn"
-              className="ms-1 text-sm font-medium text-primary"
-            >
-              Keep me logged in
-            </label>
+      <section className="col-span-1 md:col-start-2 md:col-span-6 order-2 md:order-1">
+        <div className="mx-4 md:mx-8 w-full md:w-4/5 justify-self-center rounded-lg">
+          <div className="text-primary my-3 pt-2 pb-4 px-5 flex justify-between items-center">
+            <h3 className="text-3xl font-bold">Create Account</h3>
+            <small className="font-medium">
+              Not a Doctor?{" "}
+              <Link to="/patient/sign-up" className="font-bold">
+                Sign Up
+              </Link>
+            </small>
           </div>
+          <form onSubmit={handleSubmit(onSubmit)} className="pt-2 pb-6 pr-7 lg:px-5">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4">
+              {inputs?.map((input, index) => (
+                <div key={index} className="col-span-1">
+                  {input.type === "radio" ? (
+                    <RadioInput
+                      label={input?.label}
+                      name={input?.name}
+                      options={input?.options}
+                      properties={{ ...register(input?.name) }}
+                      error={errors[input?.name]}
+                    />
+                  ) : input.type === "number" ? (
+                    <PhoneInputComp
+                      properties={{ ...register(input?.name) }}
+                      error={errors[input?.name]}
+                    />
+                  ) : (
+                    <InputField
+                      label={input.label}
+                      name={input.name}
+                      type={input.type}
+                      placeholder={input.placeholder}
+                      properties={{ ...register(input?.name) }}
+                      error={errors[input?.name]}
+                    />
+                  )}
+                </div>
+              ))}
+            </div>
+            <div className="mb-5">
+              <small className="text-primary">
+                <span className="font-bold">Note:</span>&nbsp;Password must be
+                greater than 8 characters, with at least 1 uppercase letter, 1
+                lowercase letter, 1 numeric character, and 1 special character.
+                Avoid using palindromes.
+              </small>
+            </div>
+            <div className="flex items-start justify-start my-2">
+              <div className="flex items-center ms-4">
+                <input
+                  id="loggedIn"
+                  type="checkbox"
+                  value=""
+                  className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                />
+                <label
+                  htmlFor="loggedIn"
+                  className="ms-1 text-sm font-medium text-primary"
+                >
+                  Keep me logged in
+                </label>
+              </div>
+            </div>
+            <button className="form-btn my-3">Sign Up</button>
+            <small className="block my-1 text-primary text-center">
+              Already have an account?{" "}
+              <Link to="/doctor/sign-in" className="font-bold">
+                Log In
+              </Link>
+            </small>
+          </form>
         </div>
-        <button className="form-btn my-3">Sign Up</button>
-        <small className="block my-1 text-primary text-center">
-          Already have an account?{" "}
-          <Link to="/doctor/sign-in" className="font-bold">
-            Log In
-          </Link>
-        </small>
-      </form>
-    </div>
-  </section>
-  <section className="col-span-1 md:col-span-4 order-1 md:order-2">
-    <img src={image} alt="Doctors Image" className="w-full" />
-  </section>
-  <Toaster />
-  <Modal
-    title="Verify OTP"
-    showModal={showOTPModal}
-    setModal={setShowOTPModal}
-  >
-    <form
-      onSubmit={handleSubmitModal(handleOTPSubmit)}
-      className="pt-2 pb-3 px-5"
-    >
-      <p className="text-base font-medium text-primary mb-2">
-        Enter OTP Received
-      </p>
-      <Controller
-        name="otp"
-        control={control}
-        defaultValue=""
-        render={({ field }) => (
-          <OTPInput
-            {...field}
-            numInputs={6}
-            renderSeparator={<span>-</span>}
-            containerStyle={{ gap: "10px" }}
-            inputStyle={{
-              flex: 1,
-              border: "1px solid #ddd",
-              padding: "10px 0",
-              borderRadius: "7px",
-            }}
-            renderInput={(props) => <input {...props} />}
+      </section>
+      <section className="col-span-1 md:col-span-4 order-1 md:order-2">
+        <img src={image} alt="Doctors Image" className="w-full" />
+      </section>
+      <Toaster />
+      <Modal
+        title="Verify OTP"
+        showModal={showOTPModal}
+        setModal={setShowOTPModal}
+      >
+        <form
+          onSubmit={handleSubmitModal(handleOTPSubmit)}
+          className="pt-2 pb-3 px-5"
+        >
+          <p className="text-base font-medium text-primary mb-2">
+            Enter OTP Received
+          </p>
+          <Controller
+            name="otp"
+            control={control}
+            defaultValue=""
+            render={({ field }) => (
+              <OTPInput
+                {...field}
+                numInputs={6}
+                renderSeparator={<span>-</span>}
+                containerStyle={{ gap: "10px" }}
+                inputStyle={{
+                  flex: 1,
+                  border: "1px solid #ddd",
+                  padding: "10px 0",
+                  borderRadius: "7px",
+                }}
+                renderInput={(props) => <input {...props} />}
+              />
+            )}
           />
-        )}
-      />
-      {errorsModal["otp"] && (
-        <small className="text-red-500 font-medium uppercase">
-          {typeof errorsModal["otp"].message === "string" &&
-            errorsModal["otp"].message}
-        </small>
-      )}
-      <Button title="Verify Code" className="mt-4" />
-      <Button
-        title="Send Code Again"
-        className="mt-2"
-        type="button"
-        onClick={sendOtp}
-      />
-      <small className="text-primary font-bold uppercase mt-4 block text-center">
-        OTP will expire after 5 minutes!
-      </small>
-    </form>
-  </Modal>
-</main>
+          {errorsModal["otp"] && (
+            <small className="text-red-500 font-medium uppercase">
+              {typeof errorsModal["otp"].message === "string" &&
+                errorsModal["otp"].message}
+            </small>
+          )}
+          <Button title="Verify Code" className="mt-4" />
+          <Button
+            title="Send Code Again"
+            className="mt-2"
+            type="button"
+            onClick={sendOtp}
+          />
+          <small className="text-primary font-bold uppercase mt-4 block text-center">
+            OTP will expire after 5 minutes!
+          </small>
+        </form>
+      </Modal>
+    </main>
 
   );
 }

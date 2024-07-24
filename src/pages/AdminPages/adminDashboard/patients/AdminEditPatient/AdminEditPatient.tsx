@@ -141,7 +141,7 @@ export default function AdminEditPatient() {
       }
       dispatch(loadingEnd());
     }
-  }, [data]);
+  }, [data, dispatch, navigate, queryClient]);
 
   const handleValidation = async () => {
     dispatch(loadingStart());

@@ -58,7 +58,7 @@ export default function AdminHospitalProfile() {
 
   useEffect(() => {
     doctorData.refetch();
-  }, [doctorHospitals]);
+  }, [doctorHospitals,doctorData]);
 
   if (!hospitalData?.data) {
     return (

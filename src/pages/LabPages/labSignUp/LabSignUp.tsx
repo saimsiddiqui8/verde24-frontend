@@ -209,7 +209,7 @@ export default function LabSignUp() {
       }
       dispatch(loadingEnd());
     }
-  }, [data]);
+  }, [data, dispatch, navigate, reset]);
 
   return (
     <main className="grid grid-cols-1 md:grid-cols-12 items-center p-4">

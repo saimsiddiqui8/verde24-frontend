@@ -343,7 +343,7 @@ export default function ConsultationForm() {
         doctorData?.data?.first_name + " " + doctorData?.data?.last_name,
       ...doctorData?.data,
     });
-  }, [doctorData?.data]);
+  }, [doctorData?.data, reset]);
 
   const onSubmit = async () => {
     const image_url = await imageUpload();

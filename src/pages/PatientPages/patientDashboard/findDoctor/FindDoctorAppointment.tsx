@@ -40,7 +40,7 @@ export default function FindDoctorAppointment() {
     };
 
     fetchDoctor();
-  }, [id]);
+  }, [id,dispatch]);
 
   return (
     <DashboardSection>

@@ -47,7 +47,7 @@ const ForgotPasswordReset = () => {
     if (!state?.for) {
       navigate(-1);
     }
-  }, [state?.for]);
+  }, [state?.for, navigate]);
 
   const handleNavigate = () => {
     if (state?.for === users.patient) {

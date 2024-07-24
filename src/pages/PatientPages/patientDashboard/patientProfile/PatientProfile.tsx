@@ -144,7 +144,7 @@ export default function PatientProfile() {
   useEffect(() => {
     reset(defaultPatientData());
     console.log(patientData?.data);
-  }, [patientData?.data]);
+  }, [patientData?.data, defaultPatientData, reset]);
 
   const updatePatient = async (data: any) => {
     return updatePatientById(UPDATE_PATIENT_QUERY, { id, data });
@@ -174,53 +174,53 @@ export default function PatientProfile() {
         queryKey: ["patient"],
       });
     }
-  }, [data]);
+  }, [data, queryClient]);
 
   return (
     <>
       <DashboardSection>
-  <div>
-    <form onSubmit={handleSubmit(onSubmit)} className="pt-2 pb-6">
-      <div className="flex justify-between items-center my-4">
-        <h2 className="text-2xl md:text-3xl font-semibold">Patient Profile</h2>
-        <div className="flex gap-2">
-          <Button
-            title="Edit"
-            className="w-20"
-            type="button"
-            onClick={() => setEdit(true)}
-          />
-          {edit && <Button onClick={() => setEdit(false)} title="Save" className="w-20" type="submit" />}
+        <div>
+          <form onSubmit={handleSubmit(onSubmit)} className="pt-2 pb-6">
+            <div className="flex justify-between items-center my-4">
+              <h2 className="text-2xl md:text-3xl font-semibold">Patient Profile</h2>
+              <div className="flex gap-2">
+                <Button
+                  title="Edit"
+                  className="w-20"
+                  type="button"
+                  onClick={() => setEdit(true)}
+                />
+                {edit && <Button onClick={() => setEdit(false)} title="Save" className="w-20" type="submit" />}
+              </div>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4">
+              {inputs.map((input) => (
+                <div key={input.name} className="mb-4">
+                  {input.name === "phone_number" ? (
+                    <PhoneInputComp
+                      label={input.label}
+                      properties={{ ...register(input.name) }}
+                      error={errors[input.name]}
+                      disabled={!edit}
+                    />
+                  ) : (
+                    <InputField
+                      label={input.label}
+                      name={input.name}
+                      placeholder={input.placeholder}
+                      type={input.type}
+                      disabled={!edit}
+                      properties={{ ...register(input.name) }}
+                      error={errors[input.name]}
+                    />
+                  )}
+                </div>
+              ))}
+            </div>
+          </form>
         </div>
-      </div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4">
-        {inputs.map((input) => (
-          <div key={input.name} className="mb-4">
-            {input.name === "phone_number" ? (
-              <PhoneInputComp
-                label={input.label}
-                properties={{ ...register(input.name) }}
-                error={errors[input.name]}
-                disabled={!edit}
-              />
-            ) : (
-              <InputField
-                label={input.label}
-                name={input.name}
-                placeholder={input.placeholder}
-                type={input.type}
-                disabled={!edit}
-                properties={{ ...register(input.name) }}
-                error={errors[input.name]}
-              />
-            )}
-          </div>
-        ))}
-      </div>
-    </form>
-  </div>
-  <Toaster />
-</DashboardSection>
+        <Toaster />
+      </DashboardSection>
 
     </>
   );
