@@ -4,7 +4,7 @@ import { PhoneNumberUtil } from "google-libphonenumber";
 export const notifySuccess = (msg: string) => toast.success(msg);
 export const notifyFailure = (msg: string) => toast.error(msg);
 
-export const areAllValuesTruthy = (obj: Record<string, any>) => {
+export const areAllValuesTruthy = (obj: Record<string, unknown>) => {
   return Object.values(obj).every((value) => Boolean(value));
 };
 

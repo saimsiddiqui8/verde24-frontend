@@ -229,7 +229,7 @@ export default function () {
       }
       dispatch(loadingEnd());
     }
-  }, [data]);
+  }, [data,dispatch,navigate,reset]);
 
   const handleUser = (userData: any) => {
     const user = {

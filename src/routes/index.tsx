@@ -2,13 +2,9 @@ import {
   createBrowserRouter,
   createRoutesFromElements,
   Route,
-  Outlet,
 } from "react-router-dom";
 import PublicRoutes from "./PublicRoutes";
-import Navbar from "../components/Navbar";
 import ProtectedRoutes from "./ProtectedRoutes";
-import { RootState } from "../redux/store";
-import { useSelector } from "react-redux";
 import { USER_ROLES } from "../api/roles";
 import DoctorLayout from "./layouts/DoctorLayout";
 import PatientLayout from "./layouts/PatientLayout";
@@ -19,7 +15,6 @@ import {
   ForgotPasswordReset,
   Homepage,
   Page404,
-  Unauthorized,
 } from "../pages/CommonPages";
 import {
   BookSlot,
@@ -63,20 +58,7 @@ import LabSignIn from "../pages/LabPages/labSignIn/LabSignIn.tsx";
 import LabSignUp from "../pages/LabPages/labSignUp/LabSignUp.tsx";
 import PharmacyLayout from "./layouts/PharmacyLayout.tsx";
 import LabLayout from "./layouts/LabLayout.tsx";
-
-const AppLayout = () => {
-  return (
-    <>
-      <Navbar />
-      <Outlet />
-    </>
-  );
-};
-
-const RequireAuth = ({ role }: any) => {
-  const user = useSelector((state: RootState) => state.user.currentUser);
-  return <>{user?.role === role ? <Outlet /> : <Unauthorized />}</>;
-};
+import { AppLayout } from "./AppLayout.tsx";
 
 export const router = createBrowserRouter(
   createRoutesFromElements(
