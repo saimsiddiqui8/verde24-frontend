@@ -21,7 +21,7 @@ export const updatePatientById = async (query: string, variables: { id: string; 
   }
 };
 
-export const getPatientToken = async (query: string, variables: any) => {
+export const getPatientToken = async (query: string, variables: { email: string, password: string }) => {
   try {
     const response = await publicRequest.post("/graphql", {
       query,

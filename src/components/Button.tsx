@@ -27,7 +27,7 @@ export default function Button({
 
 type InputProps = ButtonHTMLAttributes<HTMLButtonElement> & {
   title: string;
-  className?: any;
+  className?: string;
   onClick?: () => void;
   type?: string;
   secondary?: true;

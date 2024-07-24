@@ -52,7 +52,7 @@ interface FieldProps {
   label?: string;
   name: string;
   properties?: any;
-  className?:any;
+  className?:string;
   error?: any;
   disabled?: boolean;
 }

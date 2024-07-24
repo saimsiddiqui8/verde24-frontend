@@ -1,4 +1,5 @@
 import { publicRequest } from "../requestMethods";
+import { Doctor } from "./types";
 
 
 export const getDoctorById = async (query: string, variables: { findDoctorByIdId: string }) => {
@@ -8,14 +9,14 @@ export const getDoctorById = async (query: string, variables: { findDoctorByIdId
       variables,
     });
     return response?.data?.data?.findDoctorById;
-  } catch (error: any) {
-    console.error("Error fetching doctor:", error.response ? error.response.data : error.message);
+  } catch (error) {
+    console.error("Error fetching doctor:");
     throw error;
   }
 };
 
 
-export const getDoctorToken = async (query: string, variables: any) => {
+export const getDoctorToken = async (query: string, variables: { email: string, password: string }) => {
   const response = await publicRequest.post("/graphql", {
     query,
     variables,
@@ -32,7 +33,7 @@ export const createDoctor = async (query: string, variables: any) => {
     .then((response) => response.data.data.createDoctor);
 };
 
-export const updateDoctor = async (query: string, variables: any) => {
+export const updateDoctor = async (query: string, variables: { is_verified: boolean }) => {
   try {
     const response = await publicRequest.post("/graphql", {
       query,
@@ -45,7 +46,7 @@ export const updateDoctor = async (query: string, variables: any) => {
   }
 };
 
-export const checkDoctorEmail = async (query: string, variables: any) => {
+export const checkDoctorEmail = async (query: string, variables: { email: string }) => {
   return publicRequest
     .post("/graphql", {
       query,
@@ -54,7 +55,7 @@ export const checkDoctorEmail = async (query: string, variables: any) => {
     .then((response) => response.data.data.findDoctorByEmail);
 };
 
-export const sendDoctorOTP = async (query: string, variables: any) => {
+export const sendDoctorOTP = async (query: string, variables: { email: string, role: string }) => {
   return publicRequest
     .post("/graphql", {
       query,
@@ -63,7 +64,7 @@ export const sendDoctorOTP = async (query: string, variables: any) => {
     .then((response) => response.data.data.createUserOtp);
 };
 
-export const verifyDoctorOTP = async (query: string, variables: any) => {
+export const verifyDoctorOTP = async (query: string, variables: { email: string, role: string, code: string }) => {
   return publicRequest
     .post("/graphql", {
       query,
@@ -72,7 +73,7 @@ export const verifyDoctorOTP = async (query: string, variables: any) => {
     .then((response) => response.data.data.verifyUserOtp);
 };
 
-export const createDoctorTimeSlot = async (query: string, variables: any) => {
+export const createDoctorTimeSlot = async (query: string, variables: { data: { doctor_id: number; weekday: string; timeSlots: string[] } }) => {
   return publicRequest
     .post("/graphql", {
       query,

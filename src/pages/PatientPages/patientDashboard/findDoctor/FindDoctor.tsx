@@ -7,6 +7,16 @@ import { loadingEnd, loadingStart } from "../../../../redux/slices/loadingSlice"
 import { useDispatch } from "react-redux";
 import { io } from 'socket.io-client';
 
+interface Doctor {
+  id: string;
+  first_name: string;
+  last_name: string;
+  online: boolean;
+  experience: string;
+  specialization: string;
+  consultation_fee_regular: number;
+}
+
 const DOCTOR_QUERY = `
 query {
   doctors {
@@ -33,9 +43,9 @@ const getDoctors = async () => {
 };
 
 export default function FindDoctor() {
-  const [doctors, setDoctors] = useState([]);
-  const [search, setSearch] = useState("");
-  const [availability, setAvailability] = useState<any>(null);
+  const [doctors, setDoctors] = useState<Doctor[]>([]);
+  const [search, setSearch] = useState<string>("");
+  const [availability, setAvailability] = useState<boolean | null>(null);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dispatch = useDispatch();
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -56,9 +66,9 @@ export default function FindDoctor() {
     socket.on('connect', () => {
       console.log('Connected to sockets');
     });
-    socket.on('doctorStatusUpdated', (updatedDoctor) => {
-      setDoctors((prevDoctors: any) =>
-        prevDoctors.map((doctor: any) =>
+    socket.on('doctorStatusUpdated', (updatedDoctor: Doctor) => {
+      setDoctors((prevDoctors) =>
+        prevDoctors.map((doctor: Doctor) =>
           doctor.id === updatedDoctor.id ? { ...doctor, online: updatedDoctor.online } : doctor
         )
       );
@@ -107,7 +117,7 @@ export default function FindDoctor() {
           <InputField label="Search By Speciality" className="flex-grow" />
           <InputField
             value={search}
-            onChange={(e: any) => setSearch(e.target.value)}
+            onChange={(e) => setSearch((e as React.ChangeEvent<HTMLInputElement>).target.value)}
             label="Search By Doctors"
             className="flex-grow"
           />
@@ -155,11 +165,11 @@ export default function FindDoctor() {
           </div>
         </div>
         <div className="flex flex-col gap-4">
-          {doctors?.filter((doctor: any) => {
+          {doctors?.filter((doctor: Doctor) => {
             const matchesSearch = search.toLowerCase() === "" || doctor.first_name.toLowerCase().includes(search.toLowerCase()) || doctor.last_name.toLowerCase().includes(search.toLowerCase());
             const matchesOnlineStatus = availability === null ? doctor : availability === true ? doctor.online : !doctor.online;
             return matchesSearch && matchesOnlineStatus;
-          }).map((doctor: any) => {
+          }).map((doctor: Doctor) => {
             return (
               <Link to={`/patient-dashboard/find-doctor/appointment/${doctor.id}`} key={doctor.id}>
                 <div className="border-primary border rounded-lg p-3 cursor-pointer">

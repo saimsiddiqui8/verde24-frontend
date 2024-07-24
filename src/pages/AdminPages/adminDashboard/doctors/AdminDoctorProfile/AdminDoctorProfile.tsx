@@ -13,6 +13,30 @@ import {
 import { notifyFailure, notifySuccess } from "../../../../../utils/Utils";
 import { Toaster } from "react-hot-toast";
 
+type Hospital = {
+  id: string;
+  name: string;
+  checked?: boolean;
+};
+
+type CheckboxOption = {
+  id: string;
+  label: string;
+  value: string;
+  checked?: boolean;
+};
+
+type Doctor = {
+  id: string;
+  first_name: string;
+  last_name: string;
+  email: string;
+  phone_number: string;
+  gender: string;
+  is_verified: boolean;
+  doctorHospitals: { hospital_id: string }[];
+};
+
 export default function AdminDoctorProfile() {
   const [selectedHospitals, setSelectedHospitals] =
     useState<CheckboxOption[]>();
@@ -57,7 +81,7 @@ export default function AdminDoctorProfile() {
     queryFn: getDoctor,
   });
 
-  function getAssignedHospitals(doctor: any) {
+  function getAssignedHospitals(doctor: Doctor[]) {
     return doctor?.map((item: any) => item?.hospital_id);
   }
 
@@ -76,7 +100,7 @@ export default function AdminDoctorProfile() {
     setVerified(doctorData?.data?.is_verified);
   }, [doctorData.data,hospitals]);
 
-  const createDoctorHospital = async (data: any) => {
+  const createDoctorHospital = async (data: { doctor_id: number; hospital_id: number }) => {
     try {
       const response = await publicRequest.post("/graphql", {
         query: DOCTOR_ADD_HOSPITAL_QUERY,
@@ -89,7 +113,7 @@ export default function AdminDoctorProfile() {
     }
   };
 
-  const deleteDoctorHospital = async (data: any) => {
+  const deleteDoctorHospital = async (data: { doctor_id: number; hospital_id: number }) => {
     try {
       const response = await publicRequest.post("/graphql", {
         query: DOCTOR_REMOVE_HOSPITAL_QUERY,
@@ -115,11 +139,11 @@ export default function AdminDoctorProfile() {
         return item;
       }
     });
-    if (current!?.checked) {
+    if (current!.checked) {
       removeDoctorHospital.mutate(
         {
           doctor_id: parseInt(id!),
-          hospital_id: parseInt(current!?.id),
+          hospital_id: parseInt(current!.id),
         },
         {
           onSuccess: () => {
@@ -140,7 +164,7 @@ export default function AdminDoctorProfile() {
       addDoctorHospital.mutate(
         {
           doctor_id: parseInt(id!),
-          hospital_id: parseInt(current!?.id),
+          hospital_id: parseInt(current!.id),
         },
         {
           onSuccess: () => {
@@ -161,7 +185,7 @@ export default function AdminDoctorProfile() {
     setSelectedHospitals(newArr);
   };
 
-  const updateDoctor = async (data: any) => {
+  const updateDoctor = async (data: { is_verified: boolean }) => {
     try {
       const response = await publicRequest.post("/graphql", {
         query: DOCTOR_UPDATE_QUERY,
