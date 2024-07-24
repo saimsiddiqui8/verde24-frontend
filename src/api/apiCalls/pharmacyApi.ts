@@ -1,6 +1,6 @@
 import { publicRequest } from "../requestMethods";
 
-export const getPharmacyById = async (query: string, variables: any) => {
+export const getPharmacyById = async (query: string, variables: { id: string }) => {
   try {
     const response = await publicRequest.post("/graphql", { query, variables });
     return response?.data?.data?.findPharmacyById;
@@ -10,7 +10,7 @@ export const getPharmacyById = async (query: string, variables: any) => {
   }
 };
 
-export const logoutQuery = async (token: any) => {
+export const logoutQuery = async (token: String) => {
   const query = `
     mutation Mutation {
       logout
@@ -34,7 +34,7 @@ export const logoutQuery = async (token: any) => {
   }
 };
 
-export const updatePharmacyById = async (query: string, variables: any) => {
+export const updatePharmacyById = async (query: string, variables: { id: string }) => {
   try {
     const response = await publicRequest.post("/graphql", { query, variables });
     return response?.data?.data?.updatePharmacy;
@@ -44,7 +44,7 @@ export const updatePharmacyById = async (query: string, variables: any) => {
   }
 };
 
-export const getPharmacyToken = async (query: string, variables: any) => {
+export const getPharmacyToken = async (query: string, variables: { email: string, password: string }) => {
   try {
     const response = await publicRequest.post("/graphql", { query, variables });
     return response?.data?.data?.getPharmacyToken;
