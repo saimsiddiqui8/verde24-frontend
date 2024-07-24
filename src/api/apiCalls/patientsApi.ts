@@ -1,6 +1,7 @@
 import { publicRequest } from "../requestMethods";
+import { UserData } from "./types";
 
-export const getPatientById = async (query: string, variables: any) => {
+export const getPatientById = async (query: string, variables: { id: string }) => {
   try {
     const response = await publicRequest.post("/graphql", { query, variables });
     return response?.data?.data?.findPatientById;
@@ -10,7 +11,7 @@ export const getPatientById = async (query: string, variables: any) => {
   }
 };
 
-export const updatePatientById = async (query: string, variables: any) => {
+export const updatePatientById = async (query: string, variables: { id: string; data: UserData }) => {
   try {
     const response = await publicRequest.post("/graphql", { query, variables });
     return response?.data?.data?.updatePatient;
@@ -43,7 +44,7 @@ export const createPatient = async (query: string, variables: any) => {
   }
 };
 
-export const findPatientByEmail = async (query: string, variables: any) => {
+export const findPatientByEmail = async (query: string, variables: { email: string }) => {
   try {
     const response = await publicRequest.post("/graphql", { query, variables });
     return response?.data?.data?.findPatientByEmail;
@@ -53,7 +54,7 @@ export const findPatientByEmail = async (query: string, variables: any) => {
   }
 };
 
-export const sendPatientOTP = async (query: string, variables: any) => {
+export const sendPatientOTP = async (query: string, variables: { email: string, role: string }) => {
   try {
     const response = await publicRequest.post("/graphql", { query, variables });
     return response?.data?.data?.createUserOtp;
@@ -63,7 +64,7 @@ export const sendPatientOTP = async (query: string, variables: any) => {
   }
 };
 
-export const verifyPatientOTP = async (query: string, variables: any) => {
+export const verifyPatientOTP = async (query: string, variables: { email: string, role: string, code: string }) => {
   try {
     const response = await publicRequest.post("/graphql", { query, variables });
     return response.data.data.verifyUserOtp;

@@ -18,6 +18,7 @@ import {
   getPatientById,
   updatePatientById,
 } from "../../../../api/apiCalls/patientsApi";
+import { UserData } from "../../../../api/apiCalls/types";
 
 const inputs = [
   {
@@ -105,6 +106,7 @@ export default function PatientProfile() {
   const queryClient = useQueryClient();
 
   const getPatient = async () => {
+    if (!id) return;
     return getPatientById(FIND_PATIENT_QUERY, { id });
   };
 
@@ -146,7 +148,8 @@ export default function PatientProfile() {
     console.log(patientData?.data);
   }, [patientData?.data, defaultPatientData, reset]);
 
-  const updatePatient = async (data: any) => {
+  const updatePatient = async (data: UserData) => {
+    if (!id) return;
     return updatePatientById(UPDATE_PATIENT_QUERY, { id, data });
   };
 

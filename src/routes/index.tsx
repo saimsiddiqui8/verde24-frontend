@@ -59,6 +59,7 @@ import LabSignUp from "../pages/LabPages/labSignUp/LabSignUp.tsx";
 import PharmacyLayout from "./layouts/PharmacyLayout.tsx";
 import LabLayout from "./layouts/LabLayout.tsx";
 import { AppLayout } from "./AppLayout.tsx";
+import { RequireAuth } from "./RequireAuth.tsx";
 
 export const router = createBrowserRouter(
   createRoutesFromElements(
