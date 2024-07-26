@@ -1,5 +1,5 @@
 import { publicRequest } from "../requestMethods";
-import { UserData } from "./types";
+import { CreatePatientType, UserData } from "./types";
 
 export const getPatientById = async (query: string, variables: { id: string }) => {
   try {
@@ -34,9 +34,9 @@ export const getPatientToken = async (query: string, variables: { email: string,
   }
 };
 
-export const createPatient = async (query: string, variables: any) => {
+export const createPatient = async (query: string, variables: CreatePatientType) => {
   try {
-    const response = await publicRequest.post("/graphql", { query, variables });
+    const response = await publicRequest.post("/graphql", { query, variables: { data: variables } });
     return response?.data?.data?.createPatient;
   } catch (error) {
     console.error("Error creating patient:", error);

@@ -13,18 +13,18 @@ import {
 import { notifyFailure, notifySuccess } from "../../../../../utils/Utils";
 import { Toaster } from "react-hot-toast";
 
-type Hospital = {
-  id: string;
-  name: string;
-  checked?: boolean;
-};
+// type Hospital = {
+//   id: string;
+//   name: string;
+//   checked?: boolean;
+// };
 
-type CheckboxOption = {
-  id: string;
-  label: string;
-  value: string;
-  checked?: boolean;
-};
+// type CheckboxOption = {
+//   id: string;
+//   label: string;
+//   value: string;
+//   checked?: boolean;
+// };
 
 type Doctor = {
   id: string;
