@@ -48,5 +48,5 @@ type CheckboxInputProps = {
   label?: string;
   name: string;
   options: Option[] | undefined;
-  onChange: (e: any) => void;
+  onChange: () => void;
 };

@@ -46,14 +46,21 @@ const Field = ({
 
 export default Field;
 
+interface ErrorType {
+  message?: string;
+  code?: string;
+  details?: string;
+}
+
+
 interface FieldProps {
   options: Option[];
   placeholder?: string;
   label?: string;
   name: string;
-  properties?: any;
+  properties?: React.SelectHTMLAttributes<HTMLSelectElement> | object;
   className?:string;
-  error?: any;
+  error?: ErrorType | undefined;
   disabled?: boolean;
 }
 

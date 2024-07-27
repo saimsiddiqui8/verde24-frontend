@@ -54,7 +54,7 @@ export const getPharmacyToken = async (query: string, variables: { email: string
   }
 };
 
-export const createPharmacy = async (query: string, variables: any) => {
+export const createPharmacy = async (query: string, variables: object) => {
   try {
     const response = await publicRequest.post("/graphql", { query, variables });
     return response?.data?.data?.createPharmacy;

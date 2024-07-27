@@ -1,3 +1,4 @@
+import { ChangeEvent, InputHTMLAttributes } from 'react';
 export default function RadioInput({
   label,
   name,
@@ -21,7 +22,8 @@ export default function RadioInput({
               type="radio"
               value={option.value}
               // name="inline-radio-group"
-              checked={selected ? selected === option.value : null}
+              // checked={selected ?? selected === option.value}
+              checked={selected === option.value}
               onChange={onChange}
               name={name}
               {...properties}
@@ -47,12 +49,18 @@ type Option = {
   value: string;
 };
 
-type RadioInputProps = {
+interface ErrorType {
+  message?: string;
+  code?: string;
+  details?: string;
+}
+
+interface RadioInputProps {
   label?: string;
   name: string;
   options: Option[] | undefined;
-  onChange?: (e: any) => void;
-  error?: any;
-  properties?: any;
+  onChange?: (e: ChangeEvent<HTMLInputElement>) => void;
+  error?: ErrorType | null | undefined;
+  properties?: InputHTMLAttributes<HTMLInputElement> | object;
   selected?: string;
-};
+}
