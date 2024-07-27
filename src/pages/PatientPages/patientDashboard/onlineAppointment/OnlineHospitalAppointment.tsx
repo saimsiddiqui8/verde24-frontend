@@ -30,8 +30,13 @@ const consultations = [
   { title: "Hospital Consultation" },
 ];
 
+interface Hospital {
+  id: string,
+  name: string
+}
+
 export default function OnlineHospitalAppointment() {
-  const [hospital, setHospital] = useState<any>(null); 
+  const [hospital, setHospital] = useState<Hospital>(); 
   const { id } = useParams<{ id: string }>();
   const dispatch = useDispatch();
 

@@ -36,7 +36,7 @@ import {
   sendPatientOTP,
   verifyPatientOTP,
 } from "../../../api/apiCalls/patientsApi";
-import {  CreatePatientType } from "../../../api/apiCalls/types";
+import { CreatePatientType } from "../../../api/apiCalls/types";
 
 const inputs = [
   {
@@ -233,7 +233,13 @@ export default function () {
     }
   }, [data, dispatch, navigate, reset]);
 
-  const handleUser = (userData: any) => {
+  interface UserData {
+    displayName: string | null;
+    email: string | null;
+    uid: string;
+  }
+
+  const handleUser = (userData: UserData) => {
     const user = {
       first_name: userData?.displayName?.split(" ")[0],
       last_name: userData?.displayName?.split(" ")[1],

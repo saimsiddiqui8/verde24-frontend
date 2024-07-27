@@ -112,7 +112,7 @@ export default function PharmacySignUp() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const createNewPharmacy = async (data: any) => {
+  const createNewPharmacy = async (data: object) => {
     return createPharmacy(NEW_PHARMACY_QUERY, { data });
   };
 

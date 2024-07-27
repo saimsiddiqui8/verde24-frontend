@@ -72,7 +72,7 @@ export default function AdminNewDoctor() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
-  const createDoctor = async (data: any) => {
+  const createDoctor = async (data: object) => {
     try {
       const response = await publicRequest.post("/graphql", {
         query: DOCTORS_QUERY,

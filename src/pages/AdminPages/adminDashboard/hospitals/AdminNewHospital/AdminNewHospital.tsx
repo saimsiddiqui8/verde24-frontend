@@ -37,7 +37,7 @@ export default function AdminNewHospital() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
-  const createHospital = async (data: any) => {
+  const createHospital = async (data: object) => {
     try {
       const response = await publicRequest.post("/graphql", {
         query: HOSPITAL_QUERY,
