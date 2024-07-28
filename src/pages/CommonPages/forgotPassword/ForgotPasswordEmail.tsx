@@ -34,7 +34,7 @@ const ForgotPasswordEmail = () => {
     if (!state?.for) {
       navigate(-1);
     }
-  }, [state?.for]);
+  }, [state?.for, navigate]);
 
   const sendEmail = async (email: string, id: number) => {
     const res = await forgotPassword(email, id, state?.for);

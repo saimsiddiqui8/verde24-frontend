@@ -1,32 +1,31 @@
-import {
-  DashboardSection,
-  InputField,
-  PhoneInputComp,
-  RadioInput,
-  TextareaField,
-  DropdownField,
-} from "../../../../../components";
-import { IoMdAddCircle } from "react-icons/io";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { isPhoneValid } from "../../../../../utils/Utils";
-import { useState, KeyboardEvent } from "react";
 import {
+  getDownloadURL,
   getStorage,
   ref as storageRef,
   uploadBytesResumable,
-  getDownloadURL,
 } from "firebase/storage";
-import { app } from "../../../../../firebase/config";
+import { KeyboardEvent, useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import { IoMdAddCircle } from "react-icons/io";
+import { useQuery } from "react-query";
+import { useSelector } from "react-redux";
+import { z } from "zod";
 import {
   getDoctorById,
   updateDoctor,
 } from "../../../../../api/apiCalls/doctorsApi";
+import {
+  DashboardSection,
+  DropdownField,
+  InputField,
+  PhoneInputComp,
+  RadioInput,
+  TextareaField,
+} from "../../../../../components";
+import { app } from "../../../../../firebase/config";
 import { RootState } from "../../../../../redux/store";
-import { useSelector } from "react-redux";
-import { useQuery } from "react-query";
-import { useEffect } from "react";
+import { isPhoneValid } from "../../../../../utils/Utils";
 import { DOCTOR_UPDATE_QUERY, GET_DOCTOR_QUERY } from "./queries";
 
 const inputs = [
@@ -329,7 +328,7 @@ export default function ConsultationForm() {
   };
 
   const getDoctor = () => {
-    return getDoctorById(GET_DOCTOR_QUERY, { id });
+    return getDoctorById(GET_DOCTOR_QUERY, { findDoctorByIdId: String(id) });
   };
 
   const doctorData = useQuery({
@@ -343,7 +342,7 @@ export default function ConsultationForm() {
         doctorData?.data?.first_name + " " + doctorData?.data?.last_name,
       ...doctorData?.data,
     });
-  }, [doctorData?.data]);
+  }, [doctorData?.data, reset]);
 
   const onSubmit = async () => {
     const image_url = await imageUpload();

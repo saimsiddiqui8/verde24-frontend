@@ -5,8 +5,12 @@ import { store, persistor } from "./redux/store";
 import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
 import { Loading } from "./components";
+// import { useEffect } from "react";
+// import io from 'socket.io-client';
 
-const client = new QueryClient({
+
+
+const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       staleTime: 60000,
@@ -16,10 +20,23 @@ const client = new QueryClient({
 });
 
 function App() {
+
+  // useEffect(() => {
+  //   const socket = io('http://localhost:8000/');
+
+  //   socket.on('connect', () => {
+  //     console.log('Connected to sockets');
+  //   });
+
+  //   return () => {
+  //     socket.disconnect();
+  //   };
+  // }, []);
+
   return (
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
-        <QueryClientProvider client={client}>
+        <QueryClientProvider client={queryClient}>
           <Loading />
           <RouterProvider router={router} />
         </QueryClientProvider>

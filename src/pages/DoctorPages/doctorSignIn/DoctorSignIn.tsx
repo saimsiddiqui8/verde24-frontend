@@ -69,10 +69,10 @@ export default function DoctorSignIn() {
   };
 
   return (
-    <main className="grid grid-cols-12 items-center my-12">
-      <section className="col-start-3 col-span-5">
-        <div className="mx-8 w-4/5 justify-self-center rounded-lg">
-          <div className=" text-primary my-3 pt-2 pb-4 px-5 flex justify-between items-center">
+    <main className="grid grid-cols-1 md:grid-cols-12 items-center my-12">
+      <section className="col-span-1 md:col-start-3 md:col-span-5 order-2 md:order-1">
+        <div className="mx-4 md:mx-8 w-full md:w-4/5 justify-self-center rounded-lg">
+          <div className="text-primary my-3 pt-2 pb-4 px-5 flex justify-between items-center">
             <h3 className="text-3xl font-bold">Doctor Login</h3>
             <small className="font-medium">
               Not a Doctor?{" "}
@@ -81,9 +81,9 @@ export default function DoctorSignIn() {
               </Link>
             </small>
           </div>
-          <form onSubmit={handleSubmit(onSubmit)} className="pt-2 pb-6 px-5">
-            {inputs?.map((input) => (
-              <InputField
+          <form onSubmit={handleSubmit(onSubmit)} className="pt-2 pb-6 pr-7 lg:px-5">
+            {inputs?.map((input, index) => (
+              <InputField key={index}
                 label={input.label}
                 name={input.name}
                 type={input.type}
@@ -92,7 +92,7 @@ export default function DoctorSignIn() {
                 error={errors[input.name]}
               />
             ))}
-            <div className="flex items-start justify-around my-2">
+            <div className="flex flex-col md:flex-row items-center justify-around my-2">
               <div className="flex items-center">
                 <input
                   id="loggedIn"
@@ -125,11 +125,12 @@ export default function DoctorSignIn() {
           </form>
         </div>
       </section>
-      <section className="col-span-4">
+      <section className="col-span-1 md:col-span-4 order-1 md:order-2">
         <img src={image} alt="Doctors Image" className="w-full" />
       </section>
       <Toaster />
     </main>
+
   );
 }
 

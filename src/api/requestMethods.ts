@@ -1,6 +1,7 @@
 import axios from "axios";
 
-const BASE_URL = import.meta.env.VITE_API_URL;
+// const BASE_URL = import.meta.env.VITE_API_URL;
+const BASE_URL = "http://localhost:8000/";
 const data = localStorage.getItem("persist:root");
 const user = data ? JSON.parse(data)?.user : null;
 const currentUser = JSON.parse(user)?.currentUser;

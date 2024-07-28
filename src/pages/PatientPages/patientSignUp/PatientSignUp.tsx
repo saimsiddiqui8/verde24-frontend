@@ -36,6 +36,7 @@ import {
   sendPatientOTP,
   verifyPatientOTP,
 } from "../../../api/apiCalls/patientsApi";
+import {  CreatePatientType } from "../../../api/apiCalls/types";
 
 const inputs = [
   {
@@ -121,7 +122,7 @@ const OtpSchema = z.object({
     .length(6, { message: "Enter all six digits!" }),
 });
 
-export default function PatientSignUp() {
+export default function () {
   const {
     register,
     handleSubmit,
@@ -144,8 +145,8 @@ export default function PatientSignUp() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const createNewPatient = async (data: any) => {
-    return createPatient(NEW_PATIENT_QUERY, { data });
+  const createNewPatient = async (data: CreatePatientType) => {
+    return createPatient(NEW_PATIENT_QUERY, data);
   };
 
   const checkDuplicateEmail = async () => {
@@ -188,7 +189,8 @@ export default function PatientSignUp() {
 
   const handleLogin = () => {
     dispatch(loadingStart());
-    mutate(getValues());
+    const formData = getValues() as CreatePatientType;
+    mutate(formData);
   };
 
   const sendOtp = async () => {
@@ -229,7 +231,7 @@ export default function PatientSignUp() {
       }
       dispatch(loadingEnd());
     }
-  }, [data]);
+  }, [data, dispatch, navigate, reset]);
 
   const handleUser = (userData: any) => {
     const user = {
@@ -281,22 +283,22 @@ export default function PatientSignUp() {
   };
 
   return (
-    <main className="grid grid-cols-12 items-center gap-6">
-      <section className="col-start-2 col-span-5">
-        <div className=" justify-self-center">
+    <main className="grid grid-cols-1 md:grid-cols-12 items-center p-4">
+      <section className="col-span-1 md:col-start-2 md:col-span-5 order-2 md:order-1">
+        <div className="justify-self-center w-full">
           <form onSubmit={handleSubmit(onSubmit)}>
-            <div className="text-primary my-3 flex justify-between items-center">
+            <div className="text-primary my-3 flex flex-col md:flex-row justify-between items-center">
               <h3 className="text-3xl font-bold">Create Account</h3>
-              <small className="font-medium">
+              <small className="font-medium mt-2 md:mt-0">
                 Are you a Doctor?{" "}
                 <Link to="/doctor/sign-up" className="font-bold">
                   Sign Up
                 </Link>
               </small>
             </div>
-            <div className="grid grid-cols-12 gap-x-4 gap-y-0">
-              {inputs?.map((input) => (
-                <div className="col-span-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4">
+              {inputs?.map((input, index) => (
+                <div key={index} className="col-span-1">
                   {input.type === "radio" ? (
                     <RadioInput
                       label={input?.label}
@@ -347,14 +349,14 @@ export default function PatientSignUp() {
                 </label>
               </div>
             </div>
-            <button className="form-btn my-3">Sign Up</button>
+            <button className="form-btn my-3 w-full ">Sign Up</button>
           </form>
           <div className="flex items-center justify-between w-full my-2">
             <div className="w-[45%] h-[1px] bg-[#E0E0E0]"></div>
             <small>Or</small>
             <div className="w-[45%] h-[1px] bg-[#E0E0E0]"></div>
           </div>
-          <div className="flex gap-4">
+          <div className="flex flex-col md:flex-row gap-4">
             <GoogleButton
               label="Sign Up with Google"
               onClick={handleGoogleSignIn}
@@ -372,8 +374,8 @@ export default function PatientSignUp() {
           </small>
         </div>
       </section>
-      <section className="col-span-5">
-        <img src={image} alt="Doctors Image" className="h-full" />
+      <section className="col-span-1 md:col-span-5 p-4 order-1 md:order-2">
+        <img src={image} alt="Doctors Image" className="w-full h-auto" />
       </section>
       <Toaster />
       <Modal

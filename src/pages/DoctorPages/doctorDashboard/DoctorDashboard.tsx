@@ -8,19 +8,16 @@ import { loadingEnd, loadingStart } from "../../../redux/slices/loadingSlice";
 import { useDispatch } from "react-redux";
 
 const GET_DOCTOR_QUERY = `
-query($id:String!) {
-  findDoctorById(id: $id) {
-    id
+query FindDoctorById($findDoctorByIdId: String!) {
+  findDoctorById(id: $findDoctorByIdId) {
     first_name
+    id
     last_name
     email
     phone_number
     gender
     is_verified
-    consultation_mode
-    timeSlots {
-      id
-    }
+    country
   }
 }
 `;
@@ -29,13 +26,14 @@ export default function DoctorDashboard() {
   const id = useSelector((state: RootState) => state.user.currentUser?.id);
   const dispatch = useDispatch();
 
-  const getDoctor = () => {
-    return getDoctorById(GET_DOCTOR_QUERY, { id });
+  const getDoctor = async () => {
+    return await getDoctorById(GET_DOCTOR_QUERY, { findDoctorByIdId: String(id) });
   };
 
   const doctorData = useQuery({
     queryKey: ["Doctors", id, "profile"],
     queryFn: getDoctor,
+    enabled: !!id,
   });
 
   if (doctorData?.isLoading) {

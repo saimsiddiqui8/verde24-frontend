@@ -55,33 +55,34 @@ export default function AdminPatientProfile() {
 
   return (
     <DashboardSection
-      title={patientData?.data?.first_name + " " + patientData?.data?.last_name}
-    >
-      <div className="grid grid-cols-12 gap-6 my-2">
-        <div className="col-span-6 flex items-center gap-2">
-          <span>Name:</span>
-          <span>
-            {patientData?.data?.first_name + " " + patientData?.data?.last_name}
-          </span>
-        </div>
-        <div className="col-span-6 flex items-center gap-2">
-          <span>Email:</span>
-          <span>{patientData?.data?.email}</span>
-        </div>
-        <div className="col-span-6 flex items-center gap-2">
-          <span>Phone Number:</span>
-          <span>{patientData?.data?.phone_number}</span>
-        </div>
-        <div className="col-span-6 flex items-center gap-2">
-          <span>Gender:</span>
-          <span>{patientData?.data?.gender}</span>
-        </div>
-      </div>
-      <div className="w-48 mx-auto mt-6">
-        <Link to={`/admin-dashboard/patients/edit/${patientData?.data?.id}`}>
-          <button className="form-btn">Edit Patient</button>
-        </Link>
-      </div>
-    </DashboardSection>
+  title={patientData?.data?.first_name + " " + patientData?.data?.last_name}
+>
+  <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 my-2">
+    <div className="flex flex-col lg:flex-row items-start justify-start text-xs font-bold gap-2">
+      <span className="whitespace-nowrap">Name:</span>
+      <span>
+        {patientData?.data?.first_name + " " + patientData?.data?.last_name}
+      </span>
+    </div>
+    <div className="flex flex-col lg:flex-row items-start justify-start text-xs font-bold gap-2">
+      <span className="whitespace-nowrap">Email:</span>
+      <span>{patientData?.data?.email}</span>
+    </div>
+    <div className="flex flex-col lg:flex-row items-start justify-start text-xs font-bold gap-2">
+      <span className="whitespace-nowrap">Phone Number:</span>
+      <span>{patientData?.data?.phone_number}</span>
+    </div>
+    <div className="flex flex-col lg:flex-row items-start justify-start text-xs font-bold gap-2">
+      <span className="whitespace-nowrap">Gender:</span>
+      <span>{patientData?.data?.gender}</span>
+    </div>
+  </div>
+  <div className="w-4/5 sm:w-48 mx-auto mt-6">
+    <Link to={`/admin-dashboard/patients/edit/${patientData?.data?.id}`}>
+      <button className="form-btn w-full sm:w-auto">Edit Patient</button>
+    </Link>
+  </div>
+</DashboardSection>
+
   );
 }

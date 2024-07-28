@@ -13,6 +13,30 @@ import {
 import { notifyFailure, notifySuccess } from "../../../../../utils/Utils";
 import { Toaster } from "react-hot-toast";
 
+// type Hospital = {
+//   id: string;
+//   name: string;
+//   checked?: boolean;
+// };
+
+// type CheckboxOption = {
+//   id: string;
+//   label: string;
+//   value: string;
+//   checked?: boolean;
+// };
+
+type Doctor = {
+  id: string;
+  first_name: string;
+  last_name: string;
+  email: string;
+  phone_number: string;
+  gender: string;
+  is_verified: boolean;
+  doctorHospitals: { hospital_id: string }[];
+};
+
 export default function AdminDoctorProfile() {
   const [selectedHospitals, setSelectedHospitals] =
     useState<CheckboxOption[]>();
@@ -57,7 +81,7 @@ export default function AdminDoctorProfile() {
     queryFn: getDoctor,
   });
 
-  function getAssignedHospitals(doctor: any) {
+  function getAssignedHospitals(doctor: Doctor[]) {
     return doctor?.map((item: any) => item?.hospital_id);
   }
 
@@ -74,9 +98,9 @@ export default function AdminDoctorProfile() {
   useEffect(() => {
     setSelectedHospitals(hospitals);
     setVerified(doctorData?.data?.is_verified);
-  }, [doctorData.data]);
+  }, [doctorData.data,hospitals]);
 
-  const createDoctorHospital = async (data: any) => {
+  const createDoctorHospital = async (data: { doctor_id: number; hospital_id: number }) => {
     try {
       const response = await publicRequest.post("/graphql", {
         query: DOCTOR_ADD_HOSPITAL_QUERY,
@@ -89,7 +113,7 @@ export default function AdminDoctorProfile() {
     }
   };
 
-  const deleteDoctorHospital = async (data: any) => {
+  const deleteDoctorHospital = async (data: { doctor_id: number; hospital_id: number }) => {
     try {
       const response = await publicRequest.post("/graphql", {
         query: DOCTOR_REMOVE_HOSPITAL_QUERY,
@@ -115,11 +139,11 @@ export default function AdminDoctorProfile() {
         return item;
       }
     });
-    if (current!?.checked) {
+    if (current!.checked) {
       removeDoctorHospital.mutate(
         {
           doctor_id: parseInt(id!),
-          hospital_id: parseInt(current!?.id),
+          hospital_id: parseInt(current!.id),
         },
         {
           onSuccess: () => {
@@ -140,7 +164,7 @@ export default function AdminDoctorProfile() {
       addDoctorHospital.mutate(
         {
           doctor_id: parseInt(id!),
-          hospital_id: parseInt(current!?.id),
+          hospital_id: parseInt(current!.id),
         },
         {
           onSuccess: () => {
@@ -161,7 +185,7 @@ export default function AdminDoctorProfile() {
     setSelectedHospitals(newArr);
   };
 
-  const updateDoctor = async (data: any) => {
+  const updateDoctor = async (data: { is_verified: boolean }) => {
     try {
       const response = await publicRequest.post("/graphql", {
         query: DOCTOR_UPDATE_QUERY,
@@ -217,55 +241,56 @@ export default function AdminDoctorProfile() {
 
   return (
     <DashboardSection
-      title={
-        "Dr. " +
-        doctorData?.data?.first_name +
-        " " +
-        doctorData?.data?.last_name
-      }
-    >
-      <div className="grid grid-cols-12 gap-6 my-2 items-start">
-        <div className="col-span-6 flex items-center gap-2">
-          <span>Name:</span>
-          <span>
-            {doctorData?.data?.first_name + " " + doctorData?.data?.last_name}
-          </span>
-        </div>
-        <div className="col-span-6 flex items-center gap-2">
-          <span>Email:</span>
-          <span>{doctorData?.data?.email}</span>
-        </div>
-        <div className="col-span-6 flex items-center gap-2">
-          <span>Phone Number:</span>
-          <span>{doctorData?.data?.phone_number}</span>
-        </div>
-        <div className="col-span-6 flex items-center gap-2">
-          <span>Gender:</span>
-          <span>{doctorData?.data?.gender}</span>
-        </div>
-        <div className="col-span-6">
-          <span>Hospital Assignment:</span>
-          <CheckboxInput
-            options={selectedHospitals}
-            name="hospital_assignment"
-            onChange={(e) => handleAssignment(e.target.value)}
-          />
-        </div>
-        <div className="col-span-6 flex items-center gap-2">
-          <span>Verified:</span>
-          <label className="relative inline-flex items-center cursor-pointer">
-            <input
-              type="checkbox"
-              checked={verified}
-              onChange={() => handleVerify()}
-              className="sr-only peer"
-            />
-            <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
-          </label>
-        </div>
-      </div>
-      <Toaster />
-    </DashboardSection>
+  title={
+    "Dr. " +
+    doctorData?.data?.first_name +
+    " " +
+    doctorData?.data?.last_name
+  }
+>
+  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 my-2 items-start">
+    <div className="flex flex-col lg:flex-row items-start justify-start text-xs font-bold gap-2">
+      <span>Name:</span>
+      <span>
+        {doctorData?.data?.first_name + " " + doctorData?.data?.last_name}
+      </span>
+    </div>
+    <div className="flex flex-col lg:flex-row items-start justify-start text-xs font-bold gap-2">
+      <span>Email:</span>
+      <span>{doctorData?.data?.email}</span>
+    </div>
+    <div className="flex flex-col lg:flex-row items-start justify-start text-xs font-bold gap-2">
+      <span>Phone Number:</span>
+      <span>{doctorData?.data?.phone_number}</span>
+    </div>
+    <div className="flex flex-col lg:flex-row items-start justify-start text-xs font-bold gap-2">
+      <span>Gender:</span>
+      <span>{doctorData?.data?.gender}</span>
+    </div>
+    <div>
+      <span>Hospital Assignment:</span>
+      <CheckboxInput
+        options={selectedHospitals}
+        name="hospital_assignment"
+        onChange={(e) => handleAssignment(e.target.value)}
+      />
+    </div>
+    <div className="flex flex-col lg:flex-row items-start justify-start text-xs font-bold gap-2">
+      <span>Verified:</span>
+      <label className="relative inline-flex flex-col lg:flex-row items-start justify-start text-xs font-bold cursor-pointer">
+        <input
+          type="checkbox"
+          checked={verified}
+          onChange={() => handleVerify()}
+          className="sr-only peer"
+        />
+        <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
+      </label>
+    </div>
+  </div>
+  <Toaster />
+</DashboardSection>
+
   );
 }
 

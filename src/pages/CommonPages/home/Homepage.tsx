@@ -1,59 +1,77 @@
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { FaApple, FaGooglePlay } from "react-icons/fa";
 import { Link } from "react-router-dom";
-import { z } from "zod";
-import appImg1 from "../../../assets/appointment/image1.png";
-import appImg2 from "../../../assets/appointment/image2.png";
-import appImg3 from "../../../assets/appointment/image3.png";
-import appImg4 from "../../../assets/appointment/image4.png";
-import consultImg4 from "../../../assets/consult/Baby.png";
-import consultImg2 from "../../../assets/consult/CamoCream.png";
-import consultImg6 from "../../../assets/consult/Coughing.png";
-import consultImg3 from "../../../assets/consult/Male.png";
-import consultImg5 from "../../../assets/consult/Psychotherapy.png";
-import consultImg1 from "../../../assets/consult/Uterus.png";
 import doctorsImg from "../../../assets/doctors.png";
+import whiteLogoImg from "../../../assets/whiteLogo.png";
+// import syringeImg from "../../../assets/syringe.png";
+// import pillImg from "../../../assets/pill.png";
 import cardImg1 from "../../../assets/homeCards/card1.png";
 import cardImg2 from "../../../assets/homeCards/card2.png";
 import cardImg3 from "../../../assets/homeCards/card3.png";
 import cardImg4 from "../../../assets/homeCards/card4.png";
 import cardImg5 from "../../../assets/homeCards/card5.png";
-import pillImg from "../../../assets/pill.png";
-import syringeImg from "../../../assets/syringe.png";
+import consultImg1 from "../../../assets/consult/Uterus.png";
+import consultImg2 from "../../../assets/consult/CamoCream.png";
+import consultImg3 from "../../../assets/consult/Male.png";
+import consultImg4 from "../../../assets/consult/Baby.png";
+import consultImg5 from "../../../assets/consult/Psychotherapy.png";
+import consultImg6 from "../../../assets/consult/Coughing.png";
+import appImg1 from "../../../assets/appointment/image1.png";
+import appImg2 from "../../../assets/appointment/image2.png";
+import appImg3 from "../../../assets/appointment/image3.png";
+import appImg4 from "../../../assets/appointment/image4.png";
+import appImg5 from "../../../assets/appointment/image5.png";
+import appImg6 from "../../../assets/appointment/image6.png";
 import verdeAppImg1 from "../../../assets/verdeApp/image1.png";
 import verdeAppImg2 from "../../../assets/verdeApp/image2.png";
-import whiteLogoImg from "../../../assets/whiteLogo.png";
 import {
   Button,
   Footer,
   GooglePlayButton,
   InputField,
 } from "../../../components";
+import { FaApple, FaGooglePlay } from "react-icons/fa";
 import DropdownField from "../../../components/DropdownField";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 const cards = [
   {
-    title: "Instant Video Consultation",
-    desc: "Connect within 60 secs",
+    title: "Video Consultation",
     img: cardImg1,
   },
   {
-    title: "Find Doctor Near You",
-    desc: "Conformed appointments",
+    title: "Online Appointment",
     img: cardImg2,
   },
-  { title: "Medicines", desc: "Essentials at your doorstep", img: cardImg3 },
-  { title: "Lab Tests", desc: "Sample pickup at your home", img: cardImg4 },
   {
-    title: "Surgeries",
-    desc: "Safe and trusted surgery centers",
+    title: "Pharmacy At Doorstep",
+    img: cardImg3,
+  },
+  {
+    title: "Lab Facilities",
+    img: cardImg4,
+  },
+  {
+    title: "Surgeries Made Easy",
     img: cardImg5,
   },
 ];
 
+const appointment2 = [
+  {
+    img: appImg5,
+    title: "Dietitian/Nutrition",
+    desc: "Get guidance on eating right, weight management and sports nutrition",
+  },
+  {
+    img: appImg6,
+    title: "Physiotherapist",
+    desc: "Pulled a muscle? Get it treated by a trained physiotherapist",
+  },
+];
+
 const consult = [
-  { img: consultImg1, title: "Period doubts or Pregnancy " },
+  { img: consultImg1, title: "Pregnancy Care " },
   { img: consultImg2, title: "Acne, pimple or skin issues" },
   { img: consultImg3, title: "Performance issues in bed" },
   { img: consultImg4, title: "Cold, cough or fever" },
@@ -65,24 +83,21 @@ const appointment = [
   {
     img: appImg1,
     title: "Dentist",
-    desc: "Teething troubles? Schedule a dental checkup",
   },
   {
     img: appImg2,
     title: "Gynecologist/Obstetrician",
-    desc: "Explore for women's health, pregnancy and infertility treatments",
   },
   {
     img: appImg3,
     title: "Dietitian/Nutrition",
-    desc: "Get guidance on eating right, weight management and sports nutrition",
   },
   {
     img: appImg4,
     title: "Physiotherapist",
-    desc: "Pulled a muscle? Get it treated by a trained physiotherapist",
   },
 ];
+
 
 const FormSchema = z.object({
   location: z.string().min(1, { message: "Location is required" }),
@@ -100,32 +115,7 @@ export default function Homepage() {
     console.log(data);
   };
   return (
-    // <div className="h-[80vh] flex justify-center items-center gap-4">
-    //   <div className="w-36">
-    //     <Link
-    //       to="patient/sign-in"
-    //       className="form-btn py-3 px-4 block text-center"
-    //     >
-    //       Patients
-    //     </Link>
-    //   </div>
-    //   <div className="w-36">
-    //     <Link
-    //       to="doctor/sign-in"
-    //       className="form-btn py-3 px-4 block text-center"
-    //     >
-    //       Doctor
-    //     </Link>
-    //   </div>
-    //   <div className="w-36">
-    //     <Link
-    //       to="admin/sign-in"
-    //       className="form-btn py-3 px-4 block text-center"
-    //     >
-    //       Admin
-    //     </Link>
-    //   </div>
-    // </div>
+
     <div>
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="my-8 flex flex-col sm:flex-row gap-2 sm:gap-4 px-8 items-center">
@@ -150,6 +140,12 @@ export default function Homepage() {
           <Link to="/patient/sign-in">
             <Button title="Search" className="w-22" />
           </Link>
+          <Link to="/lab/sign-in">
+            <Button title="Lab Login" className="w-22" />
+          </Link>
+          <Link to="/pharmacy/sign-in">
+            <Button title="Pharmacy Login" className="w-22" />
+          </Link>
         </div>
       </form>
       <div
@@ -165,21 +161,11 @@ export default function Homepage() {
             <h5 className="text-white">Transform</h5>
           </div>
           <h2 className="text-2xl font-semibold text-center sm:text-start text-white mt-1">
-            Live a diabetes-free life
+          Prepare for the Health Revolution:
           </h2>
-          <p className="text-sm text-center sm:text-start text-white">
-            Join Verde’s Remission Program
-          </p>
-          <div className="flex flex-col sm:flex-row mt-2 sm:mt-0 gap-4 items-center">
-            <div className="flex gap-2">
-              <img src={syringeImg} alt="" className="w-5" />
-              <p className="text-white">Reduce HbA1c</p>
-            </div>
-            <div className="flex gap-2">
-              <img src={pillImg} alt="" className="w-5" />
-              <p className="text-white">No more Medications</p>
-            </div>
-          </div>
+          <h2 className="text-2xl font-semibold text-center sm:text-start text-white mt-1">
+          Verde24health Launching Soon!
+          </h2>
           <div className="w-40 mx-auto sm:mx-0">
             <Link to="/patient/sign-up">
               <Button title="Sign-up today" className="mt-4" />
@@ -197,29 +183,31 @@ export default function Homepage() {
         </div>
       </div>
       <div className="flex justify-evenly flex-wrap my-12">
-        {cards?.map((card) => (
-          <div className="w-56 rounded-2xl shadow-xl text-primary">
+        {cards?.map((card, index) => (
+          <div key={index} className="w-56 rounded-2xl shadow-xl text-primary">
             <div className="h-[70%] overflow-clip relative">
               <img src={card?.img} alt="" className="w-full object-cover" />
             </div>
-            <div className="h-[30%] flex flex-col items-center gap-2 justify-center p-2">
+            <div className="h-[20%] flex flex-col items-center gap-2 justify-center p-2">
               <h4 className="text-lg text-center">{card?.title}</h4>
-              <p className="text-base text-center">{card?.desc}</p>
             </div>
           </div>
         ))}
       </div>
-      <div className="my-12 px-8">
+      <div className="mt-12 px-8">
         <h2 className="text-2xl font-semibold">
-          Consult top doctors online for any health concern
+        Access Premier Online Consultations with Leading Healthcare
+        </h2>
+        <h2 className="text-2xl font-semibold">
+        Professionals for All Your Health Needs
         </h2>
         <p className="text-base">
-          Private online consultations with verified doctors in all specialists
+          Secure Online Consultations: Trusted Doctors in Every Specialty.
         </p>
       </div>
-      <div className="flex justify-evenly flex-wrap my-8">
-        {consult?.map((card) => (
-          <div className="w-40 text-primary">
+      <div className="flex justify-evenly flex-wrap my-4">
+        {consult?.map((card,index) => (
+          <div key={index}  className="w-40 text-primary">
             <div className="overflow-clip relative">
               <img src={card?.img} alt="" className="w-full object-cover" />
             </div>
@@ -231,21 +219,20 @@ export default function Homepage() {
       </div>
       <div className="my-12 px-8">
         <h2 className="text-2xl font-semibold">
-          Book an appointment for an in-clinic consultation
+        Schedule an appointment for an in-person consultation.
         </h2>
         <p className="text-base">
-          Find experienced doctors across all specialties
+        Discover skilled doctors in every specialty.
         </p>
       </div>
       <div className="flex justify-evenly flex-wrap my-8">
-        {appointment?.map((card) => (
-          <div className="w-72 text-primary">
+        {appointment?.map((card ,index) => (
+          <div key={index} className="w-72 text-primary">
             <div className="overflow-clip relative">
               <img src={card?.img} alt="" className="w-full object-cover" />
             </div>
             <div className="flex flex-col items-center gap-2 justify-center p-2">
               <h4 className="text-lg text-center">{card?.title}</h4>
-              <p className="text-base text-center">{card?.desc}</p>
             </div>
           </div>
         ))}
@@ -265,14 +252,14 @@ export default function Homepage() {
           </div>
         </div>
         <div className="flex gap-4 flex-wrap justify-center sm:justify-start">
-          {appointment?.slice(2)?.map((card) => (
-            <div className="w-72 text-primary">
+          {appointment2?.map((card,index) => (
+            <div key={index}  className="w-72 text-primary">
               <div className="overflow-clip relative">
                 <img src={card?.img} alt="" className="w-full object-cover" />
               </div>
               <div className="flex flex-col items-center gap-2 justify-center p-2">
                 <h4 className="text-lg text-center">{card?.title}</h4>
-                <p className="text-base text-center">{card?.desc}</p>
+                <p className="text-lg text-center md:text-start">{card?.desc}</p>
               </div>
             </div>
           ))}
@@ -281,12 +268,12 @@ export default function Homepage() {
       <div className="w-5/6 h-[1px] bg-primary mx-auto my-8"></div>
       <div className="flex flex-col items-center justify-center gap-4 my-12 w-4/5 sm:w-1/2 md:w-1/4 mx-auto">
         <h2 className="text-2xl font-semibold text-center">
-          What our users have to say
+        User testimonials
         </h2>
         <p className="text-base text-center">
-          Health articles that keep you informed about good health practices and
-          achieve your goals.
+        Verde24 has been a game-changer for me. Easy to use, helpful reviews, and teleconsultation feature are lifesavers. Highly recommend!
         </p>
+        <Button title="Learn more" className="text-sm w-28" />
       </div>
       <div className="flex flex-col sm:flex-row justify-center items-center gap-4 my-12 px-4 sm:px-8">
         <div className="w-72 relative">
@@ -298,15 +285,15 @@ export default function Homepage() {
           />
         </div>
         <div className="w-11/12 sm:w-80 flex flex-col gap-2">
-          <h2 className="text-2xl font-semibold text-[#222]">
+          <h2 className="text-2xl font-semibold ">
             Download the Verde app
           </h2>
-          <p className="text-sm text-[#222]">
+          <p className="text-sm ">
             Access video consultation with United State’s top doctors on the
             Verde app. Connect with doctors online, available 24/7, from the
-            comfort of your home.
+            comfort of your home
           </p>
-          <p className="text-base text-[#222]">
+          <p className="text-base ">
             Get the link to download the app
           </p>
           <div className="flex flex-col sm:flex-row items-center gap-2">

@@ -31,7 +31,7 @@ const ForgotPasswordCode = () => {
     if (!state?.for) {
       navigate(-1);
     }
-  }, [state?.for]);
+  }, [state?.for, navigate]);
 
   const onSubmit = async (data: any) => {
     dispatch(loadingStart());

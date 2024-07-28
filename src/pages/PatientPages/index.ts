@@ -1,3 +1,4 @@
+// export { default as PatientSignIn } from "./patientSignIn/";
 export { default as PatientSignIn } from "./patientSignIn/PatientSignIn";
 export { default as PatientSignUp } from "./patientSignUp/PatientSignUp";
 export { default as PatientProfile } from "./patientDashboard/patientProfile/PatientProfile";

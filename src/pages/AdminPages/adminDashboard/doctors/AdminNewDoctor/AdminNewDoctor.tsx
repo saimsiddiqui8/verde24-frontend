@@ -123,36 +123,37 @@ export default function AdminNewDoctor() {
 
   return (
     <DashboardSection title="Add New Doctor">
-      <form onSubmit={handleSubmit} className="pt-2">
-        <div className="grid grid-cols-12 gap-x-4 gap-y-0">
-          {inputs?.map((input) => (
-            <div className="col-span-6">
-              {input.type === "radio" ? (
-                <RadioInput
-                  label={input?.label}
-                  options={input?.options}
-                  name={input?.name}
-                  onChange={handleChange}
-                  selected={`${inputValues?.[input?.name]}`}
-                />
-              ) : (
-                <InputField
-                  label={input?.label}
-                  name={input?.name}
-                  placeholder={input?.placeholder}
-                  type={input?.type}
-                  onChange={handleChange}
-                />
-              )}
-            </div>
-          ))}
+  <form onSubmit={handleSubmit} className="pt-2">
+    <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-4">
+      {inputs?.map((input,index) => (
+        <div key={index} className="col-span-1">
+          {input.type === "radio" ? (
+            <RadioInput
+              label={input?.label}
+              options={input?.options}
+              name={input?.name}
+              onChange={handleChange}
+              selected={`${inputValues?.[input?.name]}`}
+            />
+          ) : (
+            <InputField
+              label={input?.label}
+              name={input?.name}
+              placeholder={input?.placeholder}
+              type={input?.type}
+              onChange={handleChange}
+            />
+          )}
         </div>
-        <div className="mx-auto w-64">
-          <button className="form-btn">Submit</button>
-        </div>
-        <Toaster />
-      </form>
-    </DashboardSection>
+      ))}
+    </div>
+    <div className="flex justify-center my-4">
+      <button className="form-btn w-full sm:w-auto px-6">Submit</button>
+    </div>
+    <Toaster />
+  </form>
+</DashboardSection>
+
   );
 }
 

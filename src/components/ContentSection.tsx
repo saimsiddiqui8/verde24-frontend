@@ -15,5 +15,5 @@ export default function ContentSection({ children, className }: ContentProps) {
 
 interface ContentProps {
   children: ReactNode;
-  className?: any;
+  className?: string;
 }

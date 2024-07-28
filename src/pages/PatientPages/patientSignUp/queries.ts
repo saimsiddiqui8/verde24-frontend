@@ -1,7 +1,7 @@
 export const NEW_PATIENT_QUERY = `
 mutation($data: PatientInput!) {
   createPatient(data: $data) {
-    email,
+    email
     error
   }
 }

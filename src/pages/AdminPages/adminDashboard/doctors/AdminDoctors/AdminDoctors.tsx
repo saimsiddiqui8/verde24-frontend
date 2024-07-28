@@ -29,37 +29,38 @@ export default function AdminDoctors() {
   }
   return (
     <DashboardSection title="Doctors">
-      <div className="grid grid-cols-12 gap-6 my-2">
-        {data?.map((doctor: Doctor) => (
-          <div
-            key={doctor?.id}
-            className="col-span-4 bg-gray-50 shadow rounded-lg px-4 py-4 relative"
-          >
-            <div className="flex justify-center">
-              <FaUserCircle size={50} />
-            </div>
-            <h3 className="text-primary text-lg font-medium text-center my-2">
-              {doctor?.first_name + " " + doctor?.last_name}
-            </h3>
-            <div className="w-4/5 mx-auto mt-4">
-              <Link to={`/admin-dashboard/doctors/${doctor?.id}`}>
-                <button className="form-btn text-sm">View Profile</button>
-              </Link>
-            </div>
-            {doctor?.is_verified && (
-              <div className="absolute top-2 right-2">
-                <MdVerified size={25} />
-              </div>
-            )}
+  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 my-2">
+    {data?.map((doctor: Doctor) => (
+      <div
+        key={doctor?.id}
+        className="bg-gray-50 shadow rounded-lg px-4 py-4 relative"
+      >
+        <div className="flex justify-center">
+          <FaUserCircle size={50} />
+        </div>
+        <h3 className="text-primary text-lg font-medium text-center my-2 whitespace-nowrap">
+          {doctor?.first_name + " " + doctor?.last_name}
+        </h3>
+        <div className="w-4/5 mx-auto mt-4">
+          <Link to={`/admin-dashboard/doctors/${doctor?.id}`}>
+            <button className="form-btn text-sm">View Profile</button>
+          </Link>
+        </div>
+        {doctor?.is_verified && (
+          <div className="absolute top-2 right-2">
+            <MdVerified size={25} />
           </div>
-        ))}
+        )}
       </div>
-      <div className="w-48 mx-auto">
-        <Link to="/admin-dashboard/doctors/add-new">
-          <button className="form-btn my-3">Add New Doctor</button>
-        </Link>
-      </div>
-    </DashboardSection>
+    ))}
+  </div>
+  <div className="w-4/5 mx-auto">
+    <Link to="/admin-dashboard/doctors/add-new">
+      <button className="form-btn my-3">Add New Doctor</button>
+    </Link>
+  </div>
+</DashboardSection>
+
   );
 }
 

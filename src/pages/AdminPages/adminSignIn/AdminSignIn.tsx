@@ -45,7 +45,7 @@ const FormSchema = z.object({
   password: z.string().min(1, { message: "Password is required" }),
 });
 
-export default function AdminSignIn() {
+export default function In() {
   const {
     register,
     handleSubmit,
@@ -88,60 +88,55 @@ export default function AdminSignIn() {
   };
 
   return (
-    <main className="grid grid-cols-12 items-center my-12">
-      <section className="col-start-3 col-span-4">
-        <img src={image} alt="Doctors Image" className="w-full" />
-      </section>
-      <section className="col-span-5">
-        <div className="mx-8 w-4/5 justify-self-center border border-primary rounded-lg">
-          <h3 className="text-2xl text-primary font-bold my-3 border-b border-primary pt-2 pb-4 px-5">
-            Admin
-          </h3>
-          <form onSubmit={handleSubmit(onSubmit)} className="pt-2 pb-6 px-5">
-            {inputs?.map((input) => (
-              <InputField
-                label={input.label}
-                name={input.name}
-                type={input.type}
-                placeholder={input.placeholder}
-                properties={{ ...register(input.name) }}
-                error={errors[input.name]}
+    <main className="grid grid-cols-1 md:grid-cols-12 items-center my-12">
+    <section className="md:col-start-3 md:col-span-4 col-span-1 p-4">
+      <img src={image} alt="Doctors Image" className="w-full" />
+    </section>
+    <section className="md:col-span-5 col-span-1">
+      <div className="mx-4 md:mx-8 w-full md:w-4/5 justify-self-center border border-primary rounded-lg">
+        <h3 className="text-2xl text-primary font-bold my-3 border-b border-primary pt-2 pb-4 px-5">
+          Admin
+        </h3>
+        <form onSubmit={handleSubmit(onSubmit)} className="pt-2 pb-6 px-5">
+          {inputs?.map((input) => (
+            <InputField
+              label={input.label}
+              name={input.name}
+              type={input.type}
+              placeholder={input.placeholder}
+              properties={{ ...register(input.name) }}
+              error={errors[input.name]}
+            />
+          ))}
+          <div className="flex items-start justify-around my-2">
+            <div className="flex items-center">
+              <input
+                id="loggedIn"
+                type="checkbox"
+                value=""
+                className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
               />
-            ))}
-            <div className="flex items-start justify-around my-2">
-              <div className="flex items-center">
-                <input
-                  id="loggedIn"
-                  type="checkbox"
-                  value=""
-                  className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-                />
-                <label
-                  htmlFor="loggedIn"
-                  className="ms-1 text-sm font-medium text-primary"
-                >
-                  Keep me logged in
-                </label>
-              </div>
-              <Link
-                to="/forgot-password/1"
-                state={{ for: users.admin }}
-                className="text-sm text-primary underline"
+              <label
+                htmlFor="loggedIn"
+                className="ms-1 text-sm font-medium text-primary"
               >
-                Forgot Password?
-              </Link>
+                Keep me logged in
+              </label>
             </div>
-            <button className="form-btn my-3">Log In</button>
-            {/* <small className="block my-1 text-primary text-center">
-              Do not have an account?{" "}
-              <Link to="/admin/sign-up" className="font-bold">
-                Sign Up
-              </Link>
-            </small> */}
-          </form>
-        </div>
-      </section>
-      <Toaster />
-    </main>
+            <Link
+              to="/forgot-password/1"
+              state={{ for: users.admin }}
+              className="text-sm text-primary underline"
+            >
+              Forgot Password?
+            </Link>
+          </div>
+          <button className="form-btn my-3">Log In</button>
+        </form>
+      </div>
+    </section>
+    <Toaster />
+  </main>
+  
   );
 }
