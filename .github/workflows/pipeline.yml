@@ -40,8 +40,8 @@ jobs:
         run: npm ci
         # working-directory: ${{env.WORKING_DIR}}
 
-      # - name: Linting
-      #   run: npm run lintNoFix
+      - name: Linting
+        run: npm run lintNoFix
 
       - name: Typescript Check, check that code compiles
         run: npm run tsc
