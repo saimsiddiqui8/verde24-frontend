@@ -23,7 +23,7 @@ export const getDoctorToken = async (query: string, variables: { email: string, 
   return response.data.data.getDoctorToken;
 };
 
-export const createDoctor = async (query: string, variables: any) => {
+export const createDoctor = async (query: string, variables: object) => {
   return publicRequest
     .post("/graphql", {
       query,

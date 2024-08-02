@@ -34,7 +34,7 @@ export const getLabToken = async (query: string, variables: { email: string, pas
 };
 
 // Function to create a new lab
-export const createLab = async (query: string, variables: any) => {
+export const createLab = async (query: string, variables: object) => {
   try {
     const response = await publicRequest.post("/graphql", { query, variables });
     return response?.data?.data?.createLab;
