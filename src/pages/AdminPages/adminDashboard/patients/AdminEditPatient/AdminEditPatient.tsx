@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, FormEvent, ChangeEvent } from "react";
 import {
   DashboardSection,
   InputField,
@@ -31,28 +31,28 @@ const inputsArr = [
     type: "text",
     placeholder: "Enter Your First Name",
     name: "first_name",
-    error: false,
+    // error: false,
   },
   {
     label: "Last Name",
     type: "text",
     placeholder: "Enter Your Last Name",
     name: "last_name",
-    error: false,
+    // error: false,
   },
   {
     label: "Email",
     type: "email",
     placeholder: "Enter Your Email",
     name: "email",
-    error: false,
+    // error: false,
   },
   {
     label: "Phone Number",
     type: "number",
     placeholder: "Enter Your Phone Number",
     name: "phone_number",
-    error: false,
+    // error: false,
   },
   {
     label: "Gender",
@@ -62,7 +62,7 @@ const inputsArr = [
       { label: "Male", value: "male" },
       { label: "Female", value: "female" },
     ],
-    error: false,
+    // error: false,
   },
 ];
 
@@ -83,10 +83,11 @@ export default function AdminEditPatient() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
-  const handleChange = (e: any) => {
-    setInputValues((prev: any) => ({
+  const handleChange = (e:  ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setInputValues((prev) => ({
       ...prev,
-      [e.target.name]: e.target.value,
+      [name]: value,
     }));
   };
 
@@ -105,8 +106,16 @@ export default function AdminEditPatient() {
     }
     setInputs(updatedInputs);
   };
-
-  const createPatient = async (data: any) => {
+  interface PatientInputUpdate {
+    id?: string;
+    first_name: string;
+    last_name: string;
+    email: string;
+    phone_number: string;
+    gender: string;
+  }
+  
+  const createPatient = async (data: PatientInputUpdate) => {
     const { id, ...other } = data;
     console.log(other);
     return publicRequest
@@ -159,7 +168,7 @@ export default function AdminEditPatient() {
     dispatch(loadingEnd());
   };
 
-  const handleSubmit = (e: any) => {
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (Object.values(inputValues).every((value) => value !== "")) {
       if (!valid) {
@@ -219,12 +228,12 @@ export default function AdminEditPatient() {
                   name={input?.name}
                   options={input?.options}
                   onChange={handleChange}
-                  error={input.error}
+                  // error={input.error}
                   selected={`${inputValues?.[input.name]}`}
                 />
               ) : input.type === "number" ? (
                 <PhoneInputComp
-                  error={input.error}
+                  // error={input.error}
                   onChange={(e) => {
                     setInputValues((prev) => ({
                       ...prev,
@@ -241,7 +250,7 @@ export default function AdminEditPatient() {
                   placeholder={input.placeholder}
                   onChange={handleChange}
                   value={`${inputValues?.[input.name]}`}
-                  error={input.error}
+                  // error={input.error}
                 />
               )}
             </div>

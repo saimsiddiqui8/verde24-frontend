@@ -1,3 +1,4 @@
+import { InputHTMLAttributes } from "react";
 export default function TimePicker({ label, properties, error }: InputProps) {
   return (
     <div>
@@ -16,8 +17,13 @@ export default function TimePicker({ label, properties, error }: InputProps) {
   );
 }
 
+interface ErrorType {
+  message?: string;
+  code?: string;
+  details?: string;
+}
 interface InputProps {
   label: string;
-  properties: any;
-  error: any;
+  properties?: InputHTMLAttributes<HTMLInputElement> | object;
+  error?: ErrorType | undefined;
 }

@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { DashboardSection, InputField } from "../../../../../components";
-import { useState } from "react";
+import { useState, FormEvent, ChangeEvent } from "react";
 import { publicRequest } from "../../../../../api/requestMethods";
 import { useMutation, useQueryClient } from "react-query";
 import {
@@ -10,6 +10,13 @@ import {
 } from "../../../../../utils/Utils";
 import { Toaster } from "react-hot-toast";
 import { HOSPITAL_QUERY } from "./queries";
+
+// Define type for input values
+type InputValues = {
+  name: string;
+  location: string;
+  phone_number: string;
+};
 
 const inputs = [
   {
@@ -33,11 +40,15 @@ const inputs = [
 ];
 
 export default function AdminNewHospital() {
-  const [inputValues, setInputValues] = useState({});
+  const [inputValues, setInputValues] = useState<InputValues>({
+    name: "",
+    location: "",
+    phone_number: "",
+  });
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
-  const createHospital = async (data: object) => {
+  const createHospital = async (data: InputValues) => {
     try {
       const response = await publicRequest.post("/graphql", {
         query: HOSPITAL_QUERY,
@@ -52,17 +63,18 @@ export default function AdminNewHospital() {
 
   const { mutate } = useMutation(createHospital);
 
-  const handleChange = (e: any) => {
-    setInputValues((prev: any) => ({
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setInputValues((prev) => ({
       ...prev,
-      [e.target.name]: e.target.value,
+      [name]: value,
     }));
   };
 
-  const handleSubmit = (e: any) => {
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (
-      Object.keys(inputValues)?.length === inputs?.length &&
+      Object.keys(inputValues).length === inputs.length &&
       areAllValuesTruthy(inputValues)
     ) {
       mutate(inputValues, {
@@ -88,25 +100,28 @@ export default function AdminNewHospital() {
 
   return (
     <DashboardSection title="Add New Hospital">
-    <form onSubmit={handleSubmit} className="pt-2">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-x-4">
-        {inputs?.map((input,index) => (
-          <div key={index} className="col-span-1">
-            <InputField
-              label={input.label}
-              name={input.name}
-              placeholder={input.placeholder}
-              onChange={handleChange}
-            />
-          </div>
-        ))}
-      </div>
-      <div className="flex justify-center mt-4">
-        <button className="form-btn w-full md:w-auto px-6">Submit</button>
-      </div>
-      <Toaster />
-    </form>
-  </DashboardSection>
-  
+      <form onSubmit={handleSubmit} className="pt-2">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-4">
+          {inputs.map((input, index) => (
+            <div key={index} className="col-span-1">
+              <InputField
+                label={input.label}
+                name={input.name}
+                placeholder={input.placeholder}
+                type={input.type}
+                value={inputValues[input.name as keyof InputValues]} // Ensure correct value assignment
+                onChange={handleChange}
+              />
+            </div>
+          ))}
+        </div>
+        <div className="flex justify-center mt-4">
+          <button type="submit" className="form-btn w-full md:w-auto px-6">
+            Submit
+          </button>
+        </div>
+        <Toaster />
+      </form>
+    </DashboardSection>
   );
 }

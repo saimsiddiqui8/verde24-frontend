@@ -1,3 +1,5 @@
+import { SyntheticEvent , InputHTMLAttributes } from "react";
+
 export default function TextareaField({
   label,
   placeholder,
@@ -25,7 +27,7 @@ interface TextareaFieldProps {
   label: string;
   name: string;
   placeholder?: string;
-  onChange?: (e: React.SyntheticEvent) => void;
+  onChange?: (e: SyntheticEvent) => void;
   rows: number;
-  properties?: any;
+  properties?: InputHTMLAttributes<HTMLTextAreaElement> | object;
 }

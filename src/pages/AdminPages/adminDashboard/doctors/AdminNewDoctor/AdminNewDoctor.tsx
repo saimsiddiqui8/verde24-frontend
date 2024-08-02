@@ -3,7 +3,7 @@ import {
   InputField,
   RadioInput,
 } from "../../../../../components";
-import { useState } from "react";
+import { useState, ChangeEvent, FormEvent } from "react";
 import { Toaster } from "react-hot-toast";
 import {
   areAllValuesTruthy,
@@ -58,7 +58,16 @@ const inputs = [
   },
 ];
 
-const initialValue = {
+type InputValues = {
+  email: string;
+  password: string;
+  first_name: string;
+  last_name: string;
+  phone_number: string;
+  gender: string;
+};
+
+const initialValue: InputValues = {
   email: "",
   password: "",
   first_name: "",
@@ -67,8 +76,10 @@ const initialValue = {
   gender: "",
 };
 
+
+
 export default function AdminNewDoctor() {
-  const [inputValues, setInputValues] = useState<Inputs>(initialValue);
+  const [inputValues, setInputValues] = useState<InputValues>(initialValue);
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
@@ -87,14 +98,16 @@ export default function AdminNewDoctor() {
 
   const { mutate } = useMutation(createDoctor);
 
-  const handleChange = (e: any) => {
-    setInputValues((prev: any) => ({
+  
+
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setInputValues((prev: InputValues) => ({
       ...prev,
-      [e.target.name]: e.target.value,
+      [name]: value,
     }));
   };
-
-  const handleSubmit = (e: any) => {
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (
       Object.keys(inputValues)?.length === inputs?.length &&
@@ -133,7 +146,7 @@ export default function AdminNewDoctor() {
               options={input?.options}
               name={input?.name}
               onChange={handleChange}
-              selected={`${inputValues?.[input?.name]}`}
+              selected={inputValues[input.name as keyof InputValues]}
             />
           ) : (
             <InputField
@@ -157,12 +170,12 @@ export default function AdminNewDoctor() {
   );
 }
 
-interface Inputs {
-  [key: string]: string | string[] | boolean;
-  first_name: string;
-  last_name: string;
-  email: string;
-  phone_number: string;
-  gender: string;
-  password: string;
-}
+// interface Inputs {
+//   [key: string]: string | string[] | boolean;
+//   first_name: string;
+//   last_name: string;
+//   email: string;
+//   phone_number: string;
+//   gender: string;
+//   password: string;
+// }

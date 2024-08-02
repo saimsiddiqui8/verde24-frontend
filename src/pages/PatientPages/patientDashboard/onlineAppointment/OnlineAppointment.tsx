@@ -18,6 +18,12 @@ export default function OnlineAppointment() {
   const [hospitals, sethospitals] = useState([]);
   const dispatch = useDispatch()
 
+  interface Hospital {
+    id: number;
+    name: string;
+    location: string;
+    phone_number: string;
+  }
 
   const getHospitals = async () => {
     try {
@@ -57,7 +63,7 @@ export default function OnlineAppointment() {
           <Button title="Search" secondary={true} />
         </div>
       </div>
-      {hospitals.map((hospital: any) =>
+      {hospitals.map((hospital: Hospital) =>
         <div key={hospital?.id} className="flex flex-col gap-4">
           <Link to={`/patient-dashboard/online-appointment/online-hospital-profile/${hospital?.id}`}>
             <div className="border-primary border rounded-lg p-3 cursor-pointer">

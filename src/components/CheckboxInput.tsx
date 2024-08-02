@@ -1,3 +1,5 @@
+import { ChangeEvent } from "react";
+
 export default function CheckboxInput({
   label,
   name,
@@ -15,7 +17,7 @@ export default function CheckboxInput({
       )}
       <div className=" mt-2">
         {options?.map((option, i) => (
-          <div className="flex items-center my-2">
+          <div key={i} className="flex items-center my-2">
             <input
               type="checkbox"
               value={option.value}
@@ -48,5 +50,5 @@ type CheckboxInputProps = {
   label?: string;
   name: string;
   options: Option[] | undefined;
-  onChange: () => void;
+  onChange?: (e: ChangeEvent<HTMLInputElement>) => void;
 };

@@ -55,15 +55,18 @@ export default function In() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const getAdminToken = async (data: any) => {
+  const getAdminToken = async (data: GetUserTokenPayload) => {
     const response = await publicRequest.post("/graphql", {
       query: ADMIN_QUERY,
       variables: data,
     });
     return response.data.data.getAdminToken;
   };
-
-  const handleLogin = async (data: any) => {
+  interface GetUserTokenPayload {
+    email: string;
+    password: string;
+  }
+  const handleLogin = async (data: GetUserTokenPayload) => {
     dispatch(loadingStart());
     const tokenRes = await getAdminToken(data);
     dispatch(loadingEnd());
