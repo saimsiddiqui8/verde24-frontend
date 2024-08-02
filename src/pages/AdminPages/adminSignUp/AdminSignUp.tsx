@@ -11,7 +11,6 @@ import {
   notifyFailure,
   notifySuccess,
 } from "../../../utils/Utils";
-
 const inputs = [
   {
     label: "First Name",

@@ -1,4 +1,4 @@
-import image from "../../../assets/sign-up.png";
+ import image from "../../../assets/sign-up.png";
 import { useEffect, useState } from "react";
 import {
   Button,
