@@ -1,4 +1,4 @@
-import image from "../../../assets/sign-up.png";
+ import image from "../../../assets/sign-up.png";
 import { useEffect, useState } from "react";
 import {
   Button,
@@ -112,7 +112,7 @@ export default function PharmacySignUp() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const createNewPharmacy = async (data: object) => {
+  const createNewPharmacy = async (data: any) => {
     return createPharmacy(NEW_PHARMACY_QUERY, { data });
   };
 

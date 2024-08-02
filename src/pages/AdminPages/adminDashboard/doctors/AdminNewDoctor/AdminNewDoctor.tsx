@@ -3,7 +3,7 @@ import {
   InputField,
   RadioInput,
 } from "../../../../../components";
-import { useState, ChangeEvent, FormEvent } from "react";
+import { useState } from "react";
 import { Toaster } from "react-hot-toast";
 import {
   areAllValuesTruthy,
@@ -58,16 +58,7 @@ const inputs = [
   },
 ];
 
-type InputValues = {
-  email: string;
-  password: string;
-  first_name: string;
-  last_name: string;
-  phone_number: string;
-  gender: string;
-};
-
-const initialValue: InputValues = {
+const initialValue = {
   email: "",
   password: "",
   first_name: "",
@@ -76,14 +67,12 @@ const initialValue: InputValues = {
   gender: "",
 };
 
-
-
 export default function AdminNewDoctor() {
-  const [inputValues, setInputValues] = useState<InputValues>(initialValue);
+  const [inputValues, setInputValues] = useState<Inputs>(initialValue);
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
-  const createDoctor = async (data: object) => {
+  const createDoctor = async (data: any) => {
     try {
       const response = await publicRequest.post("/graphql", {
         query: DOCTORS_QUERY,
@@ -98,16 +87,14 @@ export default function AdminNewDoctor() {
 
   const { mutate } = useMutation(createDoctor);
 
-  
-
-  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setInputValues((prev: InputValues) => ({
+  const handleChange = (e: any) => {
+    setInputValues((prev: any) => ({
       ...prev,
-      [name]: value,
+      [e.target.name]: e.target.value,
     }));
   };
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+
+  const handleSubmit = (e: any) => {
     e.preventDefault();
     if (
       Object.keys(inputValues)?.length === inputs?.length &&
@@ -146,7 +133,7 @@ export default function AdminNewDoctor() {
               options={input?.options}
               name={input?.name}
               onChange={handleChange}
-              selected={inputValues[input.name as keyof InputValues]}
+              selected={`${inputValues?.[input?.name]}`}
             />
           ) : (
             <InputField
@@ -170,12 +157,12 @@ export default function AdminNewDoctor() {
   );
 }
 
-// interface Inputs {
-//   [key: string]: string | string[] | boolean;
-//   first_name: string;
-//   last_name: string;
-//   email: string;
-//   phone_number: string;
-//   gender: string;
-//   password: string;
-// }
+interface Inputs {
+  [key: string]: string | string[] | boolean;
+  first_name: string;
+  last_name: string;
+  email: string;
+  phone_number: string;
+  gender: string;
+  password: string;
+}

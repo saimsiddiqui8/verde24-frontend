@@ -13,25 +13,20 @@ import { USER_ROLES } from "../../../api/roles";
 import { setUser } from "../../../redux/slices/userSlice";
 import { getPharmacyToken } from "../../../api/apiCalls/pharmacyApi";
 
-const inputs: Array<{
-  label: string;
-  type: string;
-  placeholder: string;
-  name: keyof Inputs;
-}> = [
-    {
-      label: "Email",
-      type: "email",
-      placeholder: "Enter your email",
-      name: "email",
-    },
-    {
-      label: "Password",
-      type: "password",
-      placeholder: "************",
-      name: "password",
-    },
-  ];
+const inputs = [
+  {
+    label: "Email",
+    type: "email",
+    placeholder: "Enter your email",
+    name: "email",
+  },
+  {
+    label: "Password",
+    type: "password",
+    placeholder: "************",
+    name: "password",
+  },
+];
 
 const FormSchema = z.object({
   email: z.string().min(1, { message: "Email is required" }).email(),
@@ -44,7 +39,7 @@ export default function PharmacySignIn() {
     handleSubmit,
     setError,
     formState: { errors },
-  } = useForm<Inputs>({ resolver: zodResolver(FormSchema) });
+  } = useForm({ resolver: zodResolver(FormSchema) });
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -69,7 +64,7 @@ export default function PharmacySignIn() {
   };
 
 
-  const onSubmit = async (data: Inputs) => {
+  const onSubmit = async (data: any) => {
     handleLogin(data);
   };
 

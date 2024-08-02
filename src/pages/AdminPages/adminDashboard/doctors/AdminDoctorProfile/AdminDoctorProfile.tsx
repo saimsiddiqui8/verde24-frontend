@@ -81,14 +81,8 @@ export default function AdminDoctorProfile() {
     queryFn: getDoctor,
   });
 
-  // function getAssignedHospitals(doctor: Doctor[]) {
-  //   return doctor?.map((item: any) => item?.hospital_id);
-  // }
-
-  function getAssignedHospitals(doctors: Doctor[]): string[] {
-    return doctors.flatMap((doctor) =>
-      doctor.doctorHospitals.map((hospital) => hospital.hospital_id)
-    );
+  function getAssignedHospitals(doctor: Doctor[]) {
+    return doctor?.map((item: any) => item?.hospital_id);
   }
 
   const assignedHospitals =

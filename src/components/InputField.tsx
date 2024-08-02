@@ -1,4 +1,4 @@
-import { ChangeEvent, KeyboardEvent, useState, InputHTMLAttributes } from "react";
+import { SyntheticEvent, KeyboardEvent, useState } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 export default function Eld({
@@ -58,22 +58,16 @@ export default function Eld({
   );
 }
 
-interface ErrorType {
-  message?: string;
-  code?: string;
-  details?: string;
-}
-
 interface eldProps {
   label?: string;
   type?: string;
   name?: string;
   placeholder?: string;
   value?: string;
-  onChange?: (e: ChangeEvent<HTMLInputElement>) => void;
+  onChange?: (e: SyntheticEvent) => void;
   onKeyDown?: (e: KeyboardEvent<HTMLInputElement>) => void;
-  properties?: object | InputHTMLAttributes<HTMLInputElement>;
-  error?: ErrorType | undefined;
+  properties?: any;
+  error?: any;
   disabled?: boolean;
   className?: string;
 }

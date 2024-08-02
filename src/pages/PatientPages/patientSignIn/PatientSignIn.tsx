@@ -15,41 +15,25 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { getPatientToken } from "../../../api/apiCalls/patientsApi";
 import { PATIENT_TOKEN_QUERY } from "./queries";
 
-const inputs: Array<{
-  label: string;
-  type: string;
-  placeholder: string;
-  name: keyof Inputs;
-}> = [
-    {
-      label: "Email",
-      type: "email",
-      placeholder: "Enter your email",
-      name: "email",
-    },
-    {
-      label: "Password",
-      type: "password",
-      placeholder: "************",
-      name: "password",
-    },
-  ];
+const inputs = [
+  {
+    label: "Email",
+    type: "email",
+    placeholder: "Enter your email",
+    name: "email",
+  },
+  {
+    label: "Password",
+    type: "password",
+    placeholder: "************",
+    name: "password",
+  },
+];
 
 const FormSchema = z.object({
   email: z.string().min(1, { message: "Email is required" }).email(),
   password: z.string().min(1, { message: "Password is required" }),
 });
-
-interface Inputs {
-  email: string;
-  password: string;
-}
-
-interface UserData {
-  email: string | null;
-  uid: string;
-  accessToken?: string;
-}
 
 export default function PatientSignIn() {
   const {
@@ -57,7 +41,7 @@ export default function PatientSignIn() {
     handleSubmit,
     setError,
     formState: { errors },
-  } = useForm<Inputs>({ resolver: zodResolver(FormSchema) });
+  } = useForm({ resolver: zodResolver(FormSchema) });
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -81,20 +65,14 @@ export default function PatientSignIn() {
     }
   };
 
-  const onSubmit = async (data: Inputs) => {
+  const onSubmit = async (data: any) => {
     handleLogin(data);
   };
 
-  const handleUser = (userData: UserData) => {
+  const handleUser = (userData: any) => {
     if (userData?.accessToken) {
-      const email = userData.email ?? "";
-      const password = userData.uid;
-      if (email) {
-        const user: Inputs = { email, password };
-        handleLogin(user);
-      } else {
-        notifyFailure("Login Failed: Incomplete user data.");
-      }
+      const user = { email: userData?.email, password: userData?.uid };
+      handleLogin(user);
     } else {
       notifyFailure("Login Failed!");
     }
@@ -120,79 +98,79 @@ export default function PatientSignIn() {
 
   return (
     <main className="grid grid-cols-12 items-center gap-4 px-4 md:px-8">
-      <section className="col-span-12 md:col-start-3 md:col-span-4 order-2 md:order-1">
+    <section className="col-span-12 md:col-start-3 md:col-span-4 order-2 md:order-1">
         <div className="w-full justify-self-center">
-          <form onSubmit={handleSubmit(onSubmit)}>
-            <div className="text-primary my-3 flex justify-between items-center">
-              <h3 className="text-2xl md:text-3xl font-bold">Log In</h3>
-              <small className="font-medium">
-                Are you a Doctor?{" "}
-                <Link to="/doctor/sign-in" className="font-bold">
-                  Sign In
+            <form onSubmit={handleSubmit(onSubmit)}>
+                <div className="text-primary my-3 flex justify-between items-center">
+                    <h3 className="text-2xl md:text-3xl font-bold">Log In</h3>
+                    <small className="font-medium">
+                        Are you a Doctor?{" "}
+                        <Link to="/doctor/sign-in" className="font-bold">
+                            Sign In
+                        </Link>
+                    </small>
+                </div>
+                {inputs?.map((input, index) => (
+                    <InputField key={index}
+                        label={input.label}
+                        name={input.name}
+                        type={input.type}
+                        placeholder={input.placeholder}
+                        properties={{ ...register(input.name) }}
+                        error={errors[input.name]}
+                    />
+                ))}
+                <div className="flex items-start justify-around my-2">
+                    <div className="flex items-center">
+                        <input
+                            id="loggedIn"
+                            type="checkbox"
+                            value=""
+                            className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                        />
+                        <label
+                            htmlFor="loggedIn"
+                            className="ms-1 text-sm font-medium text-primary"
+                        >
+                            Keep me logged in
+                        </label>
+                    </div>
+                    <Link
+                        to="/forgot-password/1"
+                        state={{ for: users.patient }}
+                        className="text-sm text-primary underline"
+                    >
+                        Forgot Password?
+                    </Link>
+                </div>
+                <button className="form-btn my-3">Log In</button>
+            </form>
+            <div className="flex items-center justify-between w-full my-2">
+                <div className="w-1/2 md:w-[45%] h-[1px] bg-[#E0E0E0]"></div>
+                <small>Or</small>
+                <div className="w-1/2 md:w-[45%] h-[1px] bg-[#E0E0E0]"></div>
+            </div>
+            <GoogleButton
+                label="Sign in with Google"
+                onClick={handleGoogleSignIn}
+            />
+            <FacebookButton
+                label="Sign in with Facebook"
+                onClick={handleFacebookSignIn}
+            />
+            <small className="block my-1 text-primary text-center">
+                Do not have an account?{" "}
+                <Link to="/patient/sign-up" className="font-bold">
+                    Sign Up
                 </Link>
-              </small>
-            </div>
-            {inputs?.map((input, index) => (
-              <InputField key={index}
-                label={input.label}
-                name={input.name}
-                type={input.type}
-                placeholder={input.placeholder}
-                properties={{ ...register(input.name) }}
-                error={errors[input.name]}
-              />
-            ))}
-            <div className="flex items-start justify-around my-2">
-              <div className="flex items-center">
-                <input
-                  id="loggedIn"
-                  type="checkbox"
-                  value=""
-                  className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-                />
-                <label
-                  htmlFor="loggedIn"
-                  className="ms-1 text-sm font-medium text-primary"
-                >
-                  Keep me logged in
-                </label>
-              </div>
-              <Link
-                to="/forgot-password/1"
-                state={{ for: users.patient }}
-                className="text-sm text-primary underline"
-              >
-                Forgot Password?
-              </Link>
-            </div>
-            <button className="form-btn my-3">Log In</button>
-          </form>
-          <div className="flex items-center justify-between w-full my-2">
-            <div className="w-1/2 md:w-[45%] h-[1px] bg-[#E0E0E0]"></div>
-            <small>Or</small>
-            <div className="w-1/2 md:w-[45%] h-[1px] bg-[#E0E0E0]"></div>
-          </div>
-          <GoogleButton
-            label="Sign in with Google"
-            onClick={handleGoogleSignIn}
-          />
-          <FacebookButton
-            label="Sign in with Facebook"
-            onClick={handleFacebookSignIn}
-          />
-          <small className="block my-1 text-primary text-center">
-            Do not have an account?{" "}
-            <Link to="/patient/sign-up" className="font-bold">
-              Sign Up
-            </Link>
-          </small>
+            </small>
         </div>
-      </section>
-      <section className="col-span-12 md:col-span-6 lg:col-span-4 order-1 md:order-2">
+    </section>
+    <section className="col-span-12 md:col-span-6 lg:col-span-4 order-1 md:order-2">
         <img src={image} alt="Doctors Image" className="w-full h-auto" />
-      </section>
-      <Toaster />
-    </main>
+    </section>
+    <Toaster />
+</main>
 
   );
 }

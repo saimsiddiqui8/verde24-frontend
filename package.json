@@ -6,8 +6,12 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
-    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "prettier": "prettier --write src",
+    "lint": "eslint '*/**/*.{js,ts}' --fix",
+    "lintWindows": "eslint \"*/**/*.{js,ts}\" --fix",
+    "lintNoFix": "eslint '*/**/*.{js,ts}' --max-warnings=0",
+    "tsc": "tsc"
   },
   "dependencies": {
     "@apollo/client": "^3.10.8",

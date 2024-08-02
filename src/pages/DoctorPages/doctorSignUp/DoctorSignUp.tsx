@@ -139,7 +139,7 @@ export default function DoctorSignUp() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const createNewDoctor = async (data: object) => {
+  const createNewDoctor = async (data: any) => {
     return createDoctor(NEW_DOCTOR_QUERY, { data });
   };
 

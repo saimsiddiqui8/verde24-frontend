@@ -36,7 +36,7 @@ import {
   sendPatientOTP,
   verifyPatientOTP,
 } from "../../../api/apiCalls/patientsApi";
-import { CreatePatientType } from "../../../api/apiCalls/types";
+import {  CreatePatientType } from "../../../api/apiCalls/types";
 
 const inputs = [
   {
@@ -122,7 +122,7 @@ const OtpSchema = z.object({
     .length(6, { message: "Enter all six digits!" }),
 });
 
-export default function PatientSignUp() {
+export default function () {
   const {
     register,
     handleSubmit,
@@ -233,13 +233,7 @@ export default function PatientSignUp() {
     }
   }, [data, dispatch, navigate, reset]);
 
-  interface UserData {
-    displayName: string | null;
-    email: string | null;
-    uid: string;
-  }
-
-  const handleUser = (userData: UserData) => {
+  const handleUser = (userData: any) => {
     const user = {
       first_name: userData?.displayName?.split(" ")[0],
       last_name: userData?.displayName?.split(" ")[1],

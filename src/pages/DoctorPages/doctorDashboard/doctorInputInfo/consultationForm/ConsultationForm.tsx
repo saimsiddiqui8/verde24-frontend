@@ -1,32 +1,31 @@
-import {
-  DashboardSection,
-  InputField,
-  PhoneInputComp,
-  RadioInput,
-  TextareaField,
-  DropdownField,
-} from "../../../../../components";
-import { IoMdAddCircle } from "react-icons/io";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { isPhoneValid } from "../../../../../utils/Utils";
-import { useState, KeyboardEvent, ChangeEvent } from "react";
 import {
+  getDownloadURL,
   getStorage,
   ref as storageRef,
   uploadBytesResumable,
-  getDownloadURL,
 } from "firebase/storage";
-import { app } from "../../../../../firebase/config";
+import { KeyboardEvent, useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import { IoMdAddCircle } from "react-icons/io";
+import { useQuery } from "react-query";
+import { useSelector } from "react-redux";
+import { z } from "zod";
 import {
   getDoctorById,
   updateDoctor,
 } from "../../../../../api/apiCalls/doctorsApi";
+import {
+  DashboardSection,
+  DropdownField,
+  InputField,
+  PhoneInputComp,
+  RadioInput,
+  TextareaField,
+} from "../../../../../components";
+import { app } from "../../../../../firebase/config";
 import { RootState } from "../../../../../redux/store";
-import { useSelector } from "react-redux";
-import { useQuery } from "react-query";
-import { useEffect } from "react";
+import { isPhoneValid } from "../../../../../utils/Utils";
 import { DOCTOR_UPDATE_QUERY, GET_DOCTOR_QUERY } from "./queries";
 
 const inputs = [
@@ -254,7 +253,7 @@ export default function ConsultationForm() {
   } = useForm({ resolver: zodResolver(FormSchema) });
   const [services, setServices] = useState<string[]>([]);
   const [specializations, setSpecializations] = useState<string[]>([]);
-  const [image, setImage] = useState<File | undefined>();
+  const [image, setImage] = useState();
   const [payout, setPayout] = useState("upi");
   const id = useSelector((state: RootState) => state.user.currentUser?.id);
 
@@ -321,13 +320,11 @@ export default function ConsultationForm() {
     }
   };
 
-  const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const newImage = e.target.files?.[0];
-    if (newImage) {
-      console.log(newImage);
-      setImage(newImage);
-      setValue("doctor_image", newImage);
-    }
+  const handleFileChange = (e: any) => {
+    const newImage = e.target.files[0];
+    console.log(newImage);
+    setImage(newImage);
+    setValue("doctor_image", newImage);
   };
 
   const getDoctor = () => {
@@ -412,7 +409,7 @@ export default function ConsultationForm() {
                     <DropdownField
                       label={input?.label}
                       name={input?.name}
-                      options={input.options!}
+                      options={input?.options!}
                       placeholder={input?.placeholder}
                       properties={{ ...register(input?.name) }}
                       error={errors[input?.name]}

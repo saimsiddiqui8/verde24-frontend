@@ -4,7 +4,7 @@ import {
   InputField,
   PhoneInputComp,
 } from "../../../../components";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -20,72 +20,56 @@ import {
 } from "../../../../api/apiCalls/patientsApi";
 import { UserData } from "../../../../api/apiCalls/types";
 
-interface FormData {
-  patient_name: string;
-  patient_age: number;
-  insurance_id: string;
-  phone_number: string;
-  gender: string;
-  weight: number;
-  blood_group: string;
-  other_history: string;
-}
-
-const inputs: Array<{
-  label: string;
-  type: string;
-  placeholder: string;
-  name: keyof FormData;
-}> = [
-    {
-      label: "Patient Name",
-      type: "text",
-      placeholder: "Enter Name",
-      name: "patient_name",
-    },
-    {
-      label: "Patient Age",
-      type: "number",
-      placeholder: "Enter Age in Years",
-      name: "patient_age",
-    },
-    {
-      label: "Insurance Id",
-      type: "text",
-      placeholder: "Enter Insurance Id",
-      name: "insurance_id",
-    },
-    {
-      label: "Gender",
-      type: "text",
-      placeholder: "Enter Your Gender",
-      name: "gender",
-    },
-    {
-      label: "Weight",
-      type: "number",
-      placeholder: "Enter Your Weight in KG",
-      name: "weight",
-    },
-    {
-      label: "Phone Number",
-      type: "number",
-      placeholder: "Enter Your Phone Number",
-      name: "phone_number",
-    },
-    {
-      label: "Blood Group",
-      type: "text",
-      placeholder: "Enter Your Blood Group",
-      name: "blood_group",
-    },
-    {
-      label: "Other History",
-      type: "text",
-      placeholder: "Other History",
-      name: "other_history",
-    },
-  ];
+const inputs = [
+  {
+    label: "Patient Name",
+    type: "text",
+    placeholder: "Enter Name",
+    name: "patient_name",
+  },
+  {
+    label: "Patient Age",
+    type: "number",
+    placeholder: "Enter Age in Years",
+    name: "patient_age",
+  },
+  {
+    label: "Insurance Id",
+    type: "text",
+    placeholder: "Enter Insurance Id",
+    name: "insurance_id",
+  },
+  {
+    label: "Gender",
+    type: "text",
+    placeholder: "Enter Your Gender",
+    name: "gender",
+  },
+  {
+    label: "Weight",
+    type: "number",
+    placeholder: "Enter Your Weight in KG",
+    name: "weight",
+  },
+  {
+    label: "Phone Number",
+    type: "number",
+    placeholder: "Enter Your Phone Number",
+    name: "phone_number",
+  },
+  {
+    label: "Blood Group",
+    type: "text",
+    placeholder: "Enter Your Blood Group",
+    name: "blood_group",
+  },
+  {
+    label: "Other History",
+    type: "text",
+    placeholder: "Other History",
+    name: "other_history",
+  },
+];
 
 const FormSchema = z
   .object({
@@ -114,7 +98,7 @@ export default function PatientProfile() {
     reset,
     // getValues,
     formState: { errors },
-  } = useForm<FormData>({
+  } = useForm({
     resolver: zodResolver(FormSchema),
   });
   const [edit, setEdit] = useState(false);
@@ -131,11 +115,11 @@ export default function PatientProfile() {
     queryFn: getPatient,
   });
 
-  const defaultPatientData = useCallback(() => {
+  function defaultPatientData() {
     if (patientData.isLoading || !patientData.data) {
       return {};
     }
-  
+
     const {
       first_name,
       last_name,
@@ -147,7 +131,6 @@ export default function PatientProfile() {
       blood_group,
       other_history,
     } = patientData.data;
-  
     return {
       patient_name: `${first_name} ${last_name}`,
       patient_age: age,
@@ -158,7 +141,7 @@ export default function PatientProfile() {
       blood_group,
       other_history,
     };
-  }, [patientData])
+  }
 
   useEffect(() => {
     reset(defaultPatientData());
@@ -172,7 +155,7 @@ export default function PatientProfile() {
 
   const { data, mutate } = useMutation(updatePatient);
 
-  const onSubmit = (data: FormData) => {
+  const onSubmit = (data: any) => {
     const userData = {
       first_name: data?.patient_name.split(" ")[0],
       last_name: data?.patient_name.split(" ")[1],
