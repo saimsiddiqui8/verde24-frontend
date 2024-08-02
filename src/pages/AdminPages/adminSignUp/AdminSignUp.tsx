@@ -1,5 +1,5 @@
 import image from "../../../assets/form-img.png";
-import { useState, useEffect } from "react";
+import { useState, useEffect, FormEvent, ChangeEvent } from "react";
 import { InputField } from "../../../components";
 import { Link, useNavigate } from "react-router-dom";
 import { useMutation } from "react-query";
@@ -11,7 +11,13 @@ import {
   notifyFailure,
   notifySuccess,
 } from "../../../utils/Utils";
-
+type InputValues = {
+  first_name?: string;
+  last_name?: string;
+  email?: string;
+  phone_number?: string;
+  password?: string;
+};
 const inputs = [
   {
     label: "First Name",
@@ -46,7 +52,7 @@ const inputs = [
 ];
 
 export default function AdminSignUp() {
-  const [inputValues, setInputValues] = useState<any>({});
+  const [inputValues, setInputValues] = useState<InputValues>({});
   const navigate = useNavigate();
   const ADMIN_QUERY = `
   mutation($data: AdminInput!) {
@@ -56,7 +62,7 @@ export default function AdminSignUp() {
   }
 `;
 
-  const createAdmin = async (data: any) => {
+  const createAdmin = async (data: InputValues) => {
     return publicRequest
       .post("/graphql", {
         query: ADMIN_QUERY,
@@ -67,18 +73,18 @@ export default function AdminSignUp() {
 
   const { mutate, isSuccess, data } = useMutation(createAdmin);
 
-  const handleChange = (e: any) => {
-    setInputValues((prev: any) => ({
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setInputValues((prev: InputValues) => ({
       ...prev,
       [e.target.name]: e.target.value,
     }));
   };
 
-  const handleSubmit = (e: any) => {
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (Object.keys(inputValues).length === 5) {
       const passwordCheck: PasswordCheckType = isValidPassword(
-        inputValues?.password
+        inputValues?.password ?? ""
       );
       if (passwordCheck?.status) {
         mutate(inputValues);

@@ -7,7 +7,7 @@ import { loadingEnd, loadingStart } from "../../../redux/slices/loadingSlice";
 import { useDispatch } from "react-redux";
 import OTPInput from "react-otp-input";
 import { z } from "zod";
-import { Controller, useForm } from "react-hook-form";
+import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 const FormSchema = z.object({
@@ -16,13 +16,14 @@ const FormSchema = z.object({
     .min(1, { message: "Otp is required!" })
     .length(6, { message: "Enter all six digits!" }),
 });
+type FormValues = z.infer<typeof FormSchema>;
 
 const ForgotPasswordCode = () => {
   const {
     handleSubmit,
     control,
     formState: { errors },
-  } = useForm({ resolver: zodResolver(FormSchema) });
+  } = useForm<FormValues>({ resolver: zodResolver(FormSchema) });
   const { state } = useLocation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -33,7 +34,7 @@ const ForgotPasswordCode = () => {
     }
   }, [state?.for, navigate]);
 
-  const onSubmit = async (data: any) => {
+  const onSubmit: SubmitHandler<FormValues> = async (data) => {
     dispatch(loadingStart());
     const res = await verifyCode(data?.otp, state?.id, state?.for);
     dispatch(loadingEnd());

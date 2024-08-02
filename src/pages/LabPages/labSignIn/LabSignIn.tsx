@@ -13,20 +13,25 @@ import { USER_ROLES } from "../../../api/roles";
 import { setUser } from "../../../redux/slices/userSlice";
 import { getLabToken } from "../../../api/apiCalls/labApi";
 
-const inputs = [
-  {
-    label: "Email",
-    type: "email",
-    placeholder: "Enter your email",
-    name: "email",
-  },
-  {
-    label: "Password",
-    type: "password",
-    placeholder: "************",
-    name: "password",
-  },
-];
+const inputs: Array<{
+  label: string;
+  type: string;
+  placeholder: string;
+  name: keyof Inputs;
+}> = [
+    {
+      label: "Email",
+      type: "email",
+      placeholder: "Enter your email",
+      name: "email",
+    },
+    {
+      label: "Password",
+      type: "password",
+      placeholder: "************",
+      name: "password",
+    },
+  ];
 
 const FormSchema = z.object({
   email: z.string().min(1, { message: "Email is required" }).email(),
@@ -39,7 +44,7 @@ export default function LabSignIn() {
     handleSubmit,
     setError,
     formState: { errors },
-  } = useForm({ resolver: zodResolver(FormSchema) });
+  } = useForm<Inputs>({ resolver: zodResolver(FormSchema) });
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -64,7 +69,7 @@ export default function LabSignIn() {
   };
 
 
-  const onSubmit = async (data: any) => {
+  const onSubmit = async (data: Inputs) => {
     handleLogin(data);
   };
 

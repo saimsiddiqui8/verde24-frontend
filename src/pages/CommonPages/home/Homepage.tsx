@@ -103,15 +103,16 @@ const FormSchema = z.object({
   location: z.string().min(1, { message: "Location is required" }),
   search: z.string().min(1, { message: "Search is required" }),
 });
+type FormData = z.infer<typeof FormSchema>;
 
 export default function Homepage() {
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm({ resolver: zodResolver(FormSchema) });
+  } = useForm<FormData>({ resolver: zodResolver(FormSchema) });
 
-  const onSubmit = (data: any) => {
+  const onSubmit = (data: FormData) => {
     console.log(data);
   };
   return (
@@ -161,10 +162,10 @@ export default function Homepage() {
             <h5 className="text-white">Transform</h5>
           </div>
           <h2 className="text-2xl font-semibold text-center sm:text-start text-white mt-1">
-          Prepare for the Health Revolution:
+            Prepare for the Health Revolution:
           </h2>
           <h2 className="text-2xl font-semibold text-center sm:text-start text-white mt-1">
-          Verde24health Launching Soon!
+            Verde24health Launching Soon!
           </h2>
           <div className="w-40 mx-auto sm:mx-0">
             <Link to="/patient/sign-up">
@@ -196,18 +197,18 @@ export default function Homepage() {
       </div>
       <div className="mt-12 px-8">
         <h2 className="text-2xl font-semibold">
-        Access Premier Online Consultations with Leading Healthcare
+          Access Premier Online Consultations with Leading Healthcare
         </h2>
         <h2 className="text-2xl font-semibold">
-        Professionals for All Your Health Needs
+          Professionals for All Your Health Needs
         </h2>
         <p className="text-base">
           Secure Online Consultations: Trusted Doctors in Every Specialty.
         </p>
       </div>
       <div className="flex justify-evenly flex-wrap my-4">
-        {consult?.map((card,index) => (
-          <div key={index}  className="w-40 text-primary">
+        {consult?.map((card, index) => (
+          <div key={index} className="w-40 text-primary">
             <div className="overflow-clip relative">
               <img src={card?.img} alt="" className="w-full object-cover" />
             </div>
@@ -219,14 +220,14 @@ export default function Homepage() {
       </div>
       <div className="my-12 px-8">
         <h2 className="text-2xl font-semibold">
-        Schedule an appointment for an in-person consultation.
+          Schedule an appointment for an in-person consultation.
         </h2>
         <p className="text-base">
-        Discover skilled doctors in every specialty.
+          Discover skilled doctors in every specialty.
         </p>
       </div>
       <div className="flex justify-evenly flex-wrap my-8">
-        {appointment?.map((card ,index) => (
+        {appointment?.map((card, index) => (
           <div key={index} className="w-72 text-primary">
             <div className="overflow-clip relative">
               <img src={card?.img} alt="" className="w-full object-cover" />
@@ -252,8 +253,8 @@ export default function Homepage() {
           </div>
         </div>
         <div className="flex gap-4 flex-wrap justify-center sm:justify-start">
-          {appointment2?.map((card,index) => (
-            <div key={index}  className="w-72 text-primary">
+          {appointment2?.map((card, index) => (
+            <div key={index} className="w-72 text-primary">
               <div className="overflow-clip relative">
                 <img src={card?.img} alt="" className="w-full object-cover" />
               </div>
@@ -268,10 +269,10 @@ export default function Homepage() {
       <div className="w-5/6 h-[1px] bg-primary mx-auto my-8"></div>
       <div className="flex flex-col items-center justify-center gap-4 my-12 w-4/5 sm:w-1/2 md:w-1/4 mx-auto">
         <h2 className="text-2xl font-semibold text-center">
-        User testimonials
+          User testimonials
         </h2>
         <p className="text-base text-center">
-        Verde24 has been a game-changer for me. Easy to use, helpful reviews, and teleconsultation feature are lifesavers. Highly recommend!
+          Verde24 has been a game-changer for me. Easy to use, helpful reviews, and teleconsultation feature are lifesavers. Highly recommend!
         </p>
         <Button title="Learn more" className="text-sm w-28" />
       </div>

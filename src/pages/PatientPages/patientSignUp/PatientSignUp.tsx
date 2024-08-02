@@ -122,7 +122,7 @@ const OtpSchema = z.object({
     .length(6, { message: "Enter all six digits!" }),
 });
 
-export default function () {
+export default function PatientSignUp() {
   const {
     register,
     handleSubmit,

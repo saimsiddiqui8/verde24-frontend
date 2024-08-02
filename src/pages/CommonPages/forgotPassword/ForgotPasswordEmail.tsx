@@ -13,19 +13,20 @@ import { Toaster } from "react-hot-toast";
 import { loadingEnd, loadingStart } from "../../../redux/slices/loadingSlice";
 import { useDispatch } from "react-redux";
 import { z } from "zod";
-import { useForm } from "react-hook-form";
+import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 const FormSchema = z.object({
   email: z.string().min(1, { message: "Email is required!" }).email(),
 });
+type FormValues = z.infer<typeof FormSchema>;
 
 const ForgotPasswordEmail = () => {
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm({ resolver: zodResolver(FormSchema) });
+  } = useForm<FormValues>({ resolver: zodResolver(FormSchema) });
   const { state } = useLocation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -50,7 +51,7 @@ const ForgotPasswordEmail = () => {
     }
   };
 
-  const onSubmit = async (data: any) => {
+  const onSubmit: SubmitHandler<FormValues> = async (data) => {
     if (data?.email?.length > 0) {
       dispatch(loadingStart());
       if (state?.for === users.patient) {

@@ -112,7 +112,7 @@ export default function LabSignUp() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const createNewLab = async (data: any) => {
+  const createNewLab = async (data: object) => {
     return createLab(NEW_LAB_QUERY, { data });
   };
 

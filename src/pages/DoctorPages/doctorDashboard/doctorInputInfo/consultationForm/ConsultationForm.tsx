@@ -11,7 +11,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { isPhoneValid } from "../../../../../utils/Utils";
-import { useState, KeyboardEvent } from "react";
+import { useState, KeyboardEvent, ChangeEvent } from "react";
 import {
   getStorage,
   ref as storageRef,
@@ -254,7 +254,7 @@ export default function ConsultationForm() {
   } = useForm({ resolver: zodResolver(FormSchema) });
   const [services, setServices] = useState<string[]>([]);
   const [specializations, setSpecializations] = useState<string[]>([]);
-  const [image, setImage] = useState();
+  const [image, setImage] = useState<File | undefined>();
   const [payout, setPayout] = useState("upi");
   const id = useSelector((state: RootState) => state.user.currentUser?.id);
 
@@ -321,11 +321,13 @@ export default function ConsultationForm() {
     }
   };
 
-  const handleFileChange = (e: any) => {
-    const newImage = e.target.files[0];
-    console.log(newImage);
-    setImage(newImage);
-    setValue("doctor_image", newImage);
+  const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const newImage = e.target.files?.[0];
+    if (newImage) {
+      console.log(newImage);
+      setImage(newImage);
+      setValue("doctor_image", newImage);
+    }
   };
 
   const getDoctor = () => {
@@ -410,7 +412,7 @@ export default function ConsultationForm() {
                     <DropdownField
                       label={input?.label}
                       name={input?.name}
-                      options={input?.options!}
+                      options={input.options!}
                       placeholder={input?.placeholder}
                       properties={{ ...register(input?.name) }}
                       error={errors[input?.name]}

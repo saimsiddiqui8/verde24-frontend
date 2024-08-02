@@ -14,7 +14,11 @@ import { FaTrash } from "react-icons/fa";
 import { createDoctorTimeSlot } from "../../../../../api/apiCalls/doctorsApi";
 import { RootState } from "../../../../../redux/store";
 import { useSelector } from "react-redux";
-import { notifySuccess } from "../../../../../utils/Utils";
+import { notifyFailure, notifySuccess } from "../../../../../utils/Utils";
+
+interface FormData {
+  slot_time: string;
+}
 
 const FormSchema = z.object({
   slot_time: z.string().min(1, { message: "Slot Time is required" }),
@@ -39,13 +43,17 @@ export default function AddSlots() {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm({ resolver: zodResolver(FormSchema) });
+  } = useForm<FormData>({ resolver: zodResolver(FormSchema) });
   const [weekdays, setWeekdays] = useState<Days[]>(days);
   const [showSlotsModal, setShowSlotsModal] = useState(false);
   const selectedDay = weekdays?.find((day) => day?.selected);
   const allEmpty = weekdays.every((day) => day.slots.length === 0);
   const id = useSelector((state: RootState) => state.user.currentUser?.id);
 
+  if (!id) {
+    notifyFailure("User ID is not available.");
+    return;
+  }
   const setSelectedDay = (title: string) => {
     setWeekdays((prev) =>
       prev?.map((day) => {
@@ -59,28 +67,32 @@ export default function AddSlots() {
   };
 
   const deleteSlots = () => {
-    setWeekdays((prev) =>
-      prev?.map((day) => {
-        if (day?.title === selectedDay?.title) {
-          return { ...day, slots: [] };
-        } else {
-          return { ...day };
-        }
-      })
-    );
+    if (selectedDay) {
+      setWeekdays((prev) =>
+        prev?.map((day) => {
+          if (day?.title === selectedDay?.title) {
+            return { ...day, slots: [] };
+          } else {
+            return { ...day };
+          }
+        })
+      );
+    }
   };
 
-  const onSubmit = (data: any) => {
-    setWeekdays((prev) =>
-      prev?.map((day) => {
-        if (day?.title === selectedDay?.title) {
-          return { ...day, slots: [...day.slots, data.slot_time] };
-        } else {
-          return { ...day };
-        }
-      })
-    );
-    setShowSlotsModal(false);
+  const onSubmit = (data: FormData) => {
+    if (selectedDay) {
+      setWeekdays((prev) =>
+        prev?.map((day) => {
+          if (day?.title === selectedDay?.title) {
+            return { ...day, slots: [...day.slots, data.slot_time] };
+          } else {
+            return { ...day };
+          }
+        })
+      );
+      setShowSlotsModal(false);
+    }
   };
 
   const query = `mutation($data: DoctorTimeSlotInput!) {
@@ -158,7 +170,7 @@ export default function AddSlots() {
           <div className="flex justify-between items-center my-2">
             <div className="flex items-center gap-2">
               <h3 className="text-2xl font-semibold">Time Slots</h3>
-              {selectedDay?.slots?.length! > 0 && (
+              {selectedDay?.slots?.length && (
                 <span
                   className="flex gap-1 items-center font-bold text-sm text-red-500 cursor-pointer"
                   onClick={deleteSlots}
@@ -177,7 +189,7 @@ export default function AddSlots() {
             </div>
           </div>
           <div className="my-4">
-            {selectedDay?.slots?.length! > 0 ? (
+            {selectedDay?.slots?.length ? (
               <div className="flex gap-2 items-center flex-wrap">
                 {selectedDay?.slots?.map((slot) => (
                   <div className="py-1 px-4 font-bold text-white bg-gradient-to-b from-green-600 to-green-900">
