@@ -107,7 +107,7 @@ export default function LabSignUp() {
     resolver: zodResolver(OtpSchema),
   });
 
-  const [showSignupModal, setShowSignupModal] = useState(false);
+  const [showSignUpModal, setShowSignUpModal] = useState(false);
   const [showOTPModal, setShowOTPModal] = useState(false);
   const navigate = useNavigate();
   const dispatch = useDispatch();
