@@ -5,7 +5,6 @@ import {
   InputField,
 } from "../../../../components";
 import { Typography } from "@material-tailwind/react";
-// import { Card, Typography } from "@material-tailwind/react";
 
 const TABLE_HEAD = [
   "Doctor Name",
