@@ -35,7 +35,7 @@ export default function Prescriptions() {
             to={BASE_URL + link?.href}
             className="flex py-0.5 px-4 sm:px-8 border-b border-[#125DB94D]"
           >
-            {/* <img className="fill-blue-500" src={link?.icon} /> */}
+      
             {link?.title}
           </Link>
         ))}
