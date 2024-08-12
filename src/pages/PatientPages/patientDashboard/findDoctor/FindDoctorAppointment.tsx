@@ -11,7 +11,7 @@ import { GET_DOCTOR_QUERY } from "../../../DoctorPages/doctorDashboard/doctorInp
 
 const consultations = [
   { title: "Video Consultation" },
-  // { title: "Online Consultation" },
+ 
   // { title: "Hospital Consultation" },
 ];
 
