@@ -48,3 +48,34 @@ export interface UpdateDoctorVariables {
   id: string;
   data: UpdateDoctorData
 }
+
+export type FindDoctorByIdVariables = {
+  findDoctorByIdId: string;
+};
+export type DoctorAuthVariables = {
+  email: string;
+  password: string;
+};
+
+export type EmailVariables = {
+  email: string;
+};
+
+export type OtpVariables = {
+  email: string;
+  role: string;
+};
+
+export type VerifyOtpVariables = {
+  email: string;
+  role: string;
+  code: string;
+};
+
+export type CreateTimeSlotVariables = {
+  data: {
+    doctor_id: number;
+    weekday: string;
+    timeSlots: string[];
+  };
+};
