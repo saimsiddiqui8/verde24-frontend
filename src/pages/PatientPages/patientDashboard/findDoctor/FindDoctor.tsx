@@ -64,7 +64,7 @@ export default function FindDoctor() {
     const socket = io('http://localhost:8000/');
 
     socket.on('connect', () => {
-      console.log('Connected to sockets');
+      
     });
     socket.on('doctorStatusUpdated', (updatedDoctor: Doctor) => {
       setDoctors((prevDoctors) =>
