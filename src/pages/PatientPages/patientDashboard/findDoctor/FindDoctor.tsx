@@ -61,10 +61,11 @@ export default function FindDoctor() {
   }, [dispatch]);
 
   useEffect(() => {
-    const socket = io('http://localhost:8000/');
+    const BASE_URL = import.meta.env.BASE_URL;
+    const socket = io(BASE_URL);
 
     socket.on('connect', () => {
-      
+
     });
     socket.on('doctorStatusUpdated', (updatedDoctor: Doctor) => {
       setDoctors((prevDoctors) =>
