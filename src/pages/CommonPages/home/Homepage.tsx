@@ -1,8 +1,6 @@
 import { Link } from "react-router-dom";
 import doctorsImg from "../../../assets/doctors.png";
 import whiteLogoImg from "../../../assets/whiteLogo.png";
-// import syringeImg from "../../../assets/syringe.png";
-// import pillImg from "../../../assets/pill.png";
 import cardImg1 from "../../../assets/homeCards/card1.png";
 import cardImg2 from "../../../assets/homeCards/card2.png";
 import cardImg3 from "../../../assets/homeCards/card3.png";
