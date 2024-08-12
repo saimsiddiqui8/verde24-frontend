@@ -33,7 +33,7 @@ export default function OnlineAppointment() {
   useEffect(() => {
     dispatch(loadingStart());
     getHospitals().then(data => {
-      sethospitals(data);
+      setHospitals(data);
       dispatch(loadingEnd());
     }).catch(err => {
       console.log(err.toString());
