@@ -114,7 +114,7 @@ export default function FindDoctor() {
           </div>
         </div>
         <div className="flex gap-2 items-center my-4 flex-wrap">
-          <InputField label="Search By Speciality" className="flex-grow" />
+          <InputField label="Search By Specialty" className="flex-grow" />
           <InputField
             value={search}
             onChange={(e) => setSearch((e as React.ChangeEvent<HTMLInputElement>).target.value)}
