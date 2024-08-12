@@ -351,8 +351,8 @@ export default function LabSignUp() {
       </Modal>
       <Modal
         title="Enter Following Information"
-        showModal={showSignupModal}
-        setModal={setShowSignupModal}
+        showModal={showSignUpModal}
+        setModal={setShowSignUpModal}
       >
         <form className="space-y-4" onSubmit={handleSubmit(handleModalSubmit)}>
           <PhoneInputComp
