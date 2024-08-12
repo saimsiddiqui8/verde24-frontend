@@ -15,7 +15,7 @@ query {
 }
 `;
 export default function OnlineAppointment() {
-  const [hospitals, sethospitals] = useState([]);
+  const [hospitals, setHospitals] = useState([]);
   const dispatch = useDispatch()
 
 
