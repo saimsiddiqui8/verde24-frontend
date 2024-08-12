@@ -126,7 +126,6 @@ export default function TreatmentPlans() {
       </tbody>
     </table>
   </div>
-  {/* </Card> */}
 </DashboardSection>
   );
 }
