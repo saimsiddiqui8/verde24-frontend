@@ -21,17 +21,6 @@ const queryClient = new QueryClient({
 
 function App() {
 
-  // useEffect(() => {
-  //   const socket = io('http://localhost:8000/');
-
-  //   socket.on('connect', () => {
-  //     console.log('Connected to sockets');
-  //   });
-
-  //   return () => {
-  //     socket.disconnect();
-  //   };
-  // }, []);
 
   return (
     <Provider store={store}>
