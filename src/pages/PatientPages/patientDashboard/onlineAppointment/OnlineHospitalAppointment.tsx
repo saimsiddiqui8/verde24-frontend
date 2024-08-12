@@ -2,10 +2,8 @@ import { Button, DashboardSection, InputField } from "../../../../components";
 import doctorImg from "../../../../assets/doctor.png";
 import { Link, useParams } from "react-router-dom";
 import { FaCircle } from "react-icons/fa";
-// import { getDoctorById } from "../../../../api/apiCalls/doctorsApi";
 import { useEffect, useState } from "react";
-// import { Doctor } from "../../../../api/apiCalls/types";
-// import { publicRequest } from "../../../../../api/requestMethods";
+
 import { publicRequest } from "../../../../api/requestMethods";
 import { loadingEnd, loadingStart } from "../../../../redux/slices/loadingSlice";
 import { useDispatch } from "react-redux";
