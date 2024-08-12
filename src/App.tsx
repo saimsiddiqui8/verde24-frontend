@@ -5,8 +5,7 @@ import { store, persistor } from "./redux/store";
 import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
 import { Loading } from "./components";
-// import { useEffect } from "react";
-// import io from 'socket.io-client';
+ import { useEffect } from "react";
 
 
 

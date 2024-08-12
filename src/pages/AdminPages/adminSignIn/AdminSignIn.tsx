@@ -45,7 +45,7 @@ const FormSchema = z.object({
   password: z.string().min(1, { message: "Password is required" }),
 });
 
-export default function In() {
+export default function AdminSignIn() {
   const {
     register,
     handleSubmit,

@@ -54,7 +54,7 @@ export default function Navbar() {
         {location.pathname === "/" ? (
           <div className="gap-3 items-center hidden lg:flex">
             <Link className="flex gap-1 items-center" to="#">
-              For Corp-orates <BiChevronDown size={20} />
+              For Corporate <BiChevronDown size={20} />
             </Link>
             <Link className="flex gap-1 items-center" to="#">
               For Providers <BiChevronDown size={20} />
