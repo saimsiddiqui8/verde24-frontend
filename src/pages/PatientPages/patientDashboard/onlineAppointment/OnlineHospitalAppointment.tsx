@@ -19,7 +19,6 @@ query($id:String!) {
     phone_number,
     doctorHospitals{
       doctor_id,
-
     }
   }
 }
