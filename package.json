@@ -14,16 +14,12 @@
     "tsc": "tsc"
   },
   "dependencies": {
-    "@apollo/client": "^3.10.8",
     "@hookform/resolvers": "^3.3.4",
     "@material-tailwind/react": "^2.1.9",
     "@reduxjs/toolkit": "^2.0.1",
-    "antd": "^5.18.3",
     "axios": "^1.6.2",
     "firebase": "^10.6.0",
     "google-libphonenumber": "^3.2.34",
-    "graphql": "^16.9.0",
-    "graphql-ws": "^5.16.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.50.1",
@@ -37,7 +33,6 @@
     "react-router-dom": "^6.18.0",
     "redux-persist": "^6.0.0",
     "socket.io-client": "^4.7.5",
-    "subscriptions-transport-ws": "^0.11.0",
     "tailwind-merge": "^2.2.1",
     "zod": "^3.22.4"
   },
@@ -48,12 +43,9 @@
     "@typescript-eslint/eslint-plugin": "^6.0.0",
     "@typescript-eslint/parser": "^6.0.0",
     "@vitejs/plugin-react": "^4.0.3",
-    "autoprefixer": "^10.4.16",
     "eslint": "^8.57.0",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.3",
-    "postcss": "^8.4.31",
-    "tailwindcss": "^3.3.5",
     "typescript": "^5.0.2",
     "vite": "^4.4.5"
   }
