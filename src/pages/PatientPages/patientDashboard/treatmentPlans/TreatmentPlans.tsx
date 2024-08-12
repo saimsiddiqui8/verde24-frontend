@@ -64,7 +64,6 @@ export default function TreatmentPlans() {
     />
     <Button title="Search" className="w-full sm:w-fit" secondary />
   </div>
-  {/* <Card className="h-full w-full overflow-scroll"> */}
   <div className="overflow-x-auto">
     <table className="w-full min-w-max table-auto text-left">
       <thead>
