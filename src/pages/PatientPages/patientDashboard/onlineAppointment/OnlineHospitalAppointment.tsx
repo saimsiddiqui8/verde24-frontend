@@ -25,7 +25,6 @@ query($id:String!) {
 }
 `;
 const consultations = [
-  // { title: "Video Consultation" },
   { title: "Online Consultation" },
   { title: "Hospital Consultation" },
 ];
