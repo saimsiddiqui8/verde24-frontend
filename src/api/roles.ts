@@ -4,5 +4,4 @@ export const USER_ROLES = {
   admin: "4862",
   lab: "7860",
   pharmacy: "5125",
-  // hospital: "9322",
 };
