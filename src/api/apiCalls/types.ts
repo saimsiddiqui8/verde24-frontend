@@ -1,4 +1,3 @@
-import { string } from "zod";
 
 export interface Doctor {
   first_name: string;
