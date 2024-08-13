@@ -107,7 +107,7 @@ export default function PharmacySignUp() {
     resolver: zodResolver(OtpSchema),
   });
 
-  const [showSignupModal, setShowSignupModal] = useState(false);
+  const [showSignUpModal, setshowSignUpModal] = useState(false);
   const [showOTPModal, setShowOTPModal] = useState(false);
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -351,8 +351,8 @@ export default function PharmacySignUp() {
       </Modal>
       <Modal
         title="Enter Following Information"
-        showModal={showSignupModal}
-        setModal={setShowSignupModal}
+        showModal={showSignUpModal}
+        setModal={setshowSignUpModal}
       >
         <form className="space-y-4" onSubmit={handleSubmit(handleModalSubmit)}>
           <PhoneInputComp

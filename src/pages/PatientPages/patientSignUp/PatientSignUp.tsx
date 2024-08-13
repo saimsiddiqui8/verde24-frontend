@@ -140,7 +140,7 @@ export default function () {
   } = useForm({
     resolver: zodResolver(OtpSchema),
   });
-  const [showSignupModal, setShowSignupModal] = useState(false);
+  const [showSignUpModal, setshowSignUpModal] = useState(false);
   const [showOTPModal, setShowOTPModal] = useState(false);
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -244,7 +244,7 @@ export default function () {
     setValue("last_name", user?.last_name);
     setValue("email", user?.email);
     setValue("password", user?.password);
-    setShowSignupModal(true);
+    setshowSignUpModal(true);
   };
 
   const handleGoogleSignIn = async () => {
@@ -430,8 +430,8 @@ export default function () {
       </Modal>
       <Modal
         title="Enter Following Information"
-        showModal={showSignupModal}
-        setModal={setShowSignupModal}
+        showModal={showSignUpModal}
+        setModal={setshowSignUpModal}
       >
         <form className="space-y-4" onSubmit={handleSubmit(handleModalSubmit)}>
           <PhoneInputComp
