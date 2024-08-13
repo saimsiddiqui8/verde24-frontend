@@ -86,7 +86,7 @@ export default function AdminDoctorProfile() {
   useEffect(() => {
     setSelectedHospitals(hospitals);
     setVerified(doctorData?.data?.is_verified);
-  }, [doctorData.data,hospitals]);
+  }, [doctorData.data, hospitals]);
 
   const createDoctorHospital = async (data: { doctor_id: number; hospital_id: number }) => {
     try {
@@ -118,24 +118,23 @@ export default function AdminDoctorProfile() {
   const removeDoctorHospital = useMutation(deleteDoctorHospital);
 
   const handleAssignment = (value: string) => {
-    let current: CheckboxOption;
     const newArr = selectedHospitals?.map((item: CheckboxOption) => {
       if (value === item.value) {
-        current = item;
         return { ...item, checked: !item.checked };
       } else {
         return item;
       }
     });
-    if (current!.checked) {
+    const currentItem = newArr?.find((item) => item.value === value);
+    if (currentItem && currentItem.checked) {
       removeDoctorHospital.mutate(
         {
           doctor_id: parseInt(id!),
-          hospital_id: parseInt(current!.id),
+          hospital_id: parseInt(currentItem.id),
         },
         {
           onSuccess: () => {
-            notifySuccess(`${current?.value} removed!`);
+            notifySuccess(`${currentItem?.value} removed!`);
             queryClient.invalidateQueries({
               queryKey: ["adminHospitals"],
             });
@@ -148,15 +147,15 @@ export default function AdminDoctorProfile() {
           },
         }
       );
-    } else {
+    } else if (currentItem) {
       addDoctorHospital.mutate(
         {
           doctor_id: parseInt(id!),
-          hospital_id: parseInt(current!.id),
+          hospital_id: parseInt(currentItem.id),
         },
         {
           onSuccess: () => {
-            notifySuccess(`${current?.value} assigned!`);
+            notifySuccess(`${currentItem?.value} assigned!`);
             queryClient.invalidateQueries({
               queryKey: ["adminHospitals"],
             });
@@ -229,55 +228,55 @@ export default function AdminDoctorProfile() {
 
   return (
     <DashboardSection
-  title={
-    "Dr. " +
-    doctorData?.data?.first_name +
-    " " +
-    doctorData?.data?.last_name
-  }
->
-  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 my-2 items-start">
-    <div className="flex flex-col lg:flex-row items-start justify-start text-xs font-bold gap-2">
-      <span>Name:</span>
-      <span>
-        {doctorData?.data?.first_name + " " + doctorData?.data?.last_name}
-      </span>
-    </div>
-    <div className="flex flex-col lg:flex-row items-start justify-start text-xs font-bold gap-2">
-      <span>Email:</span>
-      <span>{doctorData?.data?.email}</span>
-    </div>
-    <div className="flex flex-col lg:flex-row items-start justify-start text-xs font-bold gap-2">
-      <span>Phone Number:</span>
-      <span>{doctorData?.data?.phone_number}</span>
-    </div>
-    <div className="flex flex-col lg:flex-row items-start justify-start text-xs font-bold gap-2">
-      <span>Gender:</span>
-      <span>{doctorData?.data?.gender}</span>
-    </div>
-    <div>
-      <span>Hospital Assignment:</span>
-      <CheckboxInput
-        options={selectedHospitals}
-        name="hospital_assignment"
-        onChange={(e) => handleAssignment(e.target.value)}
-      />
-    </div>
-    <div className="flex flex-col lg:flex-row items-start justify-start text-xs font-bold gap-2">
-      <span>Verified:</span>
-      <label className="relative inline-flex flex-col lg:flex-row items-start justify-start text-xs font-bold cursor-pointer">
-        <input
-          type="checkbox"
-          checked={verified}
-          onChange={() => handleVerify()}
-          className="sr-only peer"
-        />
-        <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
-      </label>
-    </div>
-  </div>
-  <Toaster />
-</DashboardSection>
+      title={
+        "Dr. " +
+        doctorData?.data?.first_name +
+        " " +
+        doctorData?.data?.last_name
+      }
+    >
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 my-2 items-start">
+        <div className="flex flex-col lg:flex-row items-start justify-start text-xs font-bold gap-2">
+          <span>Name:</span>
+          <span>
+            {doctorData?.data?.first_name + " " + doctorData?.data?.last_name}
+          </span>
+        </div>
+        <div className="flex flex-col lg:flex-row items-start justify-start text-xs font-bold gap-2">
+          <span>Email:</span>
+          <span>{doctorData?.data?.email}</span>
+        </div>
+        <div className="flex flex-col lg:flex-row items-start justify-start text-xs font-bold gap-2">
+          <span>Phone Number:</span>
+          <span>{doctorData?.data?.phone_number}</span>
+        </div>
+        <div className="flex flex-col lg:flex-row items-start justify-start text-xs font-bold gap-2">
+          <span>Gender:</span>
+          <span>{doctorData?.data?.gender}</span>
+        </div>
+        <div>
+          <span>Hospital Assignment:</span>
+          <CheckboxInput
+            options={selectedHospitals}
+            name="hospital_assignment"
+            onChange={(e) => handleAssignment(e.target.value)}
+          />
+        </div>
+        <div className="flex flex-col lg:flex-row items-start justify-start text-xs font-bold gap-2">
+          <span>Verified:</span>
+          <label className="relative inline-flex flex-col lg:flex-row items-start justify-start text-xs font-bold cursor-pointer">
+            <input
+              type="checkbox"
+              checked={verified}
+              onChange={() => handleVerify()}
+              className="sr-only peer"
+            />
+            <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
+          </label>
+        </div>
+      </div>
+      <Toaster />
+    </DashboardSection>
 
   );
 }
