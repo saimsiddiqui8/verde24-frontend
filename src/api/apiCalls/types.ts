@@ -1,3 +1,5 @@
+import { string } from "zod";
+
 export interface Doctor {
   first_name: string;
   last_name: string;
@@ -81,7 +83,9 @@ export type CreateTimeSlotVariables = {
 };
 
 
-export interface createDoctorData {
-  email: string;
-  password: string;
+export type createDoctorData = {
+  data: {
+    email: string,
+    password: string,
+  }
 }
