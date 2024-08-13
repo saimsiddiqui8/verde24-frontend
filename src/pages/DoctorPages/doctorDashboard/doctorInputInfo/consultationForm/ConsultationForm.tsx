@@ -39,7 +39,7 @@ const inputs = [
     label: "Gender",
     type: "dropdown",
     placeholder: "Select Your Gender",
-    name: "gender",
+    name: "Gender",
     options: [
       { label: "Male", value: "male" },
       { label: "Female", value: "female" },
@@ -122,10 +122,46 @@ const contactDetails = [
   },
 ];
 
+const Qualification = [
+  {
+    label: "Institute",
+    type: "text",
+    placeholder: "Enter Your Institute Name",
+    name: "Institute",
+  },
+  {
+    label: "Degree",
+    type: "text",
+    placeholder: "Enter Your Specialization",
+    name: "Degree",
+  },
+];
+
+const Experience= [
+  {
+    label: "Institute",
+    type: "text",
+    placeholder: "Enter Your Institute Name",
+    name: "Institute",
+  },
+  {
+    label: "Designation",
+    type: "text",
+    placeholder: "Enter Your Designation",
+    name: "Designation",
+  },
+ {
+    label: "Years of Experience",
+    type: "text",
+    placeholder: "Enter Your Experience",
+    name: "Years of Experience",
+  },
+];
+
 const options = [
   { label: "Video Consultation", value: "male" },
-  { label: "Clinic/ Hospital Visit", value: "female" },
-  { label: "Both", value: "female" },
+  // { label: "Clinic/ Hospital Visit", value: "female" },
+  // { label: "Both", value: "female" },
 ];
 
 const consultationFee = [
@@ -396,8 +432,8 @@ export default function ConsultationForm() {
           </div>
           <div className="col-span-7">
             <div className="grid grid-cols-12 gap-x-4 gap-y-0">
-              {inputs?.map((input) => (
-                <div className="col-span-6">
+              {inputs?.map((input,index) => (
+                <div className="col-span-6" key={index}>
                   {input?.name === "phone_number" ? (
                     <PhoneInputComp
                       label={input?.label}
@@ -465,8 +501,8 @@ export default function ConsultationForm() {
       <DashboardSection title={"Consultation Fee"}>
         <>
           <div className="grid grid-cols-12 gap-x-4 gap-y-0">
-            {consultationFee?.map((input) => (
-              <div className="col-span-4">
+            {consultationFee?.map((input,index) => (
+              <div className="col-span-4" key={index}>
                 <InputField
                   label={input?.label}
                   name={input?.name}
@@ -573,8 +609,8 @@ export default function ConsultationForm() {
       </DashboardSection>
       <DashboardSection title={"Contact Details"}>
         <div className="grid grid-cols-12 gap-x-4 gap-y-0">
-          {contactDetails?.map((input) => (
-            <div className="col-span-4">
+          {contactDetails?.map((input,index) => (
+            <div className="col-span-4" key={index}>
               <InputField
                 label={input.label}
                 name={input.name}
@@ -616,8 +652,8 @@ export default function ConsultationForm() {
                 onKeyDown={handleSpecializations}
               />
               <div className="flex gap-2 flex-wrap mb-2">
-                {specializations?.map((specialization: string) => (
-                  <span className="py-1 px-2 rounded-md bg-primary text-white text-sm">
+                {specializations?.map((specialization: string,index) => (
+                  <span key={index} className="py-1 px-2 rounded-md bg-primary text-white text-sm">
                     {specialization}
                   </span>
                 ))}
@@ -627,16 +663,34 @@ export default function ConsultationForm() {
           <p>Type and press to add new Services and Specialization.</p>
         </>
       </DashboardSection>
-      <DashboardSection title={"Education (Optional)"}>
-        <div className="flex items-center gap-2 text-base">
-          <IoMdAddCircle size={20} />
-          Add Row
+      <DashboardSection title={"Qualification"}>
+      <div className="grid grid-cols-12 gap-x-4 gap-y-0">
+          { Qualification?.map((input,index) => (
+            <div className="col-span-4" key={index}>
+              <InputField
+                label={input.label}
+                name={input.name}
+                placeholder={input.placeholder}
+                properties={{ ...register(input?.name) }}
+                error={errors[input?.name]}
+              />
+            </div>
+          ))}
         </div>
       </DashboardSection>
-      <DashboardSection title={"Experience (Optional)"}>
-        <div className="flex items-center gap-2 text-base">
-          <IoMdAddCircle size={20} />
-          Add Row
+      <DashboardSection title={"Experience"}>
+      <div className="grid grid-cols-12 gap-x-4 gap-y-0">
+          { Experience?.map((input,index) => (
+            <div className="col-span-4" key={index}>
+              <InputField
+                label={input.label}
+                name={input.name}
+                placeholder={input.placeholder}
+                properties={{ ...register(input?.name) }}
+                error={errors[input?.name]}
+              />
+            </div>
+          ))}
         </div>
       </DashboardSection>
       <DashboardSection title={"Membership (Optional)"}>

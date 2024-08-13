@@ -60,7 +60,6 @@ export default function TreatmentPlans() {
       options={[]}
       name="doctors"
       placeholder="Search by doctors"
-      className="w-full sm:w-auto"
     />
     <Button title="Search" className="w-full sm:w-fit" secondary />
   </div>

@@ -18,11 +18,13 @@ export default function Navbar() {
   const location = useLocation();
 
   const handleLogout = async () => {
+    console.log("hey loguout dr")
     if (!user?.token) return null;
     await logoutQuery(user?.token)
     if (user?.role === USER_ROLES.admin) {
       navigate("/admin/sign-in");
     } else if (user?.role === USER_ROLES.doctor) {
+      console.log("hey loguout in if")
       navigate("/doctor/sign-in");
     } else if (user?.role === USER_ROLES.pharmacy) {
       navigate("/pharmacy/sign-in");
