@@ -29,34 +29,33 @@ export default function AdminPatients() {
   });
   return (
     <DashboardSection title="Patients">
-  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 my-2">
-    {data?.map((patient: Patient) => (
-      <div
-        key={patient?.id}
-        className="bg-gray-50 shadow rounded-lg px-4 py-4"
-      >
-        <div className="flex justify-center">
-          <FaUserCircle size={50} />
-        </div>
-        <h3 className="text-primary text-lg font-medium text-center my-2 whitespace-nowrap">
-          {patient?.first_name + " " + patient?.last_name}
-        </h3>
-        <div className="w-4/5 mx-auto mt-4">
-          <Link to={`/admin-dashboard/patients/${patient?.id}`}>
-            <button className="form-btn text-sm">View Profile</button>
-          </Link>
-        </div>
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 my-2">
+        {data?.map((patient: Patient) => (
+          <div
+            key={patient?.id}
+            className="bg-gray-50 shadow rounded-lg px-4 py-4"
+          >
+            <div className="flex justify-center">
+              <FaUserCircle size={50} />
+            </div>
+            <h3 className="text-primary text-lg font-medium text-center my-2 whitespace-nowrap">
+              {patient?.first_name + " " + patient?.last_name}
+            </h3>
+            <div className="w-4/5 mx-auto mt-4">
+              <Link to={`/admin-dashboard/patients/${patient?.id}`}>
+                <button className="form-btn text-sm">View Profile</button>
+              </Link>
+            </div>
+          </div>
+        ))}
       </div>
-    ))}
-  </div>
-  {/* This section for adding a new doctor is commented out. If you need to add similar functionality for patients, adjust the Link and button text accordingly. */}
-  {/* <div className="w-48 mx-auto">
+      {/* This section for adding a new doctor is commented out. If you need to add similar functionality for patients, adjust the Link and button text accordingly. */}
+      {/* <div className="w-48 mx-auto">
     <Link to="/admin-dashboard/doctors/add-new">
       <button className="form-btn my-3">Add New Doctor</button>
     </Link>
   </div> */}
-</DashboardSection>
-
+    </DashboardSection>
   );
 }
 

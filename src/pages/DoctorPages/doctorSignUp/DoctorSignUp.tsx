@@ -203,7 +203,7 @@ export default function DoctorSignUp() {
       setError(
         "email",
         { message: "Email Already Exists!" },
-        { shouldFocus: true }
+        { shouldFocus: true },
       );
       dispatch(loadingEnd());
     } else {
@@ -253,7 +253,10 @@ export default function DoctorSignUp() {
               </Link>
             </small>
           </div>
-          <form onSubmit={handleSubmit(onSubmit)} className="pt-2 pb-6 pr-7 lg:px-5">
+          <form
+            onSubmit={handleSubmit(onSubmit)}
+            className="pt-2 pb-6 pr-7 lg:px-5"
+          >
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4">
               {inputs?.map((input, index) => (
                 <div key={index} className="col-span-1">
@@ -372,6 +375,5 @@ export default function DoctorSignUp() {
         </form>
       </Modal>
     </main>
-
   );
 }

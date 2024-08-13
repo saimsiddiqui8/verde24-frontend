@@ -15,7 +15,7 @@ export default function RadioInput({
         </label>
       )}
       <div className="flex justify-evenly mt-2">
-        {options?.map((option , index) => (
+        {options?.map((option, index) => (
           <div key={index} className="flex items-center me-4">
             <input
               type="radio"

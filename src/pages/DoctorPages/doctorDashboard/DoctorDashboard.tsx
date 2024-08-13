@@ -27,7 +27,9 @@ export default function DoctorDashboard() {
   const dispatch = useDispatch();
 
   const getDoctor = async () => {
-    return await getDoctorById(GET_DOCTOR_QUERY, { findDoctorByIdId: String(id) });
+    return await getDoctorById(GET_DOCTOR_QUERY, {
+      findDoctorByIdId: String(id),
+    });
   };
 
   const doctorData = useQuery({

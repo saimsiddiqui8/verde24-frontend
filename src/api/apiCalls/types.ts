@@ -1,4 +1,3 @@
-
 export interface Doctor {
   first_name: string;
   last_name: string;
@@ -47,7 +46,7 @@ interface UpdateDoctorData {
 }
 export interface UpdateDoctorVariables {
   id: string;
-  data: UpdateDoctorData
+  data: UpdateDoctorData;
 }
 
 export type FindDoctorByIdVariables = {
@@ -81,10 +80,9 @@ export type CreateTimeSlotVariables = {
   };
 };
 
-
 export type createDoctorData = {
   data: {
-    email: string,
-    password: string,
-  }
-}
+    email: string;
+    password: string;
+  };
+};

@@ -12,13 +12,13 @@ const Field = ({
     <div className="my-6">
       <label
         className={`block text-sm font-medium ${
-          error ? 'text-crimson' : 'text-primary'
+          error ? "text-crimson" : "text-primary"
         }`}
       >
         {label}
         <select
           className={`w-full mt-1 px-3 py-2 bg-white shadow-sm border ${
-            error ? 'border-crimson' : 'border-primary'
+            error ? "border-crimson" : "border-primary"
           } rounded-md focus:outline-none focus:ring-primary focus:border-primary`}
           name={name}
           {...properties}
@@ -52,7 +52,7 @@ interface FieldProps {
   label?: string;
   name: string;
   properties?: any;
-  className?:string;
+  className?: string;
   error?: any;
   disabled?: boolean;
 }

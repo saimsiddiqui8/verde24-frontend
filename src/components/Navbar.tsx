@@ -19,9 +19,9 @@ export default function Navbar() {
 
   const handleLogout = async () => {
     if (!user?.token) {
-      return null ;
+      return null;
     }
-    await logoutQuery(user?.token)
+    await logoutQuery(user?.token);
     if (user?.role === USER_ROLES.admin) {
       navigate("/admin/sign-in");
     } else if (user?.role === USER_ROLES.doctor) {
@@ -64,9 +64,7 @@ export default function Navbar() {
             <Link className="flex gap-1 items-center" to="#">
               Security & Help <BiChevronDown size={20} />
             </Link>
-
           </div>
-
         ) : (
           <button className="py-1.5 px-6 rounded-[30px] btn-back text-white flex items-center gap-2">
             <FiPhoneCall fill="transparent" stroke="white" />
@@ -76,10 +74,7 @@ export default function Navbar() {
         <div className="relative">
           <div
             className="border-2 border-[#3FB946] flex gap-2 py-1.5 px-3 rounded"
-            onClick={() =>
-              setShowDropdown(!showDropdown)
-
-            }
+            onClick={() => setShowDropdown(!showDropdown)}
           >
             <FaUserAlt className="text-[#125DB9] text-lg" />
             <BiChevronDown className="text-[#125DB9] text-lg" />
@@ -94,12 +89,14 @@ export default function Navbar() {
               aria-labelledby="dropdownDefaultButton"
             >
               <li>
-                {user?.token ? <span
-                  className="block px-4 py-2 text-primary hover:bg-blue-600 hover:text-white cursor-pointer"
-                  onClick={() => handleLogout()}
-                >
-                  Logout
-                </span> :
+                {user?.token ? (
+                  <span
+                    className="block px-4 py-2 text-primary hover:bg-blue-600 hover:text-white cursor-pointer"
+                    onClick={() => handleLogout()}
+                  >
+                    Logout
+                  </span>
+                ) : (
                   location.pathname === "/" && (
                     <Link to="/patient/sign-in">
                       <span
@@ -110,7 +107,7 @@ export default function Navbar() {
                       </span>
                     </Link>
                   )
-                }
+                )}
               </li>
             </ul>
           </div>

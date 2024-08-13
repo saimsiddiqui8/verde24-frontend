@@ -36,7 +36,7 @@ import {
   sendPatientOTP,
   verifyPatientOTP,
 } from "../../../api/apiCalls/patientsApi";
-import {  CreatePatientType } from "../../../api/apiCalls/types";
+import { CreatePatientType } from "../../../api/apiCalls/types";
 
 const inputs = [
   {

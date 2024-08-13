@@ -185,7 +185,9 @@ export default function PatientProfile() {
         <div>
           <form onSubmit={handleSubmit(onSubmit)} className="pt-2 pb-6">
             <div className="flex justify-between items-center my-4">
-              <h2 className="text-2xl md:text-3xl font-semibold">Patient Profile</h2>
+              <h2 className="text-2xl md:text-3xl font-semibold">
+                Patient Profile
+              </h2>
               <div className="flex gap-2">
                 <Button
                   title="Edit"
@@ -193,7 +195,14 @@ export default function PatientProfile() {
                   type="button"
                   onClick={() => setEdit(true)}
                 />
-                {edit && <Button onClick={() => setEdit(false)} title="Save" className="w-20" type="submit" />}
+                {edit && (
+                  <Button
+                    onClick={() => setEdit(false)}
+                    title="Save"
+                    className="w-20"
+                    type="submit"
+                  />
+                )}
               </div>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4">
@@ -224,7 +233,6 @@ export default function PatientProfile() {
         </div>
         <Toaster />
       </DashboardSection>
-
     </>
   );
 }

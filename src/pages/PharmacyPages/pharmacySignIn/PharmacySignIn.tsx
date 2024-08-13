@@ -63,7 +63,6 @@ export default function PharmacySignIn() {
     }
   };
 
-
   const onSubmit = async (data: any) => {
     handleLogin(data);
   };
@@ -93,7 +92,8 @@ export default function PharmacySignIn() {
               </small>
             </div>
             {inputs?.map((input, index) => (
-              <InputField key={index}
+              <InputField
+                key={index}
                 label={input.label}
                 name={input.name}
                 type={input.type}

@@ -35,7 +35,7 @@ export default function AdminHospitalProfile() {
         return [];
       }
       const ids = doctorHospitals.map((i: { doctor_id: string }) =>
-        parseInt(i.doctor_id)
+        parseInt(i.doctor_id),
       );
       const response = await publicRequest.post("/graphql", {
         query: DOCTOR_QUERY,
@@ -58,7 +58,7 @@ export default function AdminHospitalProfile() {
 
   useEffect(() => {
     doctorData.refetch();
-  }, [doctorHospitals,doctorData]);
+  }, [doctorHospitals, doctorData]);
 
   if (!hospitalData?.data) {
     return (
@@ -80,40 +80,39 @@ export default function AdminHospitalProfile() {
 
   return (
     <DashboardSection title={hospitalData?.data?.name}>
-  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 my-2">
-    <div className="flex flex-col lg:flex-row items-start justify-start text-xs font-bold gap-2">
-      <span>Name:</span>
-      <span>{hospitalData?.data?.name}</span>
-    </div>
-    <div className="flex flex-col lg:flex-row items-start justify-start text-xs font-bold gap-2">
-      <span>Location:</span>
-      <span>{hospitalData?.data?.location}</span>
-    </div>
-    <div className="flex flex-col lg:flex-row items-start justify-start text-xs font-bold gap-2">
-      <span>Phone Number:</span>
-      <span>{hospitalData?.data?.phone_number}</span>
-    </div>
-  </div>
-  <div className="mt-2">
-    <h3 className="text-base font-medium">Doctors Assigned:</h3>
-    <div className="mt-2">
-      <ul className="pl-6">
-        {doctorData?.data?.length > 0 ? (
-          doctorData?.data?.map((doctor: Doctor) => (
-            <li key={doctor.id} className="list-disc">
-              <Link to={`/admin-dashboard/doctors/${doctor?.id}`}>
-                {"Dr. " + doctor?.first_name + " " + doctor?.last_name}
-              </Link>
-            </li>
-          ))
-        ) : (
-          <small>No Doctors to Show!</small>
-        )}
-      </ul>
-    </div>
-  </div>
-</DashboardSection>
-
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 my-2">
+        <div className="flex flex-col lg:flex-row items-start justify-start text-xs font-bold gap-2">
+          <span>Name:</span>
+          <span>{hospitalData?.data?.name}</span>
+        </div>
+        <div className="flex flex-col lg:flex-row items-start justify-start text-xs font-bold gap-2">
+          <span>Location:</span>
+          <span>{hospitalData?.data?.location}</span>
+        </div>
+        <div className="flex flex-col lg:flex-row items-start justify-start text-xs font-bold gap-2">
+          <span>Phone Number:</span>
+          <span>{hospitalData?.data?.phone_number}</span>
+        </div>
+      </div>
+      <div className="mt-2">
+        <h3 className="text-base font-medium">Doctors Assigned:</h3>
+        <div className="mt-2">
+          <ul className="pl-6">
+            {doctorData?.data?.length > 0 ? (
+              doctorData?.data?.map((doctor: Doctor) => (
+                <li key={doctor.id} className="list-disc">
+                  <Link to={`/admin-dashboard/doctors/${doctor?.id}`}>
+                    {"Dr. " + doctor?.first_name + " " + doctor?.last_name}
+                  </Link>
+                </li>
+              ))
+            ) : (
+              <small>No Doctors to Show!</small>
+            )}
+          </ul>
+        </div>
+      </div>
+    </DashboardSection>
   );
 }
 

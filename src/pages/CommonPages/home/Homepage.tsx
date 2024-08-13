@@ -96,7 +96,6 @@ const appointment = [
   },
 ];
 
-
 const FormSchema = z.object({
   location: z.string().min(1, { message: "Location is required" }),
   search: z.string().min(1, { message: "Search is required" }),
@@ -113,7 +112,6 @@ export default function Homepage() {
     console.log(data);
   };
   return (
-
     <div>
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="my-8 flex flex-col sm:flex-row gap-2 sm:gap-4 px-8 items-center">
@@ -159,10 +157,10 @@ export default function Homepage() {
             <h5 className="text-white">Transform</h5>
           </div>
           <h2 className="text-2xl font-semibold text-center sm:text-start text-white mt-1">
-          Prepare for the Health Revolution:
+            Prepare for the Health Revolution:
           </h2>
           <h2 className="text-2xl font-semibold text-center sm:text-start text-white mt-1">
-          Verde24health Launching Soon!
+            Verde24health Launching Soon!
           </h2>
           <div className="w-40 mx-auto sm:mx-0">
             <Link to="/patient/sign-up">
@@ -194,18 +192,18 @@ export default function Homepage() {
       </div>
       <div className="mt-12 px-8">
         <h2 className="text-2xl font-semibold">
-        Access Premier Online Consultations with Leading Healthcare
+          Access Premier Online Consultations with Leading Healthcare
         </h2>
         <h2 className="text-2xl font-semibold">
-        Professionals for All Your Health Needs
+          Professionals for All Your Health Needs
         </h2>
         <p className="text-base">
           Secure Online Consultations: Trusted Doctors in Every Specialty.
         </p>
       </div>
       <div className="flex justify-evenly flex-wrap my-4">
-        {consult?.map((card,index) => (
-          <div key={index}  className="w-40 text-primary">
+        {consult?.map((card, index) => (
+          <div key={index} className="w-40 text-primary">
             <div className="overflow-clip relative">
               <img src={card?.img} alt="" className="w-full object-cover" />
             </div>
@@ -217,14 +215,14 @@ export default function Homepage() {
       </div>
       <div className="my-12 px-8">
         <h2 className="text-2xl font-semibold">
-        Schedule an appointment for an in-person consultation.
+          Schedule an appointment for an in-person consultation.
         </h2>
         <p className="text-base">
-        Discover skilled doctors in every specialty.
+          Discover skilled doctors in every specialty.
         </p>
       </div>
       <div className="flex justify-evenly flex-wrap my-8">
-        {appointment?.map((card ,index) => (
+        {appointment?.map((card, index) => (
           <div key={index} className="w-72 text-primary">
             <div className="overflow-clip relative">
               <img src={card?.img} alt="" className="w-full object-cover" />
@@ -250,14 +248,16 @@ export default function Homepage() {
           </div>
         </div>
         <div className="flex gap-4 flex-wrap justify-center sm:justify-start">
-          {appointment2?.map((card,index) => (
-            <div key={index}  className="w-72 text-primary">
+          {appointment2?.map((card, index) => (
+            <div key={index} className="w-72 text-primary">
               <div className="overflow-clip relative">
                 <img src={card?.img} alt="" className="w-full object-cover" />
               </div>
               <div className="flex flex-col items-center gap-2 justify-center p-2">
                 <h4 className="text-lg text-center">{card?.title}</h4>
-                <p className="text-lg text-center md:text-start">{card?.desc}</p>
+                <p className="text-lg text-center md:text-start">
+                  {card?.desc}
+                </p>
               </div>
             </div>
           ))}
@@ -266,10 +266,11 @@ export default function Homepage() {
       <div className="w-5/6 h-[1px] bg-primary mx-auto my-8"></div>
       <div className="flex flex-col items-center justify-center gap-4 my-12 w-4/5 sm:w-1/2 md:w-1/4 mx-auto">
         <h2 className="text-2xl font-semibold text-center">
-        User testimonials
+          User testimonials
         </h2>
         <p className="text-base text-center">
-        Verde24 has been a game-changer for me. Easy to use, helpful reviews, and teleconsultation feature are lifesavers. Highly recommend!
+          Verde24 has been a game-changer for me. Easy to use, helpful reviews,
+          and teleconsultation feature are lifesavers. Highly recommend!
         </p>
         <Button title="Learn more" className="text-sm w-28" />
       </div>
@@ -283,17 +284,13 @@ export default function Homepage() {
           />
         </div>
         <div className="w-11/12 sm:w-80 flex flex-col gap-2">
-          <h2 className="text-2xl font-semibold ">
-            Download the Verde app
-          </h2>
+          <h2 className="text-2xl font-semibold ">Download the Verde app</h2>
           <p className="text-sm ">
             Access video consultation with United State’s top doctors on the
             Verde app. Connect with doctors online, available 24/7, from the
             comfort of your home
           </p>
-          <p className="text-base ">
-            Get the link to download the app
-          </p>
+          <p className="text-base ">Get the link to download the app</p>
           <div className="flex flex-col sm:flex-row items-center gap-2">
             <InputField label="Email" placeholder="Enter Email" />
             <Button title="Send Email" className="text-sm w-28" />

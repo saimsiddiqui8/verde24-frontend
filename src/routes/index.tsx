@@ -31,7 +31,7 @@ import {
   SelectSlot,
   TreatmentPlans,
 } from "../pages/PatientPages";
-import OnlineHospitalAppointment from '../pages/PatientPages/patientDashboard/onlineAppointment/OnlineHospitalAppointment.tsx';
+import OnlineHospitalAppointment from "../pages/PatientPages/patientDashboard/onlineAppointment/OnlineHospitalAppointment.tsx";
 import {
   DoctorProfile,
   DoctorSignIn,
@@ -201,6 +201,6 @@ export const router = createBrowserRouter(
         </Route>
       </Route>
       <Route path="/*" element={<Page404 />} />
-    </>
-  )
+    </>,
+  ),
 );

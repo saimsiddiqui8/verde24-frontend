@@ -1,4 +1,4 @@
- import image from "../../../assets/sign-up.png";
+import image from "../../../assets/sign-up.png";
 import { useEffect, useState } from "react";
 import {
   Button,
@@ -20,8 +20,18 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import OTPInput from "react-otp-input";
 import { loadingEnd, loadingStart } from "../../../redux/slices/loadingSlice";
-import { EXISTING_PHARMACY_QUERY, NEW_PHARMACY_QUERY, SEND_OTP_QUERY, VERIFY_OTP_QUERY } from "./queries";
-import { createPharmacy, findPharmacyByEmail, sendPharmacyOTP, verifyPharmacyOTP } from "../../../api/apiCalls/pharmacyApi";
+import {
+  EXISTING_PHARMACY_QUERY,
+  NEW_PHARMACY_QUERY,
+  SEND_OTP_QUERY,
+  VERIFY_OTP_QUERY,
+} from "./queries";
+import {
+  createPharmacy,
+  findPharmacyByEmail,
+  sendPharmacyOTP,
+  verifyPharmacyOTP,
+} from "../../../api/apiCalls/pharmacyApi";
 import { useDispatch } from "react-redux";
 import { useMutation, useQuery } from "react-query";
 
@@ -87,7 +97,6 @@ const OtpSchema = z.object({
 });
 
 export default function PharmacySignUp() {
-
   const {
     register,
     handleSubmit,
@@ -170,7 +179,6 @@ export default function PharmacySignUp() {
     }
   };
 
-
   const onSubmit = async () => {
     handleValidation();
   };
@@ -182,7 +190,7 @@ export default function PharmacySignUp() {
   const handleOTPSubmit = async () => {
     dispatch(loadingStart());
     const verify = await verifyOTPData.refetch();
-    console.log(verify)
+    console.log(verify);
     dispatch(loadingEnd());
     if (verify?.status === "success") {
       notifySuccess("OTP Verified!");
@@ -209,7 +217,7 @@ export default function PharmacySignUp() {
       }
       dispatch(loadingEnd());
     }
-  }, [data,dispatch,navigate,reset]);
+  }, [data, dispatch, navigate, reset]);
 
   return (
     <main className="grid grid-cols-1 md:grid-cols-12 items-center p-4">

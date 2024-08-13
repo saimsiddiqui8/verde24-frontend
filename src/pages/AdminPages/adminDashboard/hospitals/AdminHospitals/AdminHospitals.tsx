@@ -25,33 +25,34 @@ export default function AdminHospitals() {
 
   return (
     <DashboardSection title="Hospitals">
-  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 my-2">
-    {data?.map((hospital: Hospital) => (
-      <div
-        key={hospital?.id}
-        className="bg-gray-50 shadow rounded-lg px-4 py-4"
-      >
-        <div className="flex justify-center">
-          <FaHospitalAlt size={50} />
-        </div>
-        <h3 className="text-primary text-lg font-medium text-center my-2">
-          {hospital?.name}
-        </h3>
-        <div className="w-4/5 mx-auto mt-4">
-          <Link to={`/admin-dashboard/hospitals/${hospital?.id}`}>
-            <button className="form-btn text-sm">View Info</button>
-          </Link>
-        </div>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 my-2">
+        {data?.map((hospital: Hospital) => (
+          <div
+            key={hospital?.id}
+            className="bg-gray-50 shadow rounded-lg px-4 py-4"
+          >
+            <div className="flex justify-center">
+              <FaHospitalAlt size={50} />
+            </div>
+            <h3 className="text-primary text-lg font-medium text-center my-2">
+              {hospital?.name}
+            </h3>
+            <div className="w-4/5 mx-auto mt-4">
+              <Link to={`/admin-dashboard/hospitals/${hospital?.id}`}>
+                <button className="form-btn text-sm">View Info</button>
+              </Link>
+            </div>
+          </div>
+        ))}
       </div>
-    ))}
-  </div>
-  <div className="w-full sm:w-48 mx-auto mt-4">
-    <Link to="/admin-dashboard/hospitals/add-new">
-      <button className="form-btn my-3 w-full sm:w-auto">Add New Hospital</button>
-    </Link>
-  </div>
-</DashboardSection>
-
+      <div className="w-full sm:w-48 mx-auto mt-4">
+        <Link to="/admin-dashboard/hospitals/add-new">
+          <button className="form-btn my-3 w-full sm:w-auto">
+            Add New Hospital
+          </button>
+        </Link>
+      </div>
+    </DashboardSection>
   );
 }
 

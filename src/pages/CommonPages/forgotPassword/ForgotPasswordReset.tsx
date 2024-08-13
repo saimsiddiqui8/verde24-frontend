@@ -64,7 +64,7 @@ const ForgotPasswordReset = () => {
     const res = await updatePassword(
       state?.id.toString(),
       state?.for,
-      data?.password
+      data?.password,
     );
     dispatch(loadingEnd());
     if (res?.id) {

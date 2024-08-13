@@ -4,10 +4,10 @@ import { Outlet } from "react-router-dom";
 import { Unauthorized } from "../pages/CommonPages";
 
 interface Role {
-    role: string
+  role: string;
 }
 
 export const RequireAuth = ({ role }: Role) => {
-    const user = useSelector((state: RootState) => state.user.currentUser);
-    return <>{user?.role === role ? <Outlet /> : <Unauthorized />}</>;
+  const user = useSelector((state: RootState) => state.user.currentUser);
+  return <>{user?.role === role ? <Outlet /> : <Unauthorized />}</>;
 };

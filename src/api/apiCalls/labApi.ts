@@ -12,7 +12,10 @@ export const getLabById = async (query: string, variables: { id: string }) => {
 };
 
 // Function to update lab by ID
-export const updateLabById = async (query: string, variables: { id: string }) => {
+export const updateLabById = async (
+  query: string,
+  variables: { id: string },
+) => {
   try {
     const response = await publicRequest.post("/graphql", { query, variables });
     return response?.data?.data?.updateLab;
@@ -23,7 +26,10 @@ export const updateLabById = async (query: string, variables: { id: string }) =>
 };
 
 // Function to get lab token
-export const getLabToken = async (query: string, variables: { email: string, password: string }) => {
+export const getLabToken = async (
+  query: string,
+  variables: { email: string; password: string },
+) => {
   try {
     const response = await publicRequest.post("/graphql", { query, variables });
     return response?.data?.data?.getLabToken;
@@ -45,7 +51,10 @@ export const createLab = async (query: string, variables: object) => {
 };
 
 // Function to find lab by email
-export const findLabByEmail = async (query: string, variables: { email: string }) => {
+export const findLabByEmail = async (
+  query: string,
+  variables: { email: string },
+) => {
   try {
     const response = await publicRequest.post("/graphql", { query, variables });
     return response?.data?.data?.findLabByEmail;
@@ -56,7 +65,10 @@ export const findLabByEmail = async (query: string, variables: { email: string }
 };
 
 // Function to send OTP to lab
-export const sendLabOTP = async (query: string, variables: { email: string, role: string }) => {
+export const sendLabOTP = async (
+  query: string,
+  variables: { email: string; role: string },
+) => {
   try {
     const response = await publicRequest.post("/graphql", { query, variables });
     return response?.data?.data?.createUserOtp;
@@ -67,7 +79,10 @@ export const sendLabOTP = async (query: string, variables: { email: string, role
 };
 
 // Function to verify lab OTP
-export const verifyLabOTP = async (query: string, variables: { email: string, role: string, code: string }) => {
+export const verifyLabOTP = async (
+  query: string,
+  variables: { email: string; role: string; code: string },
+) => {
   try {
     const response = await publicRequest.post("/graphql", { query, variables });
     return response?.data?.data?.verifyUserOtp;

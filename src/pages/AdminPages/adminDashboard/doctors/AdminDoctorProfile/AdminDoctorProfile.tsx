@@ -13,7 +13,6 @@ import {
 import { notifyFailure, notifySuccess } from "../../../../../utils/Utils";
 import { Toaster } from "react-hot-toast";
 
-
 type Doctor = {
   id: string;
   first_name: string;
@@ -88,7 +87,10 @@ export default function AdminDoctorProfile() {
     setVerified(doctorData?.data?.is_verified);
   }, [doctorData.data, hospitals]);
 
-  const createDoctorHospital = async (data: { doctor_id: number; hospital_id: number }) => {
+  const createDoctorHospital = async (data: {
+    doctor_id: number;
+    hospital_id: number;
+  }) => {
     try {
       const response = await publicRequest.post("/graphql", {
         query: DOCTOR_ADD_HOSPITAL_QUERY,
@@ -101,7 +103,10 @@ export default function AdminDoctorProfile() {
     }
   };
 
-  const deleteDoctorHospital = async (data: { doctor_id: number; hospital_id: number }) => {
+  const deleteDoctorHospital = async (data: {
+    doctor_id: number;
+    hospital_id: number;
+  }) => {
     try {
       const response = await publicRequest.post("/graphql", {
         query: DOCTOR_REMOVE_HOSPITAL_QUERY,
@@ -145,7 +150,7 @@ export default function AdminDoctorProfile() {
           onError: () => {
             notifyFailure(`Deletion failed!`);
           },
-        }
+        },
       );
     } else if (currentItem) {
       addDoctorHospital.mutate(
@@ -166,7 +171,7 @@ export default function AdminDoctorProfile() {
           onError: () => {
             notifyFailure(`Assignment failed!`);
           },
-        }
+        },
       );
     }
     setSelectedHospitals(newArr);
@@ -204,7 +209,7 @@ export default function AdminDoctorProfile() {
         onError: () => {
           notifyFailure("Error updating doctor!");
         },
-      }
+      },
     );
   };
 
@@ -277,7 +282,6 @@ export default function AdminDoctorProfile() {
       </div>
       <Toaster />
     </DashboardSection>
-
   );
 }
 

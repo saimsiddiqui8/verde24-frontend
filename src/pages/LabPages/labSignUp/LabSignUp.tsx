@@ -20,10 +20,20 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import OTPInput from "react-otp-input";
 import { loadingEnd, loadingStart } from "../../../redux/slices/loadingSlice";
-import { EXISTING_LAB_QUERY, NEW_LAB_QUERY, SEND_OTP_QUERY, VERIFY_OTP_QUERY } from "./queries";
+import {
+  EXISTING_LAB_QUERY,
+  NEW_LAB_QUERY,
+  SEND_OTP_QUERY,
+  VERIFY_OTP_QUERY,
+} from "./queries";
 import { useDispatch } from "react-redux";
 import { useMutation, useQuery } from "react-query";
-import { createLab, findLabByEmail, sendLabOTP, verifyLabOTP } from "../../../api/apiCalls/labApi";
+import {
+  createLab,
+  findLabByEmail,
+  sendLabOTP,
+  verifyLabOTP,
+} from "../../../api/apiCalls/labApi";
 
 const inputs = [
   {
@@ -87,7 +97,6 @@ const OtpSchema = z.object({
 });
 
 export default function LabSignUp() {
-
   const {
     register,
     handleSubmit,
@@ -170,7 +179,6 @@ export default function LabSignUp() {
     }
   };
 
-
   const onSubmit = async () => {
     handleValidation();
   };
@@ -182,7 +190,7 @@ export default function LabSignUp() {
   const handleOTPSubmit = async () => {
     dispatch(loadingStart());
     const verify = await verifyOTPData.refetch();
-    console.log(verify)
+    console.log(verify);
     dispatch(loadingEnd());
     if (verify?.status === "success") {
       notifySuccess("OTP Verified!");

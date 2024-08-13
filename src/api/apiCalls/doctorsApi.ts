@@ -1,8 +1,19 @@
 import { publicRequest } from "../requestMethods";
-import { createDoctorData, CreateTimeSlotVariables, DoctorAuthVariables, EmailVariables, FindDoctorByIdVariables, OtpVariables, UpdateDoctorVariables, VerifyOtpVariables } from "./types";
+import {
+  createDoctorData,
+  CreateTimeSlotVariables,
+  DoctorAuthVariables,
+  EmailVariables,
+  FindDoctorByIdVariables,
+  OtpVariables,
+  UpdateDoctorVariables,
+  VerifyOtpVariables,
+} from "./types";
 
-
-export const getDoctorById = async (query: string, variables: FindDoctorByIdVariables) => {
+export const getDoctorById = async (
+  query: string,
+  variables: FindDoctorByIdVariables,
+) => {
   try {
     const response = await publicRequest.post("/graphql", {
       query,
@@ -15,8 +26,10 @@ export const getDoctorById = async (query: string, variables: FindDoctorByIdVari
   }
 };
 
-
-export const getDoctorToken = async (query: string, variables: DoctorAuthVariables) => {
+export const getDoctorToken = async (
+  query: string,
+  variables: DoctorAuthVariables,
+) => {
   const response = await publicRequest.post("/graphql", {
     query,
     variables,
@@ -24,7 +37,10 @@ export const getDoctorToken = async (query: string, variables: DoctorAuthVariabl
   return response.data.data.getDoctorToken;
 };
 
-export const createDoctor = async (query: string, variables: createDoctorData) => {
+export const createDoctor = async (
+  query: string,
+  variables: createDoctorData,
+) => {
   return publicRequest
     .post("/graphql", {
       query,
@@ -33,7 +49,10 @@ export const createDoctor = async (query: string, variables: createDoctorData) =
     .then((response) => response.data.data.createDoctor);
 };
 
-export const updateDoctor = async (query: string, variables: UpdateDoctorVariables) => {
+export const updateDoctor = async (
+  query: string,
+  variables: UpdateDoctorVariables,
+) => {
   try {
     const response = await publicRequest.post("/graphql", {
       query,
@@ -46,7 +65,10 @@ export const updateDoctor = async (query: string, variables: UpdateDoctorVariabl
   }
 };
 
-export const checkDoctorEmail = async (query: string, variables: EmailVariables) => {
+export const checkDoctorEmail = async (
+  query: string,
+  variables: EmailVariables,
+) => {
   return publicRequest
     .post("/graphql", {
       query,
@@ -64,7 +86,10 @@ export const sendDoctorOTP = async (query: string, variables: OtpVariables) => {
     .then((response) => response.data.data.createUserOtp);
 };
 
-export const verifyDoctorOTP = async (query: string, variables: VerifyOtpVariables) => {
+export const verifyDoctorOTP = async (
+  query: string,
+  variables: VerifyOtpVariables,
+) => {
   return publicRequest
     .post("/graphql", {
       query,
@@ -73,7 +98,10 @@ export const verifyDoctorOTP = async (query: string, variables: VerifyOtpVariabl
     .then((response) => response.data.data.verifyUserOtp);
 };
 
-export const createDoctorTimeSlot = async (query: string, variables: CreateTimeSlotVariables) => {
+export const createDoctorTimeSlot = async (
+  query: string,
+  variables: CreateTimeSlotVariables,
+) => {
   return publicRequest
     .post("/graphql", {
       query,

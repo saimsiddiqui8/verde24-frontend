@@ -3,7 +3,10 @@ import { Link } from "react-router-dom";
 import { Button, DashboardSection, InputField } from "../../../../components";
 import { publicRequest } from "../../../../api/requestMethods";
 import { useEffect, useState } from "react";
-import { loadingEnd, loadingStart } from "../../../../redux/slices/loadingSlice";
+import {
+  loadingEnd,
+  loadingStart,
+} from "../../../../redux/slices/loadingSlice";
 import { useDispatch } from "react-redux";
 
 const HOSPITAL_QUERY = `
@@ -16,8 +19,7 @@ query {
 `;
 export default function OnlineAppointment() {
   const [hospitals, setHospitals] = useState([]);
-  const dispatch = useDispatch()
-
+  const dispatch = useDispatch();
 
   const getHospitals = async () => {
     try {
@@ -32,12 +34,14 @@ export default function OnlineAppointment() {
   };
   useEffect(() => {
     dispatch(loadingStart());
-    getHospitals().then(data => {
-      setHospitals(data);
-      dispatch(loadingEnd());
-    }).catch(err => {
-      console.log(err.toString());
-    });
+    getHospitals()
+      .then((data) => {
+        setHospitals(data);
+        dispatch(loadingEnd());
+      })
+      .catch((err) => {
+        console.log(err.toString());
+      });
   }, [dispatch]);
   if (!hospitals) {
     return <div>Loading or no hospital data available...</div>;
@@ -45,7 +49,9 @@ export default function OnlineAppointment() {
   return (
     <DashboardSection>
       <div className="flex justify-between my-4 flex-wrap">
-        <h2 className="text-2xl md:text-3xl font-semibold w-full md:w-auto">Get Appointment</h2>
+        <h2 className="text-2xl md:text-3xl font-semibold w-full md:w-auto">
+          Get Appointment
+        </h2>
         <div className="flex gap-2 mt-2 md:mt-0">
           <Button title="Recently Viewed" className="w-fit" secondary={true} />
           <Button title="Reset" className="w-fit" secondary={true} />
@@ -57,9 +63,11 @@ export default function OnlineAppointment() {
           <Button title="Search" secondary={true} />
         </div>
       </div>
-      {hospitals.map((hospital: any) =>
+      {hospitals.map((hospital: any) => (
         <div key={hospital?.id} className="flex flex-col gap-4">
-          <Link to={`/patient-dashboard/online-appointment/online-hospital-profile/${hospital?.id}`}>
+          <Link
+            to={`/patient-dashboard/online-appointment/online-hospital-profile/${hospital?.id}`}
+          >
             <div className="border-primary border rounded-lg p-3 cursor-pointer">
               <div className="flex flex-col md:flex-row justify-between gap-2 my-2">
                 <div className="w-full md:w-1/5 mb-4 md:mb-0">
@@ -70,7 +78,9 @@ export default function OnlineAppointment() {
                   />
                 </div>
                 <div className="w-full md:w-3/5">
-                  <h2 className="text-xl md:text-3xl font-medium">{hospital?.name}</h2>
+                  <h2 className="text-xl md:text-3xl font-medium">
+                    {hospital?.name}
+                  </h2>
                   <p>BDS (Gold Medalist) FCPS Res. (Orthodontics), RDS</p>
                   <p>Dentist</p>
                   <div className="flex flex-col gap-2 lg:flex-row justify-between">
@@ -103,7 +113,8 @@ export default function OnlineAppointment() {
                 </div>
                 <div className="border-primary border w-full md:w-2/3 p-2 rounded-lg">
                   <h5 className="text-base">
-                    Smile Solutions | Dental Clinic | Orthodontic & Implant Centre, Model Town, Lahore
+                    Smile Solutions | Dental Clinic | Orthodontic & Implant
+                    Centre, Model Town, Lahore
                   </h5>
                   <p className="text-sm">Available today</p>
                   <p className="text-sm">Rs 1000</p>
@@ -112,9 +123,7 @@ export default function OnlineAppointment() {
             </div>
           </Link>
         </div>
-      )}
-
+      ))}
     </DashboardSection>
-
   );
 }

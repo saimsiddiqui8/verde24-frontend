@@ -225,7 +225,7 @@ const FormSchema = z
     {
       message: "Please provide either UPI ID or A/C No",
       path: ["upi_id"],
-    }
+    },
   )
   .refine((data) => data.doctor_image, {
     message: "Image is required.",
@@ -262,11 +262,11 @@ export default function ConsultationForm() {
       const storage = getStorage(app);
       const storageReference = storageRef(
         storage,
-        `images/${getValues("doctor_image").name}`
+        `images/${getValues("doctor_image").name}`,
       );
       const uploadTask = await uploadBytesResumable(
         storageReference,
-        getValues("doctor_image")
+        getValues("doctor_image"),
       );
       const url = await getDownloadURL(uploadTask.ref);
       return url;
@@ -285,10 +285,10 @@ export default function ConsultationForm() {
       qualification: getValues("qualification"),
       consultation_mode: getValues("consultation_mode"),
       consultation_fee_regular: parseFloat(
-        getValues("consultation_fee_regular")
+        getValues("consultation_fee_regular"),
       ),
       consultation_fee_discounted: parseFloat(
-        getValues("consultation_fee_discounted")
+        getValues("consultation_fee_discounted"),
       ),
       booking_lead_time: getValues("lead_time"),
       payout_method: getValues("payout_method"),

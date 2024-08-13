@@ -22,11 +22,11 @@ export const store = configureStore({
     getDefaultMiddleware({
       serializableCheck: {
         // Ignore these action types
-        ignoredActions: ['persist/PERSIST'],
+        ignoredActions: ["persist/PERSIST"],
         // Ignore these field paths in all actions
-        ignoredActionPaths: ['meta.arg', 'register'],
+        ignoredActionPaths: ["meta.arg", "register"],
         // Ignore these paths in the state
-        ignoredPaths: ['items.dates'],
+        ignoredPaths: ["items.dates"],
       },
     }),
 });

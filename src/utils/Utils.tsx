@@ -11,7 +11,7 @@ export const areAllValuesTruthy = (obj: Record<string, unknown>) => {
 export const convertToDisplayName = (input: string) => {
   const words = input.split("_");
   const capitalizedWords = words.map(
-    (word) => word.charAt(0).toUpperCase() + word.slice(1)
+    (word) => word.charAt(0).toUpperCase() + word.slice(1),
   );
   const result = capitalizedWords.join(" ");
   return result;

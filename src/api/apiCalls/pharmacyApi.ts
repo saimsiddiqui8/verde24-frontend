@@ -1,6 +1,9 @@
 import { publicRequest } from "../requestMethods";
 
-export const getPharmacyById = async (query: string, variables: { id: string }) => {
+export const getPharmacyById = async (
+  query: string,
+  variables: { id: string },
+) => {
   try {
     const response = await publicRequest.post("/graphql", { query, variables });
     return response?.data?.data?.findPharmacyById;
@@ -25,7 +28,7 @@ export const logoutQuery = async (token: string) => {
         headers: {
           Authorization: `${token}`,
         },
-      }
+      },
     );
     return response?.status;
   } catch (error) {
@@ -34,7 +37,10 @@ export const logoutQuery = async (token: string) => {
   }
 };
 
-export const updatePharmacyById = async (query: string, variables: { id: string }) => {
+export const updatePharmacyById = async (
+  query: string,
+  variables: { id: string },
+) => {
   try {
     const response = await publicRequest.post("/graphql", { query, variables });
     return response?.data?.data?.updatePharmacy;
@@ -44,7 +50,10 @@ export const updatePharmacyById = async (query: string, variables: { id: string 
   }
 };
 
-export const getPharmacyToken = async (query: string, variables: { email: string, password: string }) => {
+export const getPharmacyToken = async (
+  query: string,
+  variables: { email: string; password: string },
+) => {
   try {
     const response = await publicRequest.post("/graphql", { query, variables });
     return response?.data?.data?.getPharmacyToken;
@@ -64,7 +73,10 @@ export const createPharmacy = async (query: string, variables: object) => {
   }
 };
 
-export const findPharmacyByEmail = async (query: string, variables: { email: string }) => {
+export const findPharmacyByEmail = async (
+  query: string,
+  variables: { email: string },
+) => {
   try {
     const response = await publicRequest.post("/graphql", { query, variables });
     return response?.data?.data?.findPharmacyByEmail;
@@ -74,7 +86,10 @@ export const findPharmacyByEmail = async (query: string, variables: { email: str
   }
 };
 
-export const sendPharmacyOTP = async (query: string, variables: { email: string, role: string }) => {
+export const sendPharmacyOTP = async (
+  query: string,
+  variables: { email: string; role: string },
+) => {
   try {
     const response = await publicRequest.post("/graphql", { query, variables });
     return response?.data?.data?.createPharmacyOtp;
@@ -84,7 +99,10 @@ export const sendPharmacyOTP = async (query: string, variables: { email: string,
   }
 };
 
-export const verifyPharmacyOTP = async (query: string, variables: { email: string, role: string, code: string }) => {
+export const verifyPharmacyOTP = async (
+  query: string,
+  variables: { email: string; role: string; code: string },
+) => {
   try {
     const response = await publicRequest.post("/graphql", { query, variables });
     return response.data.data.verifyPharmacyOtp;

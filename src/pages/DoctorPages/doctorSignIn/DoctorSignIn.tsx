@@ -81,9 +81,13 @@ export default function DoctorSignIn() {
               </Link>
             </small>
           </div>
-          <form onSubmit={handleSubmit(onSubmit)} className="pt-2 pb-6 pr-7 lg:px-5">
+          <form
+            onSubmit={handleSubmit(onSubmit)}
+            className="pt-2 pb-6 pr-7 lg:px-5"
+          >
             {inputs?.map((input, index) => (
-              <InputField key={index}
+              <InputField
+                key={index}
                 label={input.label}
                 name={input.name}
                 type={input.type}
@@ -130,7 +134,6 @@ export default function DoctorSignIn() {
       </section>
       <Toaster />
     </main>
-
   );
 }
 

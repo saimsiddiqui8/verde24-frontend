@@ -77,7 +77,7 @@ export default function AdminSignUp() {
     e.preventDefault();
     if (Object.keys(inputValues).length === 5) {
       const passwordCheck: PasswordCheckType = isValidPassword(
-        inputValues?.password
+        inputValues?.password,
       );
       if (passwordCheck?.status) {
         mutate(inputValues);

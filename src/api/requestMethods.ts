@@ -9,7 +9,7 @@ export const publicRequest = axios.create({
   baseURL: import.meta.env.BASE_URL,
   headers: {
     "Content-Type": "application/json",
-  }
+  },
 });
 
 export const userRequest = axios.create({

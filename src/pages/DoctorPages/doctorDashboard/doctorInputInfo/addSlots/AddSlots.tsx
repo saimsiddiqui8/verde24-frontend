@@ -54,7 +54,7 @@ export default function AddSlots() {
         } else {
           return { ...day, selected: false };
         }
-      })
+      }),
     );
   };
 
@@ -66,7 +66,7 @@ export default function AddSlots() {
         } else {
           return { ...day };
         }
-      })
+      }),
     );
   };
 
@@ -78,7 +78,7 @@ export default function AddSlots() {
         } else {
           return { ...day };
         }
-      })
+      }),
     );
     setShowSlotsModal(false);
   };
@@ -145,7 +145,7 @@ export default function AddSlots() {
           {weekdays?.map((weekday) => (
             <div
               className={twMerge(
-                `${dayStyles} ${weekday?.selected && selectedStyles}`
+                `${dayStyles} ${weekday?.selected && selectedStyles}`,
               )}
               onClick={() => setSelectedDay(weekday?.title)}
             >
