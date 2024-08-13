@@ -16,7 +16,7 @@ export default function Navbar() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
-//done
+
   const handleLogout = async () => {
     if (!user?.token) {
       return null ;

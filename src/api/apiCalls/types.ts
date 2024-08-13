@@ -81,7 +81,7 @@ export type CreateTimeSlotVariables = {
 };
 
 
-export type createDoctorData = {
+export interface createDoctorData {
   email: string;
   password: string;
 };
