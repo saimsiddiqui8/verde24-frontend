@@ -1,5 +1,5 @@
 import { publicRequest } from "../requestMethods";
-import { CreateTimeSlotVariables, DoctorAuthVariables, EmailVariables, FindDoctorByIdVariables, OtpVariables, UpdateDoctorVariables, VerifyOtpVariables } from "./types";
+import { createDoctorData, CreateTimeSlotVariables, DoctorAuthVariables, EmailVariables, FindDoctorByIdVariables, OtpVariables, UpdateDoctorVariables, VerifyOtpVariables } from "./types";
 
 
 export const getDoctorById = async (query: string, variables: FindDoctorByIdVariables) => {
@@ -24,7 +24,7 @@ export const getDoctorToken = async (query: string, variables: DoctorAuthVariabl
   return response.data.data.getDoctorToken;
 };
 
-export const createDoctor = async (query: string, variables: object) => {
+export const createDoctor = async (query: string, variables: createDoctorData) => {
   return publicRequest
     .post("/graphql", {
       query,

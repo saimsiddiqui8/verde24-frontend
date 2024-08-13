@@ -79,3 +79,9 @@ export type CreateTimeSlotVariables = {
     timeSlots: string[];
   };
 };
+
+
+export type createDoctorData = {
+  email: string;
+  password: string;
+};

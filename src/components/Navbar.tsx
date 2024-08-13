@@ -18,7 +18,9 @@ export default function Navbar() {
   const location = useLocation();
 
   const handleLogout = async () => {
-    if (!user?.token) return null;
+    if (!user?.token) {
+      return null ;
+    }
     await logoutQuery(user?.token)
     if (user?.role === USER_ROLES.admin) {
       navigate("/admin/sign-in");
