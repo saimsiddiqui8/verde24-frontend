@@ -124,64 +124,12 @@ export const router = createBrowserRouter(
               />
             </Route>
           </Route>
-          {/* pharmacy route */}
           <Route element={<RequireAuth role={USER_ROLES.pharmacy} />}>
             <Route element={<PharmacyLayout />} path="pharmacy-dashboard">
-              {/* <Route index element={<PatientProfile />} />
-              <Route path="find-doctor">
-                <Route index element={<FindDoctor />} />
-                <Route path="appointment">
-                  <Route path=":id" element={<FindDoctorAppointment />} />
-                  <Route path="select-slot/:id" element={<SelectSlot />} />
-                  <Route path="book-slot/:id" element={<BookSlot />} />
-                </Route>
-                <Route path="profile/:id" element={<FindDoctorProfile />} />
-              </Route>
-              <Route path="treatment-plans" element={<TreatmentPlans />} />
-              <Route
-                path="completed-procedures"
-                element={<CompletedProcedures />}
-              />
-              <Route path="files" element={<Files />} />
-              <Route path="prescriptions" element={<Prescriptions />} />
-              <Route
-                path="online-appointment"
-                element={<OnlineAppointment />}
-              />
-              <Route
-                path="/patient-dashboard/online-appointment/online-hospital-profile/:id"
-                element={<OnlineHospitalAppointment/>}
-              /> */}
             </Route>
           </Route>
-          {/* lab route */}
           <Route element={<RequireAuth role={USER_ROLES.lab} />}>
             <Route element={<LabLayout />} path="lab-dashboard">
-              {/* <Route index element={<PatientProfile />} />
-              <Route path="find-doctor">
-                <Route index element={<FindDoctor />} />
-                <Route path="appointment">
-                  <Route path=":id" element={<FindDoctorAppointment />} />
-                  <Route path="select-slot/:id" element={<SelectSlot />} />
-                  <Route path="book-slot/:id" element={<BookSlot />} />
-                </Route>
-                <Route path="profile/:id" element={<FindDoctorProfile />} />
-              </Route>
-              <Route path="treatment-plans" element={<TreatmentPlans />} />
-              <Route
-                path="completed-procedures"
-                element={<CompletedProcedures />}
-              />
-              <Route path="files" element={<Files />} />
-              <Route path="prescriptions" element={<Prescriptions />} />
-              <Route
-                path="online-appointment"
-                element={<OnlineAppointment />}
-              />
-              <Route
-                path="/patient-dashboard/online-appointment/online-hospital-profile/:id"
-                element={<OnlineHospitalAppointment/>}
-              /> */}
             </Route>
           </Route>
           <Route element={<RequireAuth role={USER_ROLES.admin} />}>

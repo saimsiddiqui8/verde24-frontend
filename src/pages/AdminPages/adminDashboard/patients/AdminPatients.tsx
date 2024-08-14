@@ -49,12 +49,6 @@ export default function AdminPatients() {
           </div>
         ))}
       </div>
-      {/* This section for adding a new doctor is commented out. If you need to add similar functionality for patients, adjust the Link and button text accordingly. */}
-      {/* <div className="w-48 mx-auto">
-    <Link to="/admin-dashboard/doctors/add-new">
-      <button className="form-btn my-3">Add New Doctor</button>
-    </Link>
-  </div> */}
     </DashboardSection>
   );
 }

@@ -1,23 +1,9 @@
 import { Link, Outlet } from "react-router-dom";
 import doctorImg from "../../assets/doctor.png";
-// import DashboardIcon from "../../assets/sidemenu/doctor/Dashboard.svg";
 import ProfileIcon from "../../assets/sidemenu/doctor/My Profile.svg";
-// import AppointmentsIcon from "../../assets/sidemenu/doctor/Appointments.svg";
-// import PatientsIcon from "../../assets/sidemenu/doctor/My Patients.svg";
-// import ScheduleIcon from "../../assets/sidemenu/doctor/Schedule Slots.svg";
-// import PaymentIcon from "../../assets/sidemenu/doctor/Payment & Payouts.svg";
 
 const links = [
-  // { title: "Dashboard", href: "/", icon: DashboardIcon },
   { title: "My Profile", href: "/profile", icon: ProfileIcon },
-  // { title: "Appointments", href: "/appointments", icon: AppointmentsIcon },
-  // { title: "My Patients", href: "/my-patients", icon: PatientsIcon },
-  // { title: "Schedule Slots", href: "/schedule-slots", icon: ScheduleIcon },
-  // {
-  //   title: "Payment & Payouts",
-  //   href: "/payment-and-payouts",
-  //   icon: PaymentIcon,
-  // },
 ];
 
 const BASE_URL = "/doctor-dashboard";
@@ -64,5 +50,3 @@ export default function DoctorLayout() {
     </main>
   );
 }
-
-// border-y border-[#125DB94D]

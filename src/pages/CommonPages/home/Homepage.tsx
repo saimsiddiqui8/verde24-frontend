@@ -298,7 +298,7 @@ export default function Homepage() {
           <div className="flex flex-col items-center sm:flex-row gap-2">
             <GooglePlayButton icon={<FaGooglePlay size={25} fill="white" />} />
             <GooglePlayButton icon={<FaApple size={25} fill="white" />} />
-            {/* <Button title="See all Articles" /> */}
+           
           </div>
         </div>
       </div>

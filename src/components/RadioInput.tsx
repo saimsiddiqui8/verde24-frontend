@@ -20,7 +20,6 @@ export default function RadioInput({
             <input
               type="radio"
               value={option.value}
-              // name="inline-radio-group"
               checked={selected ? selected === option.value : null}
               onChange={onChange}
               name={name}

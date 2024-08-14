@@ -14,8 +14,6 @@ import { GET_DOCTOR_QUERY } from "../../../DoctorPages/doctorDashboard/doctorInp
 
 const consultations = [
   { title: "Video Consultation" },
-
-  // { title: "Hospital Consultation" },
 ];
 
 export default function FindDoctorAppointment() {

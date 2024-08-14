@@ -96,7 +96,6 @@ export default function PatientProfile() {
     register,
     handleSubmit,
     reset,
-    // getValues,
     formState: { errors },
   } = useForm({
     resolver: zodResolver(FormSchema),

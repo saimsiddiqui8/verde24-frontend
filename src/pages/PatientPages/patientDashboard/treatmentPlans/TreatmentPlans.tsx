@@ -93,7 +93,6 @@ export default function TreatmentPlans() {
                 <td className="p-2 sm:p-4">
                   <Typography
                     variant="small"
-                    // color="blue-gray"
                     className="font-normal"
                   >
                     {job}

@@ -5,7 +5,7 @@ const Field = ({
   label,
   properties,
   error,
-  // className,
+   className,
   disabled = false,
 }: FieldProps) => {
   return (

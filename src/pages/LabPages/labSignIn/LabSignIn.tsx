@@ -68,12 +68,10 @@ export default function LabSignIn() {
   };
 
   const handleGoogleSignIn = async () => {
-    // Simulate Google sign-in
     notifyFailure("Google Sign in is not available");
   };
 
   const handleFacebookSignIn = async () => {
-    // Simulate Facebook sign-in
     notifyFailure("Facebook Sign in is not available");
   };
 

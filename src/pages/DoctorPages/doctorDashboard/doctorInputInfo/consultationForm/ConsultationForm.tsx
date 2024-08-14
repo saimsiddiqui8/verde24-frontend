@@ -145,7 +145,6 @@ const consultationFee = [
 
 const aboutMe = {
   label: "Bibliography",
-  // type: "text",
   placeholder: "Write About Yourself",
   name: "bibliography",
 };
@@ -444,7 +443,6 @@ export default function ConsultationForm() {
         <>
           <div className="flex gap-2">
             <RadioInput
-              // label={input?.label}
               name="consultation_mode"
               options={options}
               properties={{ ...register("consultation_mode") }}
@@ -536,7 +534,6 @@ export default function ConsultationForm() {
                 <input
                   type="radio"
                   value="upi"
-                  // name="inline-radio-group"
                   {...register("payout_method")}
                   defaultChecked
                   onClick={() => setPayout("upi")}
@@ -555,7 +552,6 @@ export default function ConsultationForm() {
                   value="ac"
                   {...register("payout_method")}
                   onClick={() => setPayout("ac")}
-                  // name="inline-radio-group"
                   name={"consultation"}
                   className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
                 />
