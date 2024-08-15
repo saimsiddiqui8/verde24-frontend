@@ -5,21 +5,18 @@ const Field = ({
   label,
   properties,
   error,
-   className,
   disabled = false,
 }: FieldProps) => {
   return (
     <div className="my-6">
       <label
-        className={`block text-sm font-medium ${
-          error ? "text-crimson" : "text-primary"
-        }`}
+        className={`block text-sm font-medium ${error ? "text-crimson" : "text-primary"
+          }`}
       >
         {label}
         <select
-          className={`w-full mt-1 px-3 py-2 bg-white shadow-sm border ${
-            error ? "border-crimson" : "border-primary"
-          } rounded-md focus:outline-none focus:ring-primary focus:border-primary`}
+          className={`w-full mt-1 px-3 py-2 bg-white shadow-sm border ${error ? "border-crimson" : "border-primary"
+            } rounded-md focus:outline-none focus:ring-primary focus:border-primary`}
           name={name}
           {...properties}
           disabled={disabled}
