@@ -60,6 +60,11 @@ import PharmacyLayout from "./layouts/PharmacyLayout.tsx";
 import LabLayout from "./layouts/LabLayout.tsx";
 import { AppLayout } from "./AppLayout.tsx";
 import { RequireAuth } from "./RequireAuth.tsx";
+import AddSlots from "../pages/DoctorPages/doctorDashboard/doctorInputInfo/addSlots/AddSlots.tsx";
+import DrDashboardAfterApproval from "./layouts/DrDashboardAfterApproval.tsx";
+import Calendar from "../pages/DoctorPages/doctorDashboard/doctorInputInfo/calendar/Calendar.tsx";
+import Appointments from "../pages/DoctorPages/doctorDashboard/doctorInputInfo/appointments/Appointments.tsx";
+import MyPatients from "../pages/DoctorPages/doctorDashboard/doctorInputInfo/mypatients/MyPatients.tsx";
 
 export const router = createBrowserRouter(
   createRoutesFromElements(
@@ -86,13 +91,14 @@ export const router = createBrowserRouter(
         </Route>
         <Route element={<ProtectedRoutes />}>
           <Route element={<RequireAuth role={USER_ROLES.doctor} />}>
-            <Route element={<DoctorLayout />} path="doctor-dashboard">
+            {/* <Route element={<DoctorLayout />} path="doctor-dashboard"> */}
+            <Route element={<DrDashboardAfterApproval/>} path="doctor-dashboard">
               <Route index element={<div>Doctor Home</div>} />
               <Route path="profile" element={<DoctorProfile />} />
-              <Route path="appointments" element={<DoctorProfile />} />
-              <Route path="my-patients" element={<DoctorProfile />} />
-              <Route path="schedule-slots" element={<DoctorProfile />} />
-              <Route path="payment-and-payouts" element={<DoctorProfile />} />
+              <Route path="calendar" element={<Calendar/>} />
+              <Route path="appointments" element={<Appointments/>} />
+              <Route path="mypatients" element={<MyPatients/>} />
+              <Route path="schedule" element={<AddSlots/>} />
             </Route>
           </Route>
           <Route element={<RequireAuth role={USER_ROLES.patient} />}>

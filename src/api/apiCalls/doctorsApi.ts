@@ -1,5 +1,5 @@
 import { publicRequest } from "../requestMethods";
-import { Doctor } from "./types";
+import { UpdateDoctorVariables } from "./types";
 
 
 export const getDoctorById = async (query: string, variables: { findDoctorByIdId: string }) => {
@@ -24,7 +24,7 @@ export const getDoctorToken = async (query: string, variables: { email: string, 
   return response.data.data.getDoctorToken;
 };
 
-export const createDoctor = async (query: string, variables: any) => {
+export const createDoctor = async (query: string, variables: object) => {
   return publicRequest
     .post("/graphql", {
       query,
@@ -33,7 +33,7 @@ export const createDoctor = async (query: string, variables: any) => {
     .then((response) => response.data.data.createDoctor);
 };
 
-export const updateDoctor = async (query: string, variables: { is_verified: boolean }) => {
+export const updateDoctor = async (query: string, variables: UpdateDoctorVariables) => {
   try {
     const response = await publicRequest.post("/graphql", {
       query,

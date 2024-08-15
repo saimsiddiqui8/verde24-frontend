@@ -143,8 +143,8 @@ export default function AddSlots() {
           </div>
         )}
         <div className="flex justify-between my-2">
-          {weekdays?.map((weekday) => (
-            <div
+          {weekdays?.map((weekday,index) => (
+            <div key={index}
               className={twMerge(
                 `${dayStyles} ${weekday?.selected && selectedStyles}`
               )}

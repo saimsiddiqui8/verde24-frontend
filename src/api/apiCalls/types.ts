@@ -38,3 +38,13 @@ export interface UserData {
   blood_group: string;
   other_history: string;
 }
+
+interface UpdateDoctorData {
+  image?: string;
+  name?: string;
+  specialty?: string;
+}
+export interface UpdateDoctorVariables {
+  id: string;
+  data: UpdateDoctorData
+}
