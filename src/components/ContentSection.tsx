@@ -5,7 +5,7 @@ export default function ContentSection({ children, className }: ContentProps) {
   return (
     <div
       className={twMerge(
-        `border-primary border rounded-lg p-4 my-4 ${className ?? ""}`
+        `border-primary border rounded-lg p-4 my-4 ${className ?? ""}`,
       )}
     >
       {children}
@@ -15,5 +15,5 @@ export default function ContentSection({ children, className }: ContentProps) {
 
 interface ContentProps {
   children: ReactNode;
-  className?: any;
+  className?: string;
 }

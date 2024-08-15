@@ -203,7 +203,7 @@ export default function DoctorSignUp() {
       setError(
         "email",
         { message: "Email Already Exists!" },
-        { shouldFocus: true }
+        { shouldFocus: true },
       );
       dispatch(loadingEnd());
     } else {
@@ -224,7 +224,7 @@ export default function DoctorSignUp() {
       }
       dispatch(loadingEnd());
     }
-  }, [data]);
+  }, [data, dispatch, navigate, reset]);
 
   const handleOTPSubmit = async () => {
     dispatch(loadingStart());
@@ -241,10 +241,10 @@ export default function DoctorSignUp() {
   };
 
   return (
-    <main className="grid grid-cols-12 items-center my-8">
-      <section className="col-start-2 col-span-6">
-        <div className="mx-8 w-4/5 justify-self-center rounded-lg">
-          <div className=" text-primary my-3 pt-2 pb-4 px-5 flex justify-between items-center">
+    <main className="grid grid-cols-1 md:grid-cols-12 items-center my-8">
+      <section className="col-span-1 md:col-start-2 md:col-span-6 order-2 md:order-1">
+        <div className="mx-4 md:mx-8 w-full md:w-4/5 justify-self-center rounded-lg">
+          <div className="text-primary my-3 pt-2 pb-4 px-5 flex justify-between items-center">
             <h3 className="text-3xl font-bold">Create Account</h3>
             <small className="font-medium">
               Not a Doctor?{" "}
@@ -253,10 +253,13 @@ export default function DoctorSignUp() {
               </Link>
             </small>
           </div>
-          <form onSubmit={handleSubmit(onSubmit)} className="pt-2 pb-6 px-5">
-            <div className="grid grid-cols-12 gap-x-4 gap-y-0">
-              {inputs?.map((input) => (
-                <div className="col-span-6">
+          <form
+            onSubmit={handleSubmit(onSubmit)}
+            className="pt-2 pb-6 pr-7 lg:px-5"
+          >
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4">
+              {inputs?.map((input, index) => (
+                <div key={index} className="col-span-1">
                   {input.type === "radio" ? (
                     <RadioInput
                       label={input?.label}
@@ -317,7 +320,7 @@ export default function DoctorSignUp() {
           </form>
         </div>
       </section>
-      <section className="col-span-4">
+      <section className="col-span-1 md:col-span-4 order-1 md:order-2">
         <img src={image} alt="Doctors Image" className="w-full" />
       </section>
       <Toaster />

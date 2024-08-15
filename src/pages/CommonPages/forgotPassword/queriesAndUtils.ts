@@ -81,7 +81,7 @@ query ($email: String, $id: ID) {
 export const forgotPassword = async (
   email: string,
   id: number,
-  user: string
+  user: string,
 ) => {
   if (user === users.patient) {
     const response = await publicRequest.post("/graphql", {
@@ -171,7 +171,7 @@ mutation($id: String!, $password: String!) {
 export const updatePassword = async (
   id: string,
   user: string,
-  password: string
+  password: string,
 ) => {
   if (user === users.patient) {
     const response = await publicRequest.post("/graphql", {

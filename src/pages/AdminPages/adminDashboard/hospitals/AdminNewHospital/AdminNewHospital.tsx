@@ -89,9 +89,9 @@ export default function AdminNewHospital() {
   return (
     <DashboardSection title="Add New Hospital">
       <form onSubmit={handleSubmit} className="pt-2">
-        <div className="grid grid-cols-12 gap-x-4 gap-y-0">
-          {inputs?.map((input) => (
-            <div className="col-span-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-4">
+          {inputs?.map((input, index) => (
+            <div key={index} className="col-span-1">
               <InputField
                 label={input.label}
                 name={input.name}
@@ -101,8 +101,8 @@ export default function AdminNewHospital() {
             </div>
           ))}
         </div>
-        <div className="mx-auto w-64">
-          <button className="form-btn">Submit</button>
+        <div className="flex justify-center mt-4">
+          <button className="form-btn w-full md:w-auto px-6">Submit</button>
         </div>
         <Toaster />
       </form>

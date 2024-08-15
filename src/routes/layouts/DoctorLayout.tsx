@@ -1,31 +1,17 @@
 import { Link, Outlet } from "react-router-dom";
 import doctorImg from "../../assets/doctor.png";
-// import DashboardIcon from "../../assets/sidemenu/doctor/Dashboard.svg";
 import ProfileIcon from "../../assets/sidemenu/doctor/My Profile.svg";
-// import AppointmentsIcon from "../../assets/sidemenu/doctor/Appointments.svg";
-// import PatientsIcon from "../../assets/sidemenu/doctor/My Patients.svg";
-// import ScheduleIcon from "../../assets/sidemenu/doctor/Schedule Slots.svg";
-// import PaymentIcon from "../../assets/sidemenu/doctor/Payment & Payouts.svg";
 
 const links = [
-  // { title: "Dashboard", href: "/", icon: DashboardIcon },
   { title: "My Profile", href: "/profile", icon: ProfileIcon },
-  // { title: "Appointments", href: "/appointments", icon: AppointmentsIcon },
-  // { title: "My Patients", href: "/my-patients", icon: PatientsIcon },
-  // { title: "Schedule Slots", href: "/schedule-slots", icon: ScheduleIcon },
-  // {
-  //   title: "Payment & Payouts",
-  //   href: "/payment-and-payouts",
-  //   icon: PaymentIcon,
-  // },
 ];
 
 const BASE_URL = "/doctor-dashboard";
 
 export default function DoctorLayout() {
   return (
-    <main className="grid grid-cols-12 my-8 mx-8 text-primary gap-8">
-      <section className="col-span-4 pt-10 pb-5 h-fit border border-primary rounded-md relative">
+    <main className="grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-8 my-8 mx-4 md:mx-8 text-primary">
+      <section className="md:col-span-4 col-span-1 pt-10 pb-5 h-fit border border-primary rounded-md relative">
         <div className="bg-[#FFF500] text-[#125DB9] font-bold px-2 py-1 absolute top-2 right-4 rounded">
           Pending Verification
         </div>
@@ -46,8 +32,9 @@ export default function DoctorLayout() {
           </button>
         </div>
         <div className="mt-5 flex flex-col items-center w-full">
-          {links.map((link) => (
+          {links.map((link, index) => (
             <Link
+              key={index}
               to={BASE_URL + link?.href}
               className="flex items-center gap-2 py-0.5 px-8"
             >
@@ -57,11 +44,9 @@ export default function DoctorLayout() {
           ))}
         </div>
       </section>
-      <section className="col-span-8">
+      <section className="md:col-span-8 col-span-1">
         <Outlet />
       </section>
     </main>
   );
 }
-
-// border-y border-[#125DB94D]

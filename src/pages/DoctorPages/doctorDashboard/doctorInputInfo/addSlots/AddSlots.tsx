@@ -1,19 +1,19 @@
-import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
-import { useForm } from "react-hook-form";
-import { FaTrash } from "react-icons/fa";
-import { IoMdAddCircle } from "react-icons/io";
-import { useSelector } from "react-redux";
-import { twMerge } from "tailwind-merge";
-import { z } from "zod";
-import { createDoctorTimeSlot } from "../../../../../api/apiCalls/doctorsApi";
 import {
   Button,
   DashboardSection,
   Modal,
-  TimePicker
+  TimePicker,
 } from "../../../../../components";
+import { twMerge } from "tailwind-merge";
+import { IoMdAddCircle } from "react-icons/io";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { FaTrash } from "react-icons/fa";
+import { createDoctorTimeSlot } from "../../../../../api/apiCalls/doctorsApi";
 import { RootState } from "../../../../../redux/store";
+import { useSelector } from "react-redux";
 import { notifySuccess } from "../../../../../utils/Utils";
 
 const FormSchema = z.object({
@@ -45,7 +45,6 @@ export default function AddSlots() {
   const selectedDay = weekdays?.find((day) => day?.selected);
   const allEmpty = weekdays.every((day) => day.slots.length === 0);
   const id = useSelector((state: RootState) => state.user.currentUser?.id);
-  // const navigate = useNavigate();
 
   const setSelectedDay = (title: string) => {
     setWeekdays((prev) =>
@@ -55,7 +54,7 @@ export default function AddSlots() {
         } else {
           return { ...day, selected: false };
         }
-      })
+      }),
     );
   };
 
@@ -67,7 +66,7 @@ export default function AddSlots() {
         } else {
           return { ...day };
         }
-      })
+      }),
     );
   };
 
@@ -75,11 +74,11 @@ export default function AddSlots() {
     setWeekdays((prev) =>
       prev?.map((day) => {
         if (day?.title === selectedDay?.title) {
-          return { ...day, slots: [...day?.slots, data?.slot_time] };
+          return { ...day, slots: [...day.slots, data.slot_time] };
         } else {
           return { ...day };
         }
-      })
+      }),
     );
     setShowSlotsModal(false);
   };
@@ -121,7 +120,6 @@ export default function AddSlots() {
       const allResponses = await fetchData();
       if (allResponses?.length > 0) {
         notifySuccess("Time Slots added!");
-        // setTimeout(()=>navigate(),1000)
         console.log("All requests successful:", allResponses);
       }
     } catch (error) {
@@ -147,7 +145,7 @@ export default function AddSlots() {
           {weekdays?.map((weekday) => (
             <div
               className={twMerge(
-                `${dayStyles} ${weekday?.selected && selectedStyles}`
+                `${dayStyles} ${weekday?.selected && selectedStyles}`,
               )}
               onClick={() => setSelectedDay(weekday?.title)}
             >

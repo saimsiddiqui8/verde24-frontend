@@ -10,7 +10,7 @@ export default function ProtectedRoutes() {
     if (!user?.token) {
       navigate(-1);
     }
-  }, []);
+  }, [navigate, user?.token]);
   return (
     <>
       <Outlet />

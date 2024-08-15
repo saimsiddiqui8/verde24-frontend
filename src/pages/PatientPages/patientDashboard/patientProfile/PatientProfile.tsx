@@ -1,23 +1,24 @@
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
-import { Toaster } from "react-hot-toast";
-import { useMutation, useQuery, useQueryClient } from "react-query";
-import { useSelector } from "react-redux";
-import { z } from "zod";
-import {
-  getPatientById,
-  updatePatientById
-} from "../../../../api/apiCalls/patientsApi";
 import {
   Button,
   DashboardSection,
   InputField,
-  PhoneInputComp
+  PhoneInputComp,
 } from "../../../../components";
-import { RootState } from "../../../../redux/store";
+import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { isPhoneValid, notifySuccess } from "../../../../utils/Utils";
+import { useSelector } from "react-redux";
+import { RootState } from "../../../../redux/store";
+import { useMutation, useQuery, useQueryClient } from "react-query";
 import { FIND_PATIENT_QUERY, UPDATE_PATIENT_QUERY } from "./queries";
+import { Toaster } from "react-hot-toast";
+import {
+  getPatientById,
+  updatePatientById,
+} from "../../../../api/apiCalls/patientsApi";
+import { UserData } from "../../../../api/apiCalls/types";
 
 const inputs = [
   {
@@ -95,7 +96,6 @@ export default function PatientProfile() {
     register,
     handleSubmit,
     reset,
-    // getValues,
     formState: { errors },
   } = useForm({
     resolver: zodResolver(FormSchema),
@@ -105,6 +105,7 @@ export default function PatientProfile() {
   const queryClient = useQueryClient();
 
   const getPatient = async () => {
+    if (!id) return;
     return getPatientById(FIND_PATIENT_QUERY, { id });
   };
 
@@ -128,7 +129,7 @@ export default function PatientProfile() {
       weight,
       blood_group,
       other_history,
-    } = patientData?.data;
+    } = patientData.data;
     return {
       patient_name: `${first_name} ${last_name}`,
       patient_age: age,
@@ -144,9 +145,10 @@ export default function PatientProfile() {
   useEffect(() => {
     reset(defaultPatientData());
     console.log(patientData?.data);
-  }, [patientData?.data]);
+  }, [patientData?.data, defaultPatientData, reset]);
 
-  const updatePatient = async (data: any) => {
+  const updatePatient = async (data: UserData) => {
+    if (!id) return;
     return updatePatientById(UPDATE_PATIENT_QUERY, { id, data });
   };
 
@@ -174,15 +176,17 @@ export default function PatientProfile() {
         queryKey: ["patient"],
       });
     }
-  }, [data]);
+  }, [data, queryClient]);
 
   return (
     <>
       <DashboardSection>
-        <div className="">
-          <form onSubmit={handleSubmit(onSubmit)} className="pt-2 pb-6 ">
-            <div className="flex justify-between my-4 w-full">
-              <h2 className="text-3xl font-semibold">Patient Profile</h2>
+        <div>
+          <form onSubmit={handleSubmit(onSubmit)} className="pt-2 pb-6">
+            <div className="flex justify-between items-center my-4">
+              <h2 className="text-2xl md:text-3xl font-semibold">
+                Patient Profile
+              </h2>
               <div className="flex gap-2">
                 <Button
                   title="Edit"
@@ -190,18 +194,24 @@ export default function PatientProfile() {
                   type="button"
                   onClick={() => setEdit(true)}
                 />
-                <Button title="Save" className="w-20" />
+                {edit && (
+                  <Button
+                    onClick={() => setEdit(false)}
+                    title="Save"
+                    className="w-20"
+                    type="submit"
+                  />
+                )}
               </div>
             </div>
-            <div className="grid grid-cols-12 gap-x-4 gap-y-0">
-              {inputs?.map((input) => (
-                <div className="col-span-6">
-                  {input?.name === "phone_number" ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4">
+              {inputs.map((input) => (
+                <div key={input.name} className="mb-4">
+                  {input.name === "phone_number" ? (
                     <PhoneInputComp
-                      label={input?.label}
-                      // value={getValues("phonenumber")}
-                      properties={{ ...register(input?.name) }}
-                      error={errors[input?.name]}
+                      label={input.label}
+                      properties={{ ...register(input.name) }}
+                      error={errors[input.name]}
                       disabled={!edit}
                     />
                   ) : (
@@ -209,10 +219,10 @@ export default function PatientProfile() {
                       label={input.label}
                       name={input.name}
                       placeholder={input.placeholder}
-                      type={input?.type}
+                      type={input.type}
                       disabled={!edit}
-                      properties={{ ...register(input?.name) }}
-                      error={errors[input?.name]}
+                      properties={{ ...register(input.name) }}
+                      error={errors[input.name]}
                     />
                   )}
                 </div>

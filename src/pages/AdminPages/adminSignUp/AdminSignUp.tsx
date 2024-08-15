@@ -11,7 +11,6 @@ import {
   notifyFailure,
   notifySuccess,
 } from "../../../utils/Utils";
-
 const inputs = [
   {
     label: "First Name",
@@ -78,7 +77,7 @@ export default function AdminSignUp() {
     e.preventDefault();
     if (Object.keys(inputValues).length === 5) {
       const passwordCheck: PasswordCheckType = isValidPassword(
-        inputValues?.password
+        inputValues?.password,
       );
       if (passwordCheck?.status) {
         mutate(inputValues);
@@ -100,7 +99,7 @@ export default function AdminSignUp() {
         notifyFailure("Sign up unsuccessful!");
       }
     }
-  }, [data]);
+  }, [data, isSuccess, navigate]);
 
   return (
     <main className="grid grid-cols-12 items-center my-12">
@@ -114,8 +113,8 @@ export default function AdminSignUp() {
           </h3>
           <form onSubmit={handleSubmit} className="pt-2 pb-6 px-5">
             <div className="grid grid-cols-12 gap-x-4 gap-y-0">
-              {inputs?.map((input) => (
-                <div className="col-span-6">
+              {inputs?.map((input, index) => (
+                <div key={index} className="col-span-6">
                   <InputField
                     label={input.label}
                     name={input.name}

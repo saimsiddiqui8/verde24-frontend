@@ -1,32 +1,31 @@
-import {
-  DashboardSection,
-  InputField,
-  PhoneInputComp,
-  RadioInput,
-  TextareaField,
-  DropdownField,
-} from "../../../../../components";
-import { IoMdAddCircle } from "react-icons/io";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { isPhoneValid } from "../../../../../utils/Utils";
-import { useState, KeyboardEvent } from "react";
 import {
+  getDownloadURL,
   getStorage,
   ref as storageRef,
   uploadBytesResumable,
-  getDownloadURL,
 } from "firebase/storage";
-import { app } from "../../../../../firebase/config";
+import { KeyboardEvent, useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import { IoMdAddCircle } from "react-icons/io";
+import { useQuery } from "react-query";
+import { useSelector } from "react-redux";
+import { z } from "zod";
 import {
   getDoctorById,
   updateDoctor,
 } from "../../../../../api/apiCalls/doctorsApi";
+import {
+  DashboardSection,
+  DropdownField,
+  InputField,
+  PhoneInputComp,
+  RadioInput,
+  TextareaField,
+} from "../../../../../components";
+import { app } from "../../../../../firebase/config";
 import { RootState } from "../../../../../redux/store";
-import { useSelector } from "react-redux";
-import { useQuery } from "react-query";
-import { useEffect } from "react";
+import { isPhoneValid } from "../../../../../utils/Utils";
 import { DOCTOR_UPDATE_QUERY, GET_DOCTOR_QUERY } from "./queries";
 
 const inputs = [
@@ -146,7 +145,6 @@ const consultationFee = [
 
 const aboutMe = {
   label: "Bibliography",
-  // type: "text",
   placeholder: "Write About Yourself",
   name: "bibliography",
 };
@@ -226,7 +224,7 @@ const FormSchema = z
     {
       message: "Please provide either UPI ID or A/C No",
       path: ["upi_id"],
-    }
+    },
   )
   .refine((data) => data.doctor_image, {
     message: "Image is required.",
@@ -263,11 +261,11 @@ export default function ConsultationForm() {
       const storage = getStorage(app);
       const storageReference = storageRef(
         storage,
-        `images/${getValues("doctor_image").name}`
+        `images/${getValues("doctor_image").name}`,
       );
       const uploadTask = await uploadBytesResumable(
         storageReference,
-        getValues("doctor_image")
+        getValues("doctor_image"),
       );
       const url = await getDownloadURL(uploadTask.ref);
       return url;
@@ -286,10 +284,10 @@ export default function ConsultationForm() {
       qualification: getValues("qualification"),
       consultation_mode: getValues("consultation_mode"),
       consultation_fee_regular: parseFloat(
-        getValues("consultation_fee_regular")
+        getValues("consultation_fee_regular"),
       ),
       consultation_fee_discounted: parseFloat(
-        getValues("consultation_fee_discounted")
+        getValues("consultation_fee_discounted"),
       ),
       booking_lead_time: getValues("lead_time"),
       payout_method: getValues("payout_method"),
@@ -329,7 +327,7 @@ export default function ConsultationForm() {
   };
 
   const getDoctor = () => {
-    return getDoctorById(GET_DOCTOR_QUERY, { id });
+    return getDoctorById(GET_DOCTOR_QUERY, { findDoctorByIdId: String(id) });
   };
 
   const doctorData = useQuery({
@@ -343,7 +341,7 @@ export default function ConsultationForm() {
         doctorData?.data?.first_name + " " + doctorData?.data?.last_name,
       ...doctorData?.data,
     });
-  }, [doctorData?.data]);
+  }, [doctorData?.data, reset]);
 
   const onSubmit = async () => {
     const image_url = await imageUpload();
@@ -445,7 +443,6 @@ export default function ConsultationForm() {
         <>
           <div className="flex gap-2">
             <RadioInput
-              // label={input?.label}
               name="consultation_mode"
               options={options}
               properties={{ ...register("consultation_mode") }}
@@ -537,7 +534,6 @@ export default function ConsultationForm() {
                 <input
                   type="radio"
                   value="upi"
-                  // name="inline-radio-group"
                   {...register("payout_method")}
                   defaultChecked
                   onClick={() => setPayout("upi")}
@@ -556,7 +552,6 @@ export default function ConsultationForm() {
                   value="ac"
                   {...register("payout_method")}
                   onClick={() => setPayout("ac")}
-                  // name="inline-radio-group"
                   name={"consultation"}
                   className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
                 />

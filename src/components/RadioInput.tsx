@@ -15,12 +15,11 @@ export default function RadioInput({
         </label>
       )}
       <div className="flex justify-evenly mt-2">
-        {options?.map((option) => (
-          <div className="flex items-center me-4">
+        {options?.map((option, index) => (
+          <div key={index} className="flex items-center me-4">
             <input
               type="radio"
               value={option.value}
-              // name="inline-radio-group"
               checked={selected ? selected === option.value : null}
               onChange={onChange}
               name={name}

@@ -2,13 +2,9 @@ import {
   createBrowserRouter,
   createRoutesFromElements,
   Route,
-  Outlet,
 } from "react-router-dom";
 import PublicRoutes from "./PublicRoutes";
-import Navbar from "../components/Navbar";
 import ProtectedRoutes from "./ProtectedRoutes";
-import { RootState } from "../redux/store";
-import { useSelector } from "react-redux";
 import { USER_ROLES } from "../api/roles";
 import DoctorLayout from "./layouts/DoctorLayout";
 import PatientLayout from "./layouts/PatientLayout";
@@ -19,7 +15,6 @@ import {
   ForgotPasswordReset,
   Homepage,
   Page404,
-  Unauthorized,
 } from "../pages/CommonPages";
 import {
   BookSlot,
@@ -36,11 +31,13 @@ import {
   SelectSlot,
   TreatmentPlans,
 } from "../pages/PatientPages";
+import OnlineHospitalAppointment from "../pages/PatientPages/patientDashboard/onlineAppointment/OnlineHospitalAppointment.tsx";
 import {
   DoctorProfile,
   DoctorSignIn,
   DoctorSignUp,
 } from "../pages/DoctorPages";
+
 import {
   AdminDashboardHome,
   AdminDoctorProfile,
@@ -55,20 +52,14 @@ import {
   AdminSignIn,
 } from "../pages/AdminPages";
 import AuthenticationRoutes from "./AuthenticationRoutes";
-
-const AppLayout = () => {
-  return (
-    <>
-      <Navbar />
-      <Outlet />
-    </>
-  );
-};
-
-const RequireAuth = ({ role }: any) => {
-  const user = useSelector((state: RootState) => state.user.currentUser);
-  return <>{user?.role === role ? <Outlet /> : <Unauthorized />}</>;
-};
+import PharmacySignIn from "../pages/PharmacyPages/pharmacySignIn/PharmacySignIn.tsx";
+import PharmacySignUp from "../pages/PharmacyPages/pharmacySignUp/PharmacySignUp.tsx";
+import LabSignIn from "../pages/LabPages/labSignIn/LabSignIn.tsx";
+import LabSignUp from "../pages/LabPages/labSignUp/LabSignUp.tsx";
+import PharmacyLayout from "./layouts/PharmacyLayout.tsx";
+import LabLayout from "./layouts/LabLayout.tsx";
+import { AppLayout } from "./AppLayout.tsx";
+import { RequireAuth } from "./RequireAuth.tsx";
 
 export const router = createBrowserRouter(
   createRoutesFromElements(
@@ -81,6 +72,10 @@ export const router = createBrowserRouter(
             <Route path="patient/sign-up" element={<PatientSignUp />} />
             <Route path="doctor/sign-in" element={<DoctorSignIn />} />
             <Route path="doctor/sign-up" element={<DoctorSignUp />} />
+            <Route path="pharmacy/sign-in" element={<PharmacySignIn />} />
+            <Route path="pharmacy/sign-up" element={<PharmacySignUp />} />
+            <Route path="lab/sign-in" element={<LabSignIn />} />
+            <Route path="lab/sign-up" element={<LabSignUp />} />
             <Route path="admin/sign-in" element={<AdminSignIn />} />
             <Route path="forgot-password">
               <Route path="1" element={<ForgotPasswordEmail />} />
@@ -123,6 +118,18 @@ export const router = createBrowserRouter(
                 path="online-appointment"
                 element={<OnlineAppointment />}
               />
+              <Route
+                path="/patient-dashboard/online-appointment/online-hospital-profile/:id"
+                element={<OnlineHospitalAppointment />}
+              />
+            </Route>
+          </Route>
+          <Route element={<RequireAuth role={USER_ROLES.pharmacy} />}>
+            <Route element={<PharmacyLayout />} path="pharmacy-dashboard">
+            </Route>
+          </Route>
+          <Route element={<RequireAuth role={USER_ROLES.lab} />}>
+            <Route element={<LabLayout />} path="lab-dashboard">
             </Route>
           </Route>
           <Route element={<RequireAuth role={USER_ROLES.admin} />}>
@@ -142,6 +149,6 @@ export const router = createBrowserRouter(
         </Route>
       </Route>
       <Route path="/*" element={<Page404 />} />
-    </>
-  )
+    </>,
+  ),
 );

@@ -88,12 +88,12 @@ export default function AdminSignIn() {
   };
 
   return (
-    <main className="grid grid-cols-12 items-center my-12">
-      <section className="col-start-3 col-span-4">
+    <main className="grid grid-cols-1 md:grid-cols-12 items-center my-12">
+      <section className="md:col-start-3 md:col-span-4 col-span-1 p-4">
         <img src={image} alt="Doctors Image" className="w-full" />
       </section>
-      <section className="col-span-5">
-        <div className="mx-8 w-4/5 justify-self-center border border-primary rounded-lg">
+      <section className="md:col-span-5 col-span-1">
+        <div className="mx-4 md:mx-8 w-full md:w-4/5 justify-self-center border border-primary rounded-lg">
           <h3 className="text-2xl text-primary font-bold my-3 border-b border-primary pt-2 pb-4 px-5">
             Admin
           </h3>
@@ -132,12 +132,6 @@ export default function AdminSignIn() {
               </Link>
             </div>
             <button className="form-btn my-3">Log In</button>
-            {/* <small className="block my-1 text-primary text-center">
-              Do not have an account?{" "}
-              <Link to="/admin/sign-up" className="font-bold">
-                Sign Up
-              </Link>
-            </small> */}
           </form>
         </div>
       </section>

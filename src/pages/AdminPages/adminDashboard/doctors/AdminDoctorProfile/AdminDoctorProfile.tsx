@@ -13,6 +13,17 @@ import {
 import { notifyFailure, notifySuccess } from "../../../../../utils/Utils";
 import { Toaster } from "react-hot-toast";
 
+type Doctor = {
+  id: string;
+  first_name: string;
+  last_name: string;
+  email: string;
+  phone_number: string;
+  gender: string;
+  is_verified: boolean;
+  doctorHospitals: { hospital_id: string }[];
+};
+
 export default function AdminDoctorProfile() {
   const [selectedHospitals, setSelectedHospitals] =
     useState<CheckboxOption[]>();
@@ -57,7 +68,7 @@ export default function AdminDoctorProfile() {
     queryFn: getDoctor,
   });
 
-  function getAssignedHospitals(doctor: any) {
+  function getAssignedHospitals(doctor: Doctor[]) {
     return doctor?.map((item: any) => item?.hospital_id);
   }
 
@@ -74,9 +85,12 @@ export default function AdminDoctorProfile() {
   useEffect(() => {
     setSelectedHospitals(hospitals);
     setVerified(doctorData?.data?.is_verified);
-  }, [doctorData.data]);
+  }, [doctorData.data, hospitals]);
 
-  const createDoctorHospital = async (data: any) => {
+  const createDoctorHospital = async (data: {
+    doctor_id: number;
+    hospital_id: number;
+  }) => {
     try {
       const response = await publicRequest.post("/graphql", {
         query: DOCTOR_ADD_HOSPITAL_QUERY,
@@ -89,7 +103,10 @@ export default function AdminDoctorProfile() {
     }
   };
 
-  const deleteDoctorHospital = async (data: any) => {
+  const deleteDoctorHospital = async (data: {
+    doctor_id: number;
+    hospital_id: number;
+  }) => {
     try {
       const response = await publicRequest.post("/graphql", {
         query: DOCTOR_REMOVE_HOSPITAL_QUERY,
@@ -106,24 +123,23 @@ export default function AdminDoctorProfile() {
   const removeDoctorHospital = useMutation(deleteDoctorHospital);
 
   const handleAssignment = (value: string) => {
-    let current: CheckboxOption;
     const newArr = selectedHospitals?.map((item: CheckboxOption) => {
       if (value === item.value) {
-        current = item;
         return { ...item, checked: !item.checked };
       } else {
         return item;
       }
     });
-    if (current!?.checked) {
+    const currentItem = newArr?.find((item) => item.value === value);
+    if (currentItem && currentItem.checked) {
       removeDoctorHospital.mutate(
         {
           doctor_id: parseInt(id!),
-          hospital_id: parseInt(current!?.id),
+          hospital_id: parseInt(currentItem.id),
         },
         {
           onSuccess: () => {
-            notifySuccess(`${current?.value} removed!`);
+            notifySuccess(`${currentItem?.value} removed!`);
             queryClient.invalidateQueries({
               queryKey: ["adminHospitals"],
             });
@@ -134,17 +150,17 @@ export default function AdminDoctorProfile() {
           onError: () => {
             notifyFailure(`Deletion failed!`);
           },
-        }
+        },
       );
-    } else {
+    } else if (currentItem) {
       addDoctorHospital.mutate(
         {
           doctor_id: parseInt(id!),
-          hospital_id: parseInt(current!?.id),
+          hospital_id: parseInt(currentItem.id),
         },
         {
           onSuccess: () => {
-            notifySuccess(`${current?.value} assigned!`);
+            notifySuccess(`${currentItem?.value} assigned!`);
             queryClient.invalidateQueries({
               queryKey: ["adminHospitals"],
             });
@@ -155,13 +171,13 @@ export default function AdminDoctorProfile() {
           onError: () => {
             notifyFailure(`Assignment failed!`);
           },
-        }
+        },
       );
     }
     setSelectedHospitals(newArr);
   };
 
-  const updateDoctor = async (data: any) => {
+  const updateDoctor = async (data: { is_verified: boolean }) => {
     try {
       const response = await publicRequest.post("/graphql", {
         query: DOCTOR_UPDATE_QUERY,
@@ -193,7 +209,7 @@ export default function AdminDoctorProfile() {
         onError: () => {
           notifyFailure("Error updating doctor!");
         },
-      }
+      },
     );
   };
 
@@ -224,26 +240,26 @@ export default function AdminDoctorProfile() {
         doctorData?.data?.last_name
       }
     >
-      <div className="grid grid-cols-12 gap-6 my-2 items-start">
-        <div className="col-span-6 flex items-center gap-2">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 my-2 items-start">
+        <div className="flex flex-col lg:flex-row items-start justify-start text-xs font-bold gap-2">
           <span>Name:</span>
           <span>
             {doctorData?.data?.first_name + " " + doctorData?.data?.last_name}
           </span>
         </div>
-        <div className="col-span-6 flex items-center gap-2">
+        <div className="flex flex-col lg:flex-row items-start justify-start text-xs font-bold gap-2">
           <span>Email:</span>
           <span>{doctorData?.data?.email}</span>
         </div>
-        <div className="col-span-6 flex items-center gap-2">
+        <div className="flex flex-col lg:flex-row items-start justify-start text-xs font-bold gap-2">
           <span>Phone Number:</span>
           <span>{doctorData?.data?.phone_number}</span>
         </div>
-        <div className="col-span-6 flex items-center gap-2">
+        <div className="flex flex-col lg:flex-row items-start justify-start text-xs font-bold gap-2">
           <span>Gender:</span>
           <span>{doctorData?.data?.gender}</span>
         </div>
-        <div className="col-span-6">
+        <div>
           <span>Hospital Assignment:</span>
           <CheckboxInput
             options={selectedHospitals}
@@ -251,9 +267,9 @@ export default function AdminDoctorProfile() {
             onChange={(e) => handleAssignment(e.target.value)}
           />
         </div>
-        <div className="col-span-6 flex items-center gap-2">
+        <div className="flex flex-col lg:flex-row items-start justify-start text-xs font-bold gap-2">
           <span>Verified:</span>
-          <label className="relative inline-flex items-center cursor-pointer">
+          <label className="relative inline-flex flex-col lg:flex-row items-start justify-start text-xs font-bold cursor-pointer">
             <input
               type="checkbox"
               checked={verified}

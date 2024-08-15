@@ -47,7 +47,7 @@ const ForgotPasswordReset = () => {
     if (!state?.for) {
       navigate(-1);
     }
-  }, [state?.for]);
+  }, [state?.for, navigate]);
 
   const handleNavigate = () => {
     if (state?.for === users.patient) {
@@ -64,7 +64,7 @@ const ForgotPasswordReset = () => {
     const res = await updatePassword(
       state?.id.toString(),
       state?.for,
-      data?.password
+      data?.password,
     );
     dispatch(loadingEnd());
     if (res?.id) {

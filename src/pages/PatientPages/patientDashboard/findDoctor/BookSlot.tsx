@@ -48,7 +48,7 @@ export default function BookSlot() {
           <div className="w-1/5 flex flex-col gap-2">
             <Button title="Book Clinic Visit" secondary={true} />
             <Button title="Video Call" secondary={true} />
-            <Link to={`/patient-dashboard/find-doctor/profile/${id}`}>
+            <Link to={`/find-doctor/profile/${id}`}>
               <Button title="View Profile" secondary={true} />
             </Link>
           </div>

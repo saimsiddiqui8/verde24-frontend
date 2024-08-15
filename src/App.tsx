@@ -6,7 +6,7 @@ import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
 import { Loading } from "./components";
 
-const client = new QueryClient({
+const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       staleTime: 60000,
@@ -19,7 +19,7 @@ function App() {
   return (
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
-        <QueryClientProvider client={client}>
+        <QueryClientProvider client={queryClient}>
           <Loading />
           <RouterProvider router={router} />
         </QueryClientProvider>

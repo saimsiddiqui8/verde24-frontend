@@ -103,12 +103,12 @@ export default function FindDoctorProfile() {
         </div>
         <div>
           <p>
-            Verified patient shared utmost satisfaction with the care and
-            services provided by Dr. Umer Mushtaq at Chughtai Medical Centre ,.
+            Verified patient shared utmost satisfaction with the care and
+            services provided by Dr. Umer Mushtaq at Chughtai Medical Centre ,.
           </p>
-          <p>Satisfied with diagnosis and treatment</p>
-          <p>PA & Staff was helpful</p>
-          <p>Hospital / Clinic environment was well-maintained</p>
+          <p>Satisfied with diagnosis and treatment</p>
+          <p>PA & Staff was helpful</p>
+          <p>Hospital / Clinic environment was well-maintained</p>
           <p>Review shared on Marham feedback call - 20 hours ago</p>
         </div>
       </ContentSection>

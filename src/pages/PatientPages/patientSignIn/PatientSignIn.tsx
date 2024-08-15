@@ -97,12 +97,12 @@ export default function PatientSignIn() {
   };
 
   return (
-    <main className="grid grid-cols-12 items-center">
-      <section className="col-start-3 col-span-4">
-        <div className="w-11/12 justify-self-center">
+    <main className="grid grid-cols-12 items-center gap-4 px-4 md:px-8">
+      <section className="col-span-12 md:col-start-3 md:col-span-4 order-2 md:order-1">
+        <div className="w-full justify-self-center">
           <form onSubmit={handleSubmit(onSubmit)}>
             <div className="text-primary my-3 flex justify-between items-center">
-              <h3 className="text-3xl font-bold">Log In</h3>
+              <h3 className="text-2xl md:text-3xl font-bold">Log In</h3>
               <small className="font-medium">
                 Are you a Doctor?{" "}
                 <Link to="/doctor/sign-in" className="font-bold">
@@ -110,8 +110,9 @@ export default function PatientSignIn() {
                 </Link>
               </small>
             </div>
-            {inputs?.map((input) => (
+            {inputs?.map((input, index) => (
               <InputField
+                key={index}
                 label={input.label}
                 name={input.name}
                 type={input.type}
@@ -146,9 +147,9 @@ export default function PatientSignIn() {
             <button className="form-btn my-3">Log In</button>
           </form>
           <div className="flex items-center justify-between w-full my-2">
-            <div className="w-[45%] h-[1px] bg-[#E0E0E0]"></div>
+            <div className="w-1/2 md:w-[45%] h-[1px] bg-[#E0E0E0]"></div>
             <small>Or</small>
-            <div className="w-[45%] h-[1px] bg-[#E0E0E0]"></div>
+            <div className="w-1/2 md:w-[45%] h-[1px] bg-[#E0E0E0]"></div>
           </div>
           <GoogleButton
             label="Sign in with Google"
@@ -166,8 +167,8 @@ export default function PatientSignIn() {
           </small>
         </div>
       </section>
-      <section className="col-span-4">
-        <img src={image} alt="Doctors Image" className="w-full" />
+      <section className="col-span-12 md:col-span-6 lg:col-span-4 order-1 md:order-2">
+        <img src={image} alt="Doctors Image" className="w-full h-auto" />
       </section>
       <Toaster />
     </main>

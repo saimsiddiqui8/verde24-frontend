@@ -25,11 +25,11 @@ export default function AdminHospitals() {
 
   return (
     <DashboardSection title="Hospitals">
-      <div className="grid grid-cols-12 gap-6 my-2">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 my-2">
         {data?.map((hospital: Hospital) => (
           <div
             key={hospital?.id}
-            className="col-span-4 bg-gray-50 shadow rounded-lg px-4 py-4"
+            className="bg-gray-50 shadow rounded-lg px-4 py-4"
           >
             <div className="flex justify-center">
               <FaHospitalAlt size={50} />
@@ -45,9 +45,11 @@ export default function AdminHospitals() {
           </div>
         ))}
       </div>
-      <div className="w-48 mx-auto mt-4">
+      <div className="w-full sm:w-48 mx-auto mt-4">
         <Link to="/admin-dashboard/hospitals/add-new">
-          <button className="form-btn my-3">Add New Hospital</button>
+          <button className="form-btn my-3 w-full sm:w-auto">
+            Add New Hospital
+          </button>
         </Link>
       </div>
     </DashboardSection>
