@@ -1,5 +1,5 @@
 export const NEW_PHARMACY_QUERY = `
-mutation CreatePharmacy($data: LabInput!) {
+mutation CreatePharmacy($data: PharmacyInput!) {
   createPharmacy(data: $data) {
     id
     name

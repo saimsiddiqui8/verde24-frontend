@@ -2,8 +2,6 @@ import image from "../../../assets/sign-up.png";
 import { useEffect, useState } from "react";
 import {
   Button,
-  FacebookButton,
-  GoogleButton,
   InputField,
   Modal,
   PhoneInputComp,
@@ -20,18 +18,8 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import OTPInput from "react-otp-input";
 import { loadingEnd, loadingStart } from "../../../redux/slices/loadingSlice";
-import {
-  EXISTING_PHARMACY_QUERY,
-  NEW_PHARMACY_QUERY,
-  SEND_OTP_QUERY,
-  VERIFY_OTP_QUERY,
-} from "./queries";
-import {
-  createPharmacy,
-  findPharmacyByEmail,
-  sendPharmacyOTP,
-  verifyPharmacyOTP,
-} from "../../../api/apiCalls/pharmacyApi";
+import { EXISTING_PHARMACY_QUERY, NEW_PHARMACY_QUERY, SEND_OTP_QUERY, VERIFY_OTP_QUERY } from "./queries";
+import { createPharmacy, findPharmacyByEmail, sendPharmacyOTP, verifyPharmacyOTP } from "../../../api/apiCalls/pharmacyApi";
 import { useDispatch } from "react-redux";
 import { useMutation, useQuery } from "react-query";
 
@@ -97,6 +85,7 @@ const OtpSchema = z.object({
 });
 
 export default function PharmacySignUp() {
+
   const {
     register,
     handleSubmit,
@@ -116,7 +105,7 @@ export default function PharmacySignUp() {
     resolver: zodResolver(OtpSchema),
   });
 
-  const [showSignUpModal, setshowSignUpModal] = useState(false);
+  const [showSignupModal, setShowSignupModal] = useState(false);
   const [showOTPModal, setShowOTPModal] = useState(false);
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -179,6 +168,7 @@ export default function PharmacySignUp() {
     }
   };
 
+
   const onSubmit = async () => {
     handleValidation();
   };
@@ -190,7 +180,7 @@ export default function PharmacySignUp() {
   const handleOTPSubmit = async () => {
     dispatch(loadingStart());
     const verify = await verifyOTPData.refetch();
-    console.log(verify);
+    console.log(verify)
     dispatch(loadingEnd());
     if (verify?.status === "success") {
       notifySuccess("OTP Verified!");
@@ -217,7 +207,7 @@ export default function PharmacySignUp() {
       }
       dispatch(loadingEnd());
     }
-  }, [data, dispatch, navigate, reset]);
+  }, [data]);
 
   return (
     <main className="grid grid-cols-1 md:grid-cols-12 items-center p-4">
@@ -285,16 +275,6 @@ export default function PharmacySignUp() {
             <small>Or</small>
             <div className="w-[45%] h-[1px] bg-[#E0E0E0]"></div>
           </div>
-          <div className="flex flex-col md:flex-row gap-4">
-            <GoogleButton
-              label="Sign Up with Google"
-              onClick={() => notifyFailure("Google Sign up is not available")}
-            />
-            <FacebookButton
-              label="Sign Up with Facebook"
-              onClick={() => notifyFailure("Facebook Sign up is not available")}
-            />
-          </div>
           <small className="block my-1 text-primary text-center">
             Already have an account?{" "}
             <Link to="/pharmacy/sign-in" className="font-bold">
@@ -303,7 +283,7 @@ export default function PharmacySignUp() {
           </small>
         </div>
       </section>
-      <section className="col-span-1 md:col-span-5 p-4 order-1 md:order-2">
+      <section className="col-span-1 md:col-span-4 px-4 order-1 md:order-2">
         <img src={image} alt="Pharmacy Image" className="w-full h-auto" />
       </section>
       <Toaster />
@@ -359,8 +339,8 @@ export default function PharmacySignUp() {
       </Modal>
       <Modal
         title="Enter Following Information"
-        showModal={showSignUpModal}
-        setModal={setshowSignUpModal}
+        showModal={showSignupModal}
+        setModal={setShowSignupModal}
       >
         <form className="space-y-4" onSubmit={handleSubmit(handleModalSubmit)}>
           <PhoneInputComp

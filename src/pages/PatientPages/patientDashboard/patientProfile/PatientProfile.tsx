@@ -144,9 +144,7 @@ export default function PatientProfile() {
 
   useEffect(() => {
     reset(defaultPatientData());
-    console.log(patientData?.data);
   }, [patientData?.data, defaultPatientData, reset]);
-
   const updatePatient = async (data: UserData) => {
     if (!id) return;
     return updatePatientById(UPDATE_PATIENT_QUERY, { id, data });

@@ -2,9 +2,13 @@ import {
   createBrowserRouter,
   createRoutesFromElements,
   Route,
+  Outlet,
 } from "react-router-dom";
 import PublicRoutes from "./PublicRoutes";
+import Navbar from "../components/Navbar";
 import ProtectedRoutes from "./ProtectedRoutes";
+import { RootState } from "../redux/store";
+import { useSelector } from "react-redux";
 import { USER_ROLES } from "../api/roles";
 import DoctorLayout from "./layouts/DoctorLayout";
 import PatientLayout from "./layouts/PatientLayout";
@@ -15,6 +19,7 @@ import {
   ForgotPasswordReset,
   Homepage,
   Page404,
+  Unauthorized,
 } from "../pages/CommonPages";
 import {
   BookSlot,
@@ -31,7 +36,7 @@ import {
   SelectSlot,
   TreatmentPlans,
 } from "../pages/PatientPages";
-import OnlineHospitalAppointment from "../pages/PatientPages/patientDashboard/onlineAppointment/OnlineHospitalAppointment.tsx";
+import OnlineHospitalAppointment from '../pages/PatientPages/patientDashboard/onlineAppointment/OnlineHospitalAppointment.tsx';
 import {
   DoctorProfile,
   DoctorSignIn,
@@ -58,8 +63,26 @@ import LabSignIn from "../pages/LabPages/labSignIn/LabSignIn.tsx";
 import LabSignUp from "../pages/LabPages/labSignUp/LabSignUp.tsx";
 import PharmacyLayout from "./layouts/PharmacyLayout.tsx";
 import LabLayout from "./layouts/LabLayout.tsx";
-import { AppLayout } from "./AppLayout.tsx";
-import { RequireAuth } from "./RequireAuth.tsx";
+import AccountManagement from "../pages/PharmacyPages/pharmacyDashboard/accountManagement/AccountManagement.tsx";
+import LabAccount from "../pages/LabPages/LabDashboard/labAccount/LabAccount.tsx";
+
+interface RequireAuthProps {
+  role: string;
+}
+
+const AppLayout = () => {
+  return (
+    <>
+      <Navbar />
+      <Outlet />
+    </>
+  );
+};
+
+const RequireAuth = ({ role }: RequireAuthProps) => {
+  const user = useSelector((state: RootState) => state.user.currentUser);
+  return <>{user?.role === role ? <Outlet /> : <Unauthorized />}</>;
+};
 
 export const router = createBrowserRouter(
   createRoutesFromElements(
@@ -124,12 +147,16 @@ export const router = createBrowserRouter(
               />
             </Route>
           </Route>
+          {/* pharmacy route */}
           <Route element={<RequireAuth role={USER_ROLES.pharmacy} />}>
             <Route element={<PharmacyLayout />} path="pharmacy-dashboard">
+              <Route index element={<AccountManagement/>} />
             </Route>
           </Route>
+          {/* lab route */}
           <Route element={<RequireAuth role={USER_ROLES.lab} />}>
             <Route element={<LabLayout />} path="lab-dashboard">
+              <Route index element={<LabAccount/>} />
             </Route>
           </Route>
           <Route element={<RequireAuth role={USER_ROLES.admin} />}>
@@ -149,6 +176,6 @@ export const router = createBrowserRouter(
         </Route>
       </Route>
       <Route path="/*" element={<Page404 />} />
-    </>,
-  ),
+    </>
+  )
 );
