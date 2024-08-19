@@ -1,12 +1,5 @@
 import { Link, Outlet, useLocation } from "react-router-dom";
 import doctorImg from "../../assets/doctor.png";
-// import ProfileIcon from "../../assets/sidemenu/patient/Profile.svg";
-// import FindDoctorIcon from "../../assets/sidemenu/patient/FindDoctor.svg";
-// import TreatmentPlanIcon from "../../assets/sidemenu/patient/TreatmentPlan.svg";
-// import CompletedProceduresIcon from "../../assets/sidemenu/patient/CompletedProcedures.svg";
-// import FilesIcon from "../../assets/sidemenu/patient/Files.svg";
-// import PrescriptionsIcon from "../../assets/sidemenu/patient/Prescriptions.svg";
-// import OnlineAppointmentIcon from "../../assets/sidemenu/patient/OnlineAppointment.svg";
 
 const links = [
   { title: "Account Management", href: "/account-management" },

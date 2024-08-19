@@ -147,13 +147,11 @@ export const router = createBrowserRouter(
               />
             </Route>
           </Route>
-          {/* pharmacy route */}
           <Route element={<RequireAuth role={USER_ROLES.pharmacy} />}>
             <Route element={<PharmacyLayout />} path="pharmacy-dashboard">
               <Route index element={<AccountManagement/>} />
             </Route>
           </Route>
-          {/* lab route */}
           <Route element={<RequireAuth role={USER_ROLES.lab} />}>
             <Route element={<LabLayout />} path="lab-dashboard">
               <Route index element={<LabAccount/>} />

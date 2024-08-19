@@ -65,7 +65,7 @@ const LabAccount: React.FC = () => {
   });
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const email = "test@gmail.com"; // Replace with actual email logic if needed
+  const email = formData.registered_email;
 
   const { data: labData } = useQuery(
     ["findLabByEmail", email],
@@ -78,7 +78,7 @@ const LabAccount: React.FC = () => {
     console.log(labData)
     setFormData({
       name: labData.name,
-      laboratory_name: labData.laboratory_name, // Adjust if necessary
+      laboratory_name: labData.laboratory_name, 
       city: labData.city,
       registration_number: labData.registration_number,
       registered_email: labData.email,

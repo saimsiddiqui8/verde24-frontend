@@ -21,22 +21,18 @@ export default function Navbar() {
     if (!user?.token) {
       return null;
     }
-   const res = await logoutQuery(user?.token);
-   if (res === "Logged out successfully"){
+      await logoutQuery(user?.token);
     if (user?.role === USER_ROLES.admin) {
       navigate("/admin/sign-in");
     } else if (user?.role === USER_ROLES.doctor) {
       navigate("/doctor/sign-in");
     } else if (user?.role === USER_ROLES.pharmacy) {
-      console.log("i am pharmacay");
       navigate("/pharmacy/sign-in");
     } else if (user?.role === USER_ROLES.lab) {
-      console.log("i am lab"); 
       navigate("/lab/sign-in");
     } else if (user?.role === USER_ROLES.patient) {
       navigate("/patient/sign-in");
     }
-  }
     dispatch(flushUser());
     setShowDropdown(false);
   };

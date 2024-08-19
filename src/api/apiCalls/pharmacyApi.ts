@@ -30,8 +30,6 @@ export const logoutQuery = async (token: string) => {
         },
       },
     );
-    console.log(response,"response api");
-    
     return response?.data?.data?.logout;
   } catch (error) {
     console.error("Error logging out:", error);
