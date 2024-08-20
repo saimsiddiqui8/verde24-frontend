@@ -1,5 +1,19 @@
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useEffect, useState } from "react";
+import { Controller, useForm } from "react-hook-form";
+import { Toaster } from "react-hot-toast";
+import OTPInput from "react-otp-input";
+import { useMutation, useQuery } from "react-query";
+import { useDispatch } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
+import { z } from "zod";
+import {
+  checkDoctorEmail,
+  createDoctor,
+  sendDoctorOTP,
+  verifyDoctorOTP,
+} from "../../../api/apiCalls/doctorsApi";
 import image from "../../../assets/form-img.png";
-import { useState, useEffect } from "react";
 import {
   Button,
   InputField,
@@ -7,32 +21,18 @@ import {
   PhoneInputComp,
   RadioInput,
 } from "../../../components";
-import { Link, useNavigate } from "react-router-dom";
-import { useMutation, useQuery } from "react-query";
-import { Toaster } from "react-hot-toast";
+import { loadingEnd, loadingStart } from "../../../redux/slices/loadingSlice";
 import {
   isPhoneValid,
   notifyFailure,
   notifySuccess,
 } from "../../../utils/Utils";
-import { useDispatch } from "react-redux";
-import { loadingEnd, loadingStart } from "../../../redux/slices/loadingSlice";
 import {
   EXISTING_DOCTOR_QUERY,
   NEW_DOCTOR_QUERY,
   SEND_OTP_QUERY,
   VERIFY_OTP_QUERY,
 } from "./queries";
-import OTPInput from "react-otp-input";
-import { Controller, useForm } from "react-hook-form";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  checkDoctorEmail,
-  createDoctor,
-  sendDoctorOTP,
-  verifyDoctorOTP,
-} from "../../../api/apiCalls/doctorsApi";
 
 const inputs = [
   {
@@ -230,7 +230,6 @@ export default function DoctorSignUp() {
     dispatch(loadingStart());
     const verify = await verifyOTPData.refetch();
     dispatch(loadingEnd());
-    console.log(verify?.data);
     if (verify?.data) {
       notifySuccess("OTP Verified!");
       setShowOTPModal(false);

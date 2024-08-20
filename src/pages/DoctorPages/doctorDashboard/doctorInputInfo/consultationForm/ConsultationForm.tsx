@@ -321,7 +321,6 @@ export default function ConsultationForm() {
 
   const handleFileChange = (e: any) => {
     const newImage = e.target.files[0];
-    console.log(newImage);
     setImage(newImage);
     setValue("doctor_image", newImage);
   };
@@ -350,9 +349,6 @@ export default function ConsultationForm() {
         id: String(id),
         data: { image: image_url, ...getInfo() },
       });
-      if (res) {
-        console.log("Success");
-      }
     }
   };
   return (

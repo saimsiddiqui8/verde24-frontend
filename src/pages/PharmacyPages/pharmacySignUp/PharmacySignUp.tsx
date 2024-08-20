@@ -1,27 +1,27 @@
-import image from "../../../assets/sign-up.png";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useState } from "react";
+import { Controller, useForm } from "react-hook-form";
+import { Toaster } from "react-hot-toast";
+import OTPInput from "react-otp-input";
+import { useMutation, useQuery } from "react-query";
+import { useDispatch } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
+import { z } from "zod";
+import { createPharmacy, findPharmacyByEmail, sendPharmacyOTP, verifyPharmacyOTP } from "../../../api/apiCalls/pharmacyApi";
+import image from "../../../assets/sign-up.png";
 import {
   Button,
   InputField,
   Modal,
   PhoneInputComp,
 } from "../../../components";
-import { Link, useNavigate } from "react-router-dom";
-import { Toaster } from "react-hot-toast";
+import { loadingEnd, loadingStart } from "../../../redux/slices/loadingSlice";
 import {
   isPhoneValid,
   notifyFailure,
   notifySuccess,
 } from "../../../utils/Utils";
-import { useForm, Controller } from "react-hook-form";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import OTPInput from "react-otp-input";
-import { loadingEnd, loadingStart } from "../../../redux/slices/loadingSlice";
 import { EXISTING_PHARMACY_QUERY, NEW_PHARMACY_QUERY, SEND_OTP_QUERY, VERIFY_OTP_QUERY } from "./queries";
-import { createPharmacy, findPharmacyByEmail, sendPharmacyOTP, verifyPharmacyOTP } from "../../../api/apiCalls/pharmacyApi";
-import { useDispatch } from "react-redux";
-import { useMutation, useQuery } from "react-query";
 
 const inputs = [
   {
@@ -180,7 +180,6 @@ export default function PharmacySignUp() {
   const handleOTPSubmit = async () => {
     dispatch(loadingStart());
     const verify = await verifyOTPData.refetch();
-    console.log(verify)
     dispatch(loadingEnd());
     if (verify?.status === "success") {
       notifySuccess("OTP Verified!");

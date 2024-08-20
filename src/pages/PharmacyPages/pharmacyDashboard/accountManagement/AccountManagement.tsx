@@ -1,6 +1,6 @@
-import React, { useState, useRef } from "react";
-import { Button, DashboardSection, InputField, PhoneInputComp } from "../../../../components";
+import React, { useRef, useState } from "react";
 import { Toaster } from "react-hot-toast";
+import { Button, DashboardSection, InputField, PhoneInputComp } from "../../../../components";
 
 const inputs = [
   {
@@ -73,7 +73,6 @@ const AccountManagement: React.FC = () => {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log(formData, selectedFile);
   };
 
   return (

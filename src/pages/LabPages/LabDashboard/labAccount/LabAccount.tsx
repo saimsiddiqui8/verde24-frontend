@@ -1,8 +1,8 @@
-import React, { useState, useRef ,useEffect} from "react";
-import { Button, DashboardSection, InputField, PhoneInputComp } from "../../../../components";
+import React, { useEffect, useRef, useState } from "react";
 import { Toaster } from "react-hot-toast";
 import { useQuery } from "react-query";
 import { findLabByEmail } from "../../../../api/apiCalls/labApi";
+import { Button, DashboardSection, InputField, PhoneInputComp } from "../../../../components";
 
 const inputs = [
   {
@@ -69,23 +69,22 @@ const LabAccount: React.FC = () => {
 
   const { data: labData } = useQuery(
     ["findLabByEmail", email],
-    () => findLabByEmail(query,{email}),
+    () => findLabByEmail(query, { email }),
     { enabled: !!email }
   );
 
   useEffect(() => {
-  if (labData) {
-    console.log(labData)
-    setFormData({
-      name: labData.name,
-      laboratory_name: labData.laboratory_name, 
-      city: labData.city,
-      registration_number: labData.registration_number,
-      registered_email: labData.email,
-      phone_number: labData.phone_number,
-    });
-  }
-}, [labData]);
+    if (labData) {
+      setFormData({
+        name: labData.name,
+        laboratory_name: labData.laboratory_name,
+        city: labData.city,
+        registration_number: labData.registration_number,
+        registered_email: labData.email,
+        phone_number: labData.phone_number,
+      });
+    }
+  }, [labData]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -106,8 +105,6 @@ const LabAccount: React.FC = () => {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // Handle form submission
-    console.log(formData, selectedFile);
   };
 
   return (

@@ -1,6 +1,13 @@
-import { Link, useLocation, useNavigate } from "react-router-dom";
-import { InputField } from "../../../components";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect } from "react";
+import { useForm } from "react-hook-form";
+import { Toaster } from "react-hot-toast";
+import { useDispatch } from "react-redux";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { z } from "zod";
+import { InputField } from "../../../components";
+import { loadingEnd, loadingStart } from "../../../redux/slices/loadingSlice";
+import { notifyFailure, notifySuccess } from "../../../utils/Utils";
 import {
   forgotPassword,
   getAdminByEmail,
@@ -8,13 +15,6 @@ import {
   getPatientByEmail,
   users,
 } from "./queriesAndUtils";
-import { notifyFailure, notifySuccess } from "../../../utils/Utils";
-import { Toaster } from "react-hot-toast";
-import { loadingEnd, loadingStart } from "../../../redux/slices/loadingSlice";
-import { useDispatch } from "react-redux";
-import { z } from "zod";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
 
 const FormSchema = z.object({
   email: z.string().min(1, { message: "Email is required!" }).email(),
@@ -39,7 +39,6 @@ const ForgotPasswordEmail = () => {
   const sendEmail = async (email: string, id: number) => {
     const res = await forgotPassword(email, id, state?.for);
     dispatch(loadingEnd());
-    console.log(res);
     if (res?.id) {
       notifySuccess("Verification Code is sent to your email. Redirecting...");
       setTimeout(() => {
