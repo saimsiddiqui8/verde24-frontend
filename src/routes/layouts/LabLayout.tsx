@@ -2,9 +2,15 @@ import { Link, Outlet, useLocation } from "react-router-dom";
 import doctorImg from "../../assets/doctor.png";
 
 const links = [
-  { title: "Lab File Report", href: "/lab-file-report" },
-  { title: "Lab Profile View", href: "/lab-profile-view" },
+  { title: "Account Management", href: "/account-management" },
+  { title: "Upcoming Lab Test", href: "/upcoming-lab-test" },
+  { title: "Lab Booked Appointments", href: "/lab-booked-appointments" },
+  { title: "Declined Appointments", href: "/declined-appointments" },
+  { title: "Payments And Payouts", href: "/payments-and-payouts" },
+  { title: "Collection Center", href: "/collection-center" },
+  { title: "Available Test", href: "/available-test" },
 ];
+
 
 const BASE_URL = "/lab-dashboard";
 
@@ -22,8 +28,7 @@ export default function LabLayout() {
         </div>
         <div className="mt-5">
           {links.map((link, index) => (
-            <Link
-              key={index}
+            <Link key={index}
               to={BASE_URL + link?.href}
               className={`block py-0.5 px-4 md:px-8 border-y border-[#125DB94D] ${
                 pathname === BASE_URL + link?.href && "text-selected"

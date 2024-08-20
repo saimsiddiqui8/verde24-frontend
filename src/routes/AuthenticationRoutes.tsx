@@ -11,7 +11,7 @@ export default function AuthenticationRoutes() {
     if (user?.token) {
       navigate(-1);
     }
-  }, [navigate, user?.token]);
+  }, [navigate]);
   return (
     <>
       <Outlet />

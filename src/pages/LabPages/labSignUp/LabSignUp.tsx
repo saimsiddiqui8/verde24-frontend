@@ -1,39 +1,27 @@
-import image from "../../../assets/sign-up.png";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useState } from "react";
+import { Controller, useForm } from "react-hook-form";
+import { Toaster } from "react-hot-toast";
+import OTPInput from "react-otp-input";
+import { useMutation, useQuery } from "react-query";
+import { useDispatch } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
+import { z } from "zod";
+import { createLab, findLabByEmail, sendLabOTP, verifyLabOTP } from "../../../api/apiCalls/labApi";
+import image from "../../../assets/lab-auth.png";
 import {
   Button,
-  FacebookButton,
-  GoogleButton,
   InputField,
   Modal,
   PhoneInputComp,
 } from "../../../components";
-import { Link, useNavigate } from "react-router-dom";
-import { Toaster } from "react-hot-toast";
+import { loadingEnd, loadingStart } from "../../../redux/slices/loadingSlice";
 import {
   isPhoneValid,
   notifyFailure,
   notifySuccess,
 } from "../../../utils/Utils";
-import { useForm, Controller } from "react-hook-form";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import OTPInput from "react-otp-input";
-import { loadingEnd, loadingStart } from "../../../redux/slices/loadingSlice";
-import {
-  EXISTING_LAB_QUERY,
-  NEW_LAB_QUERY,
-  SEND_OTP_QUERY,
-  VERIFY_OTP_QUERY,
-} from "./queries";
-import { useDispatch } from "react-redux";
-import { useMutation, useQuery } from "react-query";
-import {
-  createLab,
-  findLabByEmail,
-  sendLabOTP,
-  verifyLabOTP,
-} from "../../../api/apiCalls/labApi";
+import { EXISTING_LAB_QUERY, NEW_LAB_QUERY, SEND_OTP_QUERY, VERIFY_OTP_QUERY } from "./queries";
 
 const inputs = [
   {
@@ -97,6 +85,7 @@ const OtpSchema = z.object({
 });
 
 export default function LabSignUp() {
+
   const {
     register,
     handleSubmit,
@@ -116,7 +105,7 @@ export default function LabSignUp() {
     resolver: zodResolver(OtpSchema),
   });
 
-  const [showSignUpModal, setshowSignUpModal] = useState(false);
+  const [showSignUpModal, setShowSignUpModal] = useState(false);
   const [showOTPModal, setShowOTPModal] = useState(false);
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -179,6 +168,7 @@ export default function LabSignUp() {
     }
   };
 
+
   const onSubmit = async () => {
     handleValidation();
   };
@@ -190,7 +180,6 @@ export default function LabSignUp() {
   const handleOTPSubmit = async () => {
     dispatch(loadingStart());
     const verify = await verifyOTPData.refetch();
-    console.log(verify);
     dispatch(loadingEnd());
     if (verify?.status === "success") {
       notifySuccess("OTP Verified!");
@@ -217,7 +206,7 @@ export default function LabSignUp() {
       }
       dispatch(loadingEnd());
     }
-  }, [data, dispatch, navigate, reset]);
+  }, [data]);
 
   return (
     <main className="grid grid-cols-1 md:grid-cols-12 items-center p-4">
@@ -227,8 +216,8 @@ export default function LabSignUp() {
             <div className="text-primary my-3 flex flex-col md:flex-row justify-between items-center">
               <h3 className="text-3xl font-bold">Create Account</h3>
               <small className="font-medium mt-2 md:mt-0">
-                Are you a Lab?{" "}
-                <Link to="/lab/sign-up" className="font-bold">
+                Are you a Pharmacy?{" "}
+                <Link to="/pharmacy/sign-up" className="font-bold">
                   Sign Up
                 </Link>
               </small>
@@ -285,16 +274,6 @@ export default function LabSignUp() {
             <small>Or</small>
             <div className="w-[45%] h-[1px] bg-[#E0E0E0]"></div>
           </div>
-          <div className="flex flex-col md:flex-row gap-4">
-            <GoogleButton
-              label="Sign Up with Google"
-              onClick={() => notifyFailure("Google Sign up is not available")}
-            />
-            <FacebookButton
-              label="Sign Up with Facebook"
-              onClick={() => notifyFailure("Facebook Sign up is not available")}
-            />
-          </div>
           <small className="block my-1 text-primary text-center">
             Already have an account?{" "}
             <Link to="/pharmacy/sign-in" className="font-bold">
@@ -303,7 +282,7 @@ export default function LabSignUp() {
           </small>
         </div>
       </section>
-      <section className="col-span-1 md:col-span-5 p-4 order-1 md:order-2">
+      <section className="col-span-1 md:col-span-4 px-4 order-1 md:order-2">
         <img src={image} alt="Pharmacy Image" className="w-full h-auto" />
       </section>
       <Toaster />
@@ -360,7 +339,7 @@ export default function LabSignUp() {
       <Modal
         title="Enter Following Information"
         showModal={showSignUpModal}
-        setModal={setshowSignUpModal}
+        setModal={setShowSignUpModal}
       >
         <form className="space-y-4" onSubmit={handleSubmit(handleModalSubmit)}>
           <PhoneInputComp

@@ -1,6 +1,6 @@
 import axios from "axios";
 
-// const BASE_URL = import.meta.env.BASE_URL;
+
 const BASE_URL = `https://dev-api.verde24health.com`;
 const data = localStorage.getItem("persist:root");
 const user = data ? JSON.parse(data)?.user : null;

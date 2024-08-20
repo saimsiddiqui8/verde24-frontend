@@ -1,5 +1,5 @@
-import image from "../../../assets/sign-in.png";
-import { FacebookButton, GoogleButton, InputField } from "../../../components";
+import image from "../../../assets/lab-auth.png";
+import { InputField } from "../../../components";
 import { Link, useNavigate } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 import { notifyFailure, notifySuccess } from "../../../utils/Utils";
@@ -53,7 +53,7 @@ export default function LabSignIn() {
       notifySuccess("Login Success! Redirecting...");
       setTimeout(() => {
         navigate("/lab-dashboard");
-      }, 1000);
+      }, 100);
     } else {
       notifyFailure(tokenRes?.error || "Login Failed!");
       setError("email", { type: "custom" });
@@ -63,17 +63,12 @@ export default function LabSignIn() {
     }
   };
 
+
   const onSubmit = async (data: any) => {
     handleLogin(data);
   };
 
-  const handleGoogleSignIn = async () => {
-    notifyFailure("Google Sign in is not available");
-  };
-
-  const handleFacebookSignIn = async () => {
-    notifyFailure("Facebook Sign in is not available");
-  };
+ 
 
   return (
     <main className="grid grid-cols-12 items-center gap-4 px-4 md:px-8">
@@ -83,15 +78,14 @@ export default function LabSignIn() {
             <div className="text-primary my-3 flex justify-between items-center">
               <h3 className="text-2xl md:text-3xl font-bold">Lab Login</h3>
               <small className="font-medium">
-                Are you a Lab?{" "}
-                <Link to="/lab/sign-in" className="font-bold">
+                Are you a Pharmacy?{" "}
+                <Link to="/pharmacy/sign-in" className="font-bold">
                   Sign In
                 </Link>
               </small>
             </div>
             {inputs?.map((input, index) => (
-              <InputField
-                key={index}
+              <InputField key={index}
                 label={input.label}
                 name={input.name}
                 type={input.type}
@@ -130,14 +124,6 @@ export default function LabSignIn() {
             <small>Or</small>
             <div className="w-1/2 md:w-[45%] h-[1px] bg-[#E0E0E0]"></div>
           </div>
-          <GoogleButton
-            label="Sign in with Google"
-            onClick={handleGoogleSignIn}
-          />
-          <FacebookButton
-            label="Sign in with Facebook"
-            onClick={handleFacebookSignIn}
-          />
           <small className="block my-1 text-primary text-center">
             Do not have an account?{" "}
             <Link to="/lab/sign-up" className="font-bold">

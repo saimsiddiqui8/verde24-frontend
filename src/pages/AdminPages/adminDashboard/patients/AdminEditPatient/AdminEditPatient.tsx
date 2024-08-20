@@ -1,24 +1,24 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
+import { Toaster } from "react-hot-toast";
+import { useMutation, useQuery, useQueryClient } from "react-query";
+import { useDispatch } from "react-redux";
+import { useNavigate, useParams } from "react-router-dom";
+import { publicRequest } from "../../../../../api/requestMethods";
 import {
   DashboardSection,
   InputField,
   PhoneInputComp,
   RadioInput,
 } from "../../../../../components";
-import { useNavigate, useParams } from "react-router-dom";
-import { useMutation, useQuery, useQueryClient } from "react-query";
-import { Toaster } from "react-hot-toast";
-import { publicRequest } from "../../../../../api/requestMethods";
+import {
+  loadingEnd,
+  loadingStart,
+} from "../../../../../redux/slices/loadingSlice";
 import {
   isPhoneValid,
   notifyFailure,
   notifySuccess,
 } from "../../../../../utils/Utils";
-import { useDispatch } from "react-redux";
-import {
-  loadingEnd,
-  loadingStart,
-} from "../../../../../redux/slices/loadingSlice";
 import {
   EXISTING_PATIENT_QUERY,
   GET_PATIENT_QUERY,
@@ -108,7 +108,6 @@ export default function AdminEditPatient() {
 
   const createPatient = async (data: any) => {
     const { id, ...other } = data;
-    console.log(other);
     return publicRequest
       .post("/graphql", {
         query: UPDATE_PATIENT_QUERY,
@@ -121,10 +120,8 @@ export default function AdminEditPatient() {
 
   const handleUpdate = () => {
     mutate(inputValues);
-    console.log(inputValues);
   };
 
-  console.log(data);
   useEffect(() => {
     if (data) {
       setInputValues(initialValue);
@@ -167,7 +164,6 @@ export default function AdminEditPatient() {
         setFieldError("phone_number");
       } else {
         handleValidation();
-        console.log("validate");
       }
     } else {
       setFieldError();
