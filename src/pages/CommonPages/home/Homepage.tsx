@@ -108,7 +108,7 @@ export default function Homepage() {
     formState: { errors },
   } = useForm({ resolver: zodResolver(FormSchema) });
 
-  const onSubmit = (data: any) => {
+  const onSubmit = () => {
   };
   return (
     <div>
