@@ -116,7 +116,7 @@ export default function FindDoctor() {
     <>
       <DashboardSection>
         <div className="flex justify-between my-4 flex-wrap">
-          <h2 className="text-xl sm:text-3xl font-semibold w-full sm:w-auto">
+          <h2 className="text-3xl sm:text-3xl font-semibold w-full sm:w-auto">
             Find Doctor
           </h2>
           <div className="flex gap-2 mt-2 sm:mt-0">
@@ -128,7 +128,7 @@ export default function FindDoctor() {
             <Button title="Reset" className="w-fit" secondary={true} />
           </div>
         </div>
-        <div className="flex gap-2 items-center my-4 flex-wrap">
+        <div className="flex gap-0 sm:gap-2 items-center my-4 flex-wrap">
           <InputField label="Search By Specialty" className="flex-grow" />
           <InputField
             value={search}
@@ -189,7 +189,7 @@ export default function FindDoctor() {
               </div>
             )}
           </div>
-          <div className="w-full sm:w-auto mt-2 sm:mt-0">
+          <div className="w-full sm:w-auto my-5 sm:my-0">
             <Button title="Search" secondary={true} />
           </div>
         </div>
@@ -228,7 +228,7 @@ export default function FindDoctor() {
                           className={`absolute top-7 right-6 transform translate-x-1/2 -translate-y-1/2 w-5 h-5 rounded-full border-2 border-white ${doctor.online ? "bg-green-500" : "bg-gray-500"}`}
                         ></div>
                       </div>
-                      <div className="w-full sm:w-3/5">
+                      <div className="w-full sm:w-3/5 order-2 sm:order-1">
                         <h2 className="text-xl sm:text-3xl font-medium">
                           {doctor.first_name} {doctor.last_name}
                         </h2>
@@ -249,7 +249,7 @@ export default function FindDoctor() {
                           </div>
                         </div>
                       </div>
-                      <div className="w-full sm:w-1/5 flex flex-col gap-2">
+                      <div className="w-full sm:w-1/5 flex flex-col gap-4 order-1 sm:order-2">
                         <Button title="Video Call" secondary={true} />
                         <Link
                           to={`/patient-dashboard/find-doctor/profile/${doctor.id}`}

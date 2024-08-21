@@ -71,7 +71,7 @@ export default function LabSignIn() {
  
 
   return (
-    <main className="grid grid-cols-12 items-center gap-4 px-4 md:px-8">
+    <main className="grid grid-cols-12 items-center gap-4 mb-6 px-4 md:px-8">
       <section className="col-span-12 md:col-start-3 md:col-span-4 order-2 md:order-1">
         <div className="w-full justify-self-center">
           <form onSubmit={handleSubmit(onSubmit)}>

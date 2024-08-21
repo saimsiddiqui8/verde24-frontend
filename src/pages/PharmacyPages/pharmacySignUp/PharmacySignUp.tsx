@@ -210,7 +210,7 @@ export default function PharmacySignUp() {
   }, [data]);
 
   return (
-    <main className="grid grid-cols-1 md:grid-cols-12 items-center p-4">
+    <main className="grid grid-cols-1 mb-4 md:grid-cols-12 items-center p-4">
       <section className="col-span-1 md:col-start-2 md:col-span-5 order-2 md:order-1">
         <div className="justify-self-center w-full">
           <form onSubmit={handleSubmit(onSubmit)}>

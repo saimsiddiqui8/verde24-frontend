@@ -75,43 +75,47 @@ const ForgotPasswordReset = () => {
     }
   };
   return (
-    <main>
-      <div className="mx-auto mt-12 w-2/5 justify-self-center border border-primary rounded-lg">
-        <div className="text-primary border-b border-primary pt-2 pb-4 px-5">
-          <h3 className="text-2xl font-bold my-3">Forgot Password</h3>
-          <small>
-            Please enter the email address you would like your password
-            information sent to{" "}
+    <main className="flex justify-center items-center min-h-screen bg-gray-100">
+    <div className="w-full max-w-md mx-4 md:mx-0 border border-primary rounded-lg bg-white shadow-lg">
+      <div className="text-primary border-b border-primary pt-4 pb-6 px-6">
+        <h3 className="text-2xl font-bold my-3">Forgot Password</h3>
+        <small className="block text-sm text-gray-600">
+          Please enter the new password and confirm it.
+        </small>
+      </div>
+      <form onSubmit={handleSubmit(onSubmit)} className="pt-4 pb-6 px-6">
+        <InputField
+          label="New Password"
+          name="password"
+          type="password"
+          properties={{ ...register("password") }}
+          error={errors["password"]}
+        />
+        <InputField
+          label="Confirm Password"
+          name="confirmPassword"
+          type="password"
+          properties={{ ...register("confirmPassword") }}
+          error={errors["confirmPassword"]}
+        />
+        <div className="mb-5">
+          <small className="text-primary text-xs md:text-sm">
+            <span className="font-bold">Note:</span>&nbsp;Password must be
+            greater than 8 characters, with at least 1 uppercase letter, 1
+            lowercase letter, 1 numeric character, and 1 special character.
+            Avoid using palindromes.
           </small>
         </div>
-        <form onSubmit={handleSubmit(onSubmit)} className="pt-2 pb-6 px-5">
-          <InputField
-            label="New Password"
-            name="password"
-            type="password"
-            properties={{ ...register("password") }}
-            error={errors["password"]}
-          />
-          <InputField
-            label="Confirm Password"
-            name="confirmPassword"
-            type="password"
-            properties={{ ...register("confirmPassword") }}
-            error={errors["confirmPassword"]}
-          />
-          <div className="mb-5">
-            <small className="text-primary">
-              <span className="font-bold">Note:</span>&nbsp;Password must be
-              greater than 8 characters, with at least 1 uppercase letter, 1
-              lowercase letter, 1 numeric character, and 1 special character.
-              Avoid using palindromes.
-            </small>
-          </div>
-          <button className="form-btn my-3">Reset Password</button>
-        </form>
-      </div>
-      <Toaster />
-    </main>
+        <button
+          type="submit"
+          className="form-btn w-full py-2 mt-4"
+        >
+          Reset Password
+        </button>
+      </form>
+    </div>
+    <Toaster />
+  </main>
   );
 };
 

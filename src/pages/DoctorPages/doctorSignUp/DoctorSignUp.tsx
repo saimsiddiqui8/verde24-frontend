@@ -241,7 +241,7 @@ export default function DoctorSignUp() {
   };
 
   return (
-    <main className="grid grid-cols-1 md:grid-cols-12 items-center my-8">
+    <main className="grid grid-cols-1 md:grid-cols-12 items-center my-4">
       <section className="col-span-1 md:col-start-2 md:col-span-6 order-2 md:order-1">
         <div className="mx-4 md:mx-8 w-full md:w-4/5 justify-self-center rounded-lg">
           <div className="text-primary my-3 pt-2 pb-4 px-5 flex justify-between items-center">
