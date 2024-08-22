@@ -6,6 +6,8 @@ export default function Modal({
   children,
   showModal,
   setModal,
+  timer,
+  timeLeft,
 }: ModalInputProps) {
   return (
     <div
@@ -22,6 +24,14 @@ export default function Modal({
               onClick={() => setModal(false)}
             />
           </div>
+          {showModal &&(
+            <p className="text-center text-primary font-semibold mb-2">
+              Time left: {timer}
+            </p>
+          )}
+          {timeLeft === 0 && <p className="text-center text-red-900 font-semibold mb-2">
+             YOUR OTP IS EXPIRED PLEASE RESEND CODE 
+            </p>}
           <div className="p-4 md:p-5">{children}</div>
         </div>
       </div>
@@ -33,5 +43,7 @@ interface ModalInputProps {
   title: string;
   children: ReactNode;
   showModal: boolean;
+  timer?: string;
+  timeLeft?:number;
   setModal: (x: boolean) => void;
 }

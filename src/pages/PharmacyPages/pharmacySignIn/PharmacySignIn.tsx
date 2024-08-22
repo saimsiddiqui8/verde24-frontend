@@ -6,14 +6,12 @@ import { notifyFailure, notifySuccess } from "../../../utils/Utils";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { loadingEnd, loadingStart } from "../../../redux/slices/loadingSlice";
 import { PHARMACY_TOKEN_QUERY } from "./queries";
 import { USER_ROLES } from "../../../api/roles";
 import { setUser } from "../../../redux/slices/userSlice";
 import { getPharmacyToken } from "../../../api/apiCalls/pharmacyApi";
-import { RootState } from "../../../redux/store";
-import { useEffect} from "react";
 
 const inputs = [
   {
@@ -44,7 +42,6 @@ export default function PharmacySignIn() {
   } = useForm({ resolver: zodResolver(FormSchema) });
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const user = useSelector((state: RootState) => state.user.currentUser);
 
   const handleLogin = async (data: Inputs) => {
     dispatch(loadingStart());
@@ -71,18 +68,10 @@ export default function PharmacySignIn() {
     handleLogin(data);
   };
 
-  useEffect(() => {
-    if (user?.token) {
-      navigate("/pharmacy-dashboard", { replace: true });
-    }
-    else{
-      navigate("/pharmacy/sign-in", { replace: true });
-    }
-  }, [user?.token,  navigate]);
 
 
   return (
-    <main className="grid grid-cols-12 items-center gap-4 mb-6 px-4 md:px-8">
+    <main className="grid grid-cols-12 items-center gap-8 mb-6 px-4 md:px-8">
       <section className="col-span-12 md:col-start-3 md:col-span-4 order-2 md:order-1">
         <div className="w-full justify-self-center">
           <form onSubmit={handleSubmit(onSubmit)}>

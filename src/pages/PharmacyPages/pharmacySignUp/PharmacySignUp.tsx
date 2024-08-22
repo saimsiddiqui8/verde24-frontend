@@ -109,6 +109,30 @@ export default function PharmacySignUp() {
   const [showOTPModal, setShowOTPModal] = useState(false);
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const [timeLeft, setTimeLeft] = useState<number>(300);
+  const [isDisabled, setIsDisabled] = useState<boolean>(false);
+
+  useEffect(() => {
+    let timer: NodeJS.Timeout;
+    if (showOTPModal && timeLeft > 0) {
+      timer = setInterval(() => setTimeLeft((prev) => prev - 1), 1000);
+    }
+
+    if (timeLeft === 0) {
+      setIsDisabled(true);
+    }
+   
+
+    return () => {
+      if (timer) clearInterval(timer);
+    };
+  }, [showOTPModal, timeLeft, setShowOTPModal]);
+
+  const formatTime = (seconds: number) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins}:${secs < 10 ? "0" : ""}${secs}`;
+  };
 
   const createNewPharmacy = async (data: any) => {
     return createPharmacy(NEW_PHARMACY_QUERY, { data });
@@ -156,6 +180,8 @@ export default function PharmacySignUp() {
       setShowOTPModal(true);
     }
     dispatch(loadingEnd());
+    setIsDisabled(false);
+    setTimeLeft(300);
   };
   const handleValidation = async () => {
     dispatch(loadingStart());
@@ -291,6 +317,8 @@ export default function PharmacySignUp() {
         title="Verify OTP"
         showModal={showOTPModal}
         setModal={setShowOTPModal}
+        timer={formatTime(timeLeft)}
+        timeLeft={timeLeft}
       >
         <form
           onSubmit={handleSubmitModal(handleOTPSubmit)}
@@ -325,13 +353,13 @@ export default function PharmacySignUp() {
                 errorsModal["otp"].message}
             </small>
           )}
-          <Button title="Verify Code" className="mt-4" />
-          <Button
+            {!isDisabled &&   <Button title="Verify Code" className="mt-4" />} 
+          {isDisabled &&<Button
             title="Send Code Again"
             className="mt-2"
             type="button"
-            onClick={() => notifyFailure("Send OTP is not available")}
-          />
+            onClick={sendOtp}
+          />}
           <small className="text-primary font-bold uppercase mt-4 block text-center">
             OTP will expire after 5 minutes!
           </small>
