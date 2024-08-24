@@ -2,9 +2,7 @@ import { Link, Outlet } from "react-router-dom";
 import doctorImg from "../../assets/doctor.png";
 import ProfileIcon from "../../assets/sidemenu/doctor/My Profile.svg";
 
-const links = [
-  { title: "My Profile", href: "/profile", icon: ProfileIcon },
-];
+const links = [{ title: "My Profile", href: "/profile", icon: ProfileIcon }];
 
 const BASE_URL = "/doctor-dashboard";
 

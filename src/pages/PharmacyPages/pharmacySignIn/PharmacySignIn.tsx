@@ -63,12 +63,9 @@ export default function PharmacySignIn() {
     }
   };
 
-
   const onSubmit = async (data: any) => {
     handleLogin(data);
   };
-
-
 
   return (
     <main className="grid grid-cols-12 items-center gap-8 mb-6 px-4 md:px-8">
@@ -85,7 +82,8 @@ export default function PharmacySignIn() {
               </small>
             </div>
             {inputs?.map((input, index) => (
-              <InputField key={index}
+              <InputField
+                key={index}
                 label={input.label}
                 name={input.name}
                 type={input.type}

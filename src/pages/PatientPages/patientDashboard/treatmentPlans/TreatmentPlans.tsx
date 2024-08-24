@@ -91,10 +91,7 @@ export default function TreatmentPlans() {
                   </Typography>
                 </td>
                 <td className="p-2 sm:p-4">
-                  <Typography
-                    variant="small"
-                    className="font-normal"
-                  >
+                  <Typography variant="small" className="font-normal">
                     {job}
                   </Typography>
                 </td>

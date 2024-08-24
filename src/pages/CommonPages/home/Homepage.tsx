@@ -72,9 +72,9 @@ const consult = [
   { img: consultImg1, title: "Pregnancy Care " },
   { img: consultImg2, title: "Acne, pimple or skin issues" },
   { img: consultImg3, title: "Performance issues in bed" },
-  { img: consultImg4, title: "Cold, cough or fever" },
-  { img: consultImg5, title: "Child not feeling well " },
-  { img: consultImg6, title: "Depression or anxiety" },
+  { img: consultImg6, title: "Cold, cough or fever" },
+  { img: consultImg4, title: "Child not feeling well " },
+  { img: consultImg5, title: "Depression or anxiety" },
 ];
 
 const appointment = [
@@ -298,7 +298,6 @@ export default function Homepage() {
           <div className="flex flex-col items-center sm:flex-row gap-2">
             <GooglePlayButton icon={<FaGooglePlay size={25} fill="white" />} />
             <GooglePlayButton icon={<FaApple size={25} fill="white" />} />
-           
           </div>
         </div>
       </div>

@@ -7,15 +7,15 @@ mutation($id: String!, $data: DoctorInputUpdate!) {
 `;
 
 export const GET_DOCTOR_QUERY = `
-query($id:String!) {
-  findDoctorById(id: $id) {
-    id
-    first_name
-    last_name
-    email
-    phone_number
-    gender
-    is_verified
+query FindDoctorById($findDoctorByIdId: String!) {
+    findDoctorById(id: $findDoctorByIdId) {
+      id
+      first_name
+      last_name
+      email
+      phone_number
+      gender
+      is_verified
+    }
   }
-}
 `;

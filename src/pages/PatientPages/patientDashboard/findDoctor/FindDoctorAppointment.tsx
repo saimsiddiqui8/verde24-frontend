@@ -12,9 +12,7 @@ import {
 import { useDispatch } from "react-redux";
 import { GET_DOCTOR_QUERY } from "../../../DoctorPages/doctorDashboard/doctorInputInfo/consultationForm/queries";
 
-const consultations = [
-  { title: "Video Consultation" },
-];
+const consultations = [{ title: "Video Consultation" }];
 
 export default function FindDoctorAppointment() {
   const [doctor, setDoctor] = useState<Doctor | null>(null);

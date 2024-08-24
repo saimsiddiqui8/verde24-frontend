@@ -49,7 +49,7 @@ const ForgotPasswordCode = () => {
     }
   };
   return (
-<main className="flex justify-center items-center min-h-screen bg-gray-100">
+    <main className="flex justify-center items-center min-h-screen bg-white-100">
       <div className="w-full max-w-md mx-4 md:mx-0 border border-primary rounded-lg bg-white shadow-lg">
         <div className="text-primary border-b border-primary pt-4 pb-6 px-6">
           <h3 className="text-2xl font-bold my-3">Forgot Password</h3>
@@ -84,10 +84,7 @@ const ForgotPasswordCode = () => {
                 errors["otp"].message}
             </small>
           )}
-          <button
-            type="submit"
-            className="form-btn w-full py-2 mt-4"
-          >
+          <button type="submit" className="form-btn w-full py-2 mt-4">
             Verify Code
           </button>
         </form>

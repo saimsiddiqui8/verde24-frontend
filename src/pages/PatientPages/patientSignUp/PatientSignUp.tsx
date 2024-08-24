@@ -144,19 +144,20 @@ export default function () {
   const [showOTPModal, setShowOTPModal] = useState(false);
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const [timeLeft, setTimeLeft] = useState<number>(300);
+  const initialTime = 300;
+  const [timeLeft, setTimeLeft] = useState<number>(initialTime);
   const [isDisabled, setIsDisabled] = useState<boolean>(false);
 
   useEffect(() => {
     let timer: NodeJS.Timeout;
+    let seconds: number = 1000;
     if (showOTPModal && timeLeft > 0) {
-      timer = setInterval(() => setTimeLeft((prev) => prev - 1), 1000);
+      timer = setInterval(() => setTimeLeft((prev) => prev - 1), seconds);
     }
 
     if (timeLeft === 0) {
       setIsDisabled(true);
     }
-   
 
     return () => {
       if (timer) clearInterval(timer);
@@ -168,7 +169,6 @@ export default function () {
     const secs = seconds % 60;
     return `${mins}:${secs < 10 ? "0" : ""}${secs}`;
   };
-
 
   const createNewPatient = async (data: CreatePatientType) => {
     return createPatient(NEW_PATIENT_QUERY, data);
@@ -227,7 +227,7 @@ export default function () {
     }
     dispatch(loadingEnd());
     setIsDisabled(false);
-    setTimeLeft(300);
+    setTimeLeft(initialTime);
   };
 
   const handleValidation = async () => {
@@ -445,13 +445,15 @@ export default function () {
                 errorsModal["otp"].message}
             </small>
           )}
-          {!isDisabled &&   <Button title="Verify Code" className="mt-4" />} 
-          {isDisabled &&<Button
-            title="Send Code Again"
-            className="mt-2"
-            type="button"
-            onClick={sendOtp}
-          />}         
+          {!isDisabled && <Button title="Verify Code" className="mt-4" />}
+          {isDisabled && (
+            <Button
+              title="Send Code Again"
+              className="mt-2"
+              type="button"
+              onClick={sendOtp}
+            />
+          )}
           <small className="text-primary font-bold uppercase mt-4 block text-center">
             OTP will expire after 5 minutes!
           </small>
