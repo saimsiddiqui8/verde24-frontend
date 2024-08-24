@@ -257,7 +257,6 @@ export default function DoctorSignUp() {
     dispatch(loadingStart());
     const verify = await verifyOTPData.refetch();
     dispatch(loadingEnd());
-    console.log(verify?.data);
     if (verify?.data) {
       notifySuccess("OTP Verified!");
       setShowOTPModal(false);

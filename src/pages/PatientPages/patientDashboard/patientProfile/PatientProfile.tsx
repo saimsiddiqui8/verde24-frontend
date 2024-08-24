@@ -144,7 +144,6 @@ export default function PatientProfile() {
 
   useEffect(() => {
     if (patientData?.data) {
-      // console.log(new Date());
       reset(defaultPatientData);
     }
   }, [patientData?.data, reset]);

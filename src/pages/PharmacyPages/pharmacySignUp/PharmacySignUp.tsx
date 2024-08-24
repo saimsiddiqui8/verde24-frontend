@@ -210,7 +210,6 @@ export default function PharmacySignUp() {
   const handleOTPSubmit = async () => {
     dispatch(loadingStart());
     const verify = await verifyOTPData.refetch();
-    console.log(verify);
     dispatch(loadingEnd());
     if (verify?.status === "success") {
       notifySuccess("OTP Verified!");

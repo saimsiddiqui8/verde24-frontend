@@ -41,7 +41,6 @@ const ForgotPasswordEmail = () => {
   const sendEmail = async (email: string, id: number) => {
     const res = await forgotPassword(email, id, state?.for);
     dispatch(loadingEnd());
-    console.log(res);
     if (res?.id) {
       notifySuccess("Verification Code is sent to your email. Redirecting...");
       setTimeout(() => {

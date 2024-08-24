@@ -108,7 +108,6 @@ export default function AdminEditPatient() {
 
   const createPatient = async (data: any) => {
     const { id, ...other } = data;
-    console.log(other);
     return publicRequest
       .post("/graphql", {
         query: UPDATE_PATIENT_QUERY,
@@ -121,10 +120,7 @@ export default function AdminEditPatient() {
 
   const handleUpdate = () => {
     mutate(inputValues);
-    console.log(inputValues);
   };
-
-  console.log(data);
   useEffect(() => {
     if (data) {
       setInputValues(initialValue);
@@ -167,7 +163,6 @@ export default function AdminEditPatient() {
         setFieldError("phone_number");
       } else {
         handleValidation();
-        console.log("validate");
       }
     } else {
       setFieldError();

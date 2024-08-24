@@ -40,7 +40,7 @@ export default function OnlineAppointment() {
         dispatch(loadingEnd());
       })
       .catch((err) => {
-        console.log(err.toString());
+        console.error(err.toString());
       });
   }, [dispatch]);
   if (!hospitals) {

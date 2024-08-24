@@ -4,7 +4,6 @@ import { RootState } from "../redux/store";
 
 const Loading = () => {
   const loading = useSelector((state: RootState) => state.loading.loading);
-  console.log(loading);
   return (
     <>
       {loading ? (

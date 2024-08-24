@@ -78,7 +78,6 @@ const AccountManagement: React.FC = () => {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log(formData, selectedFile);
   };
 
   return (

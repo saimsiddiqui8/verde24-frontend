@@ -80,7 +80,6 @@ const LabAccount: React.FC = () => {
 
   useEffect(() => {
     if (labData) {
-      console.log(labData);
       setFormData({
         name: labData.name,
         laboratory_name: labData.laboratory_name,
@@ -111,8 +110,6 @@ const LabAccount: React.FC = () => {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // Handle form submission
-    console.log(formData, selectedFile);
   };
 
   return (

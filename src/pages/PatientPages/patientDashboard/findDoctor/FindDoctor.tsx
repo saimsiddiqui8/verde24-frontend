@@ -61,7 +61,7 @@ export default function FindDoctor() {
         dispatch(loadingEnd());
       })
       .catch((err) => {
-        console.log(err.toString());
+        console.error(err.toString());
       });
   }, [dispatch]);
 

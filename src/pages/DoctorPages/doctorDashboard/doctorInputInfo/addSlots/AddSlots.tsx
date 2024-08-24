@@ -120,7 +120,6 @@ export default function AddSlots() {
       const allResponses = await fetchData();
       if (allResponses?.length > 0) {
         notifySuccess("Time Slots added!");
-        console.log("All requests successful:", allResponses);
       }
     } catch (error) {
       console.error("Error fetching data:", error);

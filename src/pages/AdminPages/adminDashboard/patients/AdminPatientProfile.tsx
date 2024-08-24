@@ -22,8 +22,6 @@ export default function AdminPatientProfile() {
   `;
 
   const getPatient = async () => {
-    console.log("id of admin ", id);
-
     return publicRequest
       .post("/graphql", {
         query: PATIENT_QUERY,
