@@ -345,7 +345,7 @@ export default function ConsultationForm() {
   const onSubmit = async () => {
     const image_url = await imageUpload();
     if (image_url) {
-      const res = await updateDoctor(DOCTOR_UPDATE_QUERY, {
+      await updateDoctor(DOCTOR_UPDATE_QUERY, {
         id: String(id),
         data: { image: image_url, ...getInfo() },
       });

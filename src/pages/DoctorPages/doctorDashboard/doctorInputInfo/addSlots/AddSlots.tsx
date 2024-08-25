@@ -1,19 +1,19 @@
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { FaTrash } from "react-icons/fa";
+import { IoMdAddCircle } from "react-icons/io";
+import { useSelector } from "react-redux";
+import { twMerge } from "tailwind-merge";
+import { z } from "zod";
+import { createDoctorTimeSlot } from "../../../../../api/apiCalls/doctorsApi";
 import {
   Button,
   DashboardSection,
   Modal,
   TimePicker,
 } from "../../../../../components";
-import { twMerge } from "tailwind-merge";
-import { IoMdAddCircle } from "react-icons/io";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { FaTrash } from "react-icons/fa";
-import { createDoctorTimeSlot } from "../../../../../api/apiCalls/doctorsApi";
 import { RootState } from "../../../../../redux/store";
-import { useSelector } from "react-redux";
 import { notifySuccess } from "../../../../../utils/Utils";
 
 const FormSchema = z.object({
