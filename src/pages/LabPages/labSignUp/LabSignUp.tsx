@@ -119,7 +119,7 @@ export default function LabSignUp() {
 
   useEffect(() => {
     let timer: NodeJS.Timeout;
-    let seconds: number = 1000;
+    const seconds: number = 1000;
     if (showOTPModal && timeLeft > 0) {
       timer = setInterval(() => setTimeLeft((prev) => prev - 1), seconds);
     }
