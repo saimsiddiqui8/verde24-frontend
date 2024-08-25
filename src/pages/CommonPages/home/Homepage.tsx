@@ -31,7 +31,6 @@ import DropdownField from "../../../components/DropdownField";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-
 const cards = [
   {
     title: "Video Consultation",
@@ -117,7 +116,6 @@ export default function Homepage() {
         <div className="my-8 flex flex-col sm:flex-row gap-2 sm:gap-4 px-8 items-center">
           <div className="w-11/12 sm:w-48">
             <InputField
-              label="Location"
               placeholder="Nigeria"
               properties={{ ...register("location") }}
               error={errors["location"]}
@@ -227,7 +225,7 @@ export default function Homepage() {
             <div className="overflow-clip relative">
               <img src={card?.img} alt="" className="w-full object-cover" />
             </div>
-            <div className="flex flex-col items-center gap-2 justify-center p-2">
+            <div className="flex flex-col items-start gap-2 justify-center p-2">
               <h4 className="text-lg text-center">{card?.title}</h4>
             </div>
           </div>

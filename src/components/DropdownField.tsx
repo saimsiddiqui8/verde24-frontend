@@ -16,7 +16,7 @@ const Field = ({
       >
         {label}
         <select
-          className={`w-full mt-1 px-3 py-2 bg-white shadow-sm border ${
+          className={`w-full px-3 pb-2.5 pt-4 bg-white shadow-sm border ${
             error ? "border-crimson" : "border-primary"
           } rounded-md focus:outline-none focus:ring-primary focus:border-primary`}
           name={name}

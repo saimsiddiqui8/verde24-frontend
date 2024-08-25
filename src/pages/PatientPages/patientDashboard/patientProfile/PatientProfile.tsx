@@ -192,7 +192,7 @@ export default function PatientProfile() {
               <h2 className="text-2xl md:text-3xl font-semibold">
                 Patient Profile
               </h2>
-              <div className="flex gap-2">
+              <div className="flex gap-4">
                 <Button
                   title="Edit"
                   className="w-20"
@@ -204,7 +204,7 @@ export default function PatientProfile() {
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4">
               {inputs.map((input) => (
-                <div key={input.name} className="mb-4">
+                <div key={input.name} className="mb-6 h-16">
                   {input.name === "phone_number" ? (
                     <PhoneInputComp
                       label={input.label}
