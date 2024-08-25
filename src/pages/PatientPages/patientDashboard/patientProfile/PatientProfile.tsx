@@ -151,7 +151,7 @@ export default function PatientProfile() {
     if (!id) return;
     const updatedId = String(id);
     return updatePatientById(UPDATE_PATIENT_QUERY, {
-      updatePatientId: updatedid,
+      updatePatientId: updatedId,
       data,
     });
   };
