@@ -1,10 +1,4 @@
 import React, { useState, useRef } from "react";
-import {
-  Button,
-  DashboardSection,
-  InputField,
-  PhoneInputComp,
-} from "../../../../components";
 import { Toaster } from "react-hot-toast";
 import {
   Button,

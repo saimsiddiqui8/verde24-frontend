@@ -349,8 +349,6 @@ export default function ConsultationForm() {
         id: String(id),
         data: { image: image_url, ...getInfo() },
       });
-      if (res) {
-      }
     }
   };
   return (

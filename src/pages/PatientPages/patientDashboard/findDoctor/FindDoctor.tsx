@@ -1,4 +1,4 @@
-import { Button, DashboardSection, InputField } from "../../../../components";
+import { Button, DashboardSection } from "../../../../components";
 import doctorImg from "../../../../assets/doctor.png";
 import { Link } from "react-router-dom";
 import { useEffect, useState, useRef } from "react";
@@ -281,7 +281,7 @@ export default function FindDoctor() {
         </div>
         <div className="flex flex-col gap-4">
           {doctors
-            ?.filter((doctor: any) => {
+            ?.filter((doctor: Doctor) => {
               const matchesSearchDoctor =
                 searchDoctor.toLowerCase() === "" ||
                 doctor.first_name
