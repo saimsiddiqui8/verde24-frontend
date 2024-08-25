@@ -149,7 +149,7 @@ export default function PatientProfile() {
   }, [patientData?.data, reset]);
   const updatePatient = async (data: UserData) => {
     if (!id) return;
-    const updatedid = String(id);
+    const updatedId = String(id);
     return updatePatientById(UPDATE_PATIENT_QUERY, {
       updatePatientId: updatedid,
       data,
