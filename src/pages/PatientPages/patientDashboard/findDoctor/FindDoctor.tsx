@@ -9,6 +9,7 @@ import {
 } from "../../../../redux/slices/loadingSlice";
 import { useDispatch } from "react-redux";
 import { io } from "socket.io-client";
+import { notifyFailure } from "../../../../utils/Utils";
 
 interface Doctor {
   id: string;
@@ -66,7 +67,7 @@ export default function FindDoctor() {
         dispatch(loadingEnd());
       })
       .catch((err) => {
-        console.error(err.toString());
+        notifyFailure(err.toString());
       });
   }, [dispatch]);
 
