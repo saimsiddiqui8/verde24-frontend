@@ -51,7 +51,8 @@ export default function FindDoctor() {
   const [availability, setAvailability] = useState<boolean | null>(null);
   const [specialityDropdownOpen, setSpecialityDropdownOpen] = useState(false);
   const [doctorDropdownOpen, setDoctorDropdownOpen] = useState(false);
-  const [availabilityDropdownOpen, setAvailabilityDropdownOpen] = useState(false);
+  const [availabilityDropdownOpen, setAvailabilityDropdownOpen] =
+    useState(false);
   const dispatch = useDispatch();
   const specialityDropdownRef = useRef<HTMLDivElement>(null);
   const doctorDropdownRef = useRef<HTMLDivElement>(null);
@@ -100,29 +101,36 @@ export default function FindDoctor() {
     setAvailabilityDropdownOpen(false);
   };
 
-
-
   const handleDoctorChange = (doctor: string) => {
     setSearchDoctor(doctor);
     setDoctorDropdownOpen(false);
   };
 
   const handleClickOutside = (event: MouseEvent) => {
-    if (specialityDropdownRef.current && !specialityDropdownRef.current.contains(event.target as Node)) {
+    if (
+      specialityDropdownRef.current &&
+      !specialityDropdownRef.current.contains(event.target as Node)
+    ) {
       setSpecialityDropdownOpen(false);
     }
-    if (doctorDropdownRef.current && !doctorDropdownRef.current.contains(event.target as Node)) {
+    if (
+      doctorDropdownRef.current &&
+      !doctorDropdownRef.current.contains(event.target as Node)
+    ) {
       setDoctorDropdownOpen(false);
     }
-    if (availabilityDropdownRef.current && !availabilityDropdownRef.current.contains(event.target as Node)) {
+    if (
+      availabilityDropdownRef.current &&
+      !availabilityDropdownRef.current.contains(event.target as Node)
+    ) {
       setAvailabilityDropdownOpen(false);
     }
   };
 
   useEffect(() => {
-    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
   return (
@@ -142,114 +150,155 @@ export default function FindDoctor() {
           </div>
         </div>
         <div className="flex gap-4 items-center my-4 flex-wrap">
-  <div className="w-full sm:w-auto mt-2 sm:mt-0 relative" ref={specialityDropdownRef}>
-    <button
-      onClick={() => setSpecialityDropdownOpen(!specialityDropdownOpen)}
-      style={{ width: '14rem' }}
-      className="mt-1 block py-3.5 px-4 border border-indigo-500 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 sm:text-sm relative flex justify-between items-center"
-    >
-      {"Search By Speciality"}
-      <svg
-  className={`bg-indigo-500 w-4 h-4 ml-2 transition-transform duration-200 ${specialityDropdownOpen ? 'rotate-180' : 'rotate-0'}`}
-  fill="none"
-  stroke="white"
-  viewBox="0 0 24 24"
-  xmlns="http://www.w3.org/2000/svg"
->
-  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path>
-</svg>
-
-    </button>
-  </div>
-  <div className="w-full sm:w-auto mt-2 sm:mt-0 relative" ref={doctorDropdownRef}>
-    <button
-      onClick={() => setDoctorDropdownOpen(!doctorDropdownOpen)}
-      style={{ width: '14rem' }}
-      className="mt-1 block py-3.5 px-4 border border-indigo-500 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 sm:text-sm relative flex justify-between items-center"
-    >
-      {searchDoctor || "Search By Experience"}
-      <svg
-  className={`bg-indigo-500 w-4 h-4 ml-2 transition-transform duration-200 ${doctorDropdownOpen ? 'rotate-180' : 'rotate-0'}`}
-  fill="none"
-  stroke="white"
-  viewBox="0 0 24 24"
-  xmlns="http://www.w3.org/2000/svg"
->
-  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path>
-</svg>
-
-    </button>
-    {doctorDropdownOpen && (
-      <div className="absolute left-20 w-55 bg-white border border-indigo-500 rounded-md shadow-lg z-10">
-        <div
-          className="border-b border-indigo-500 py-2 px-4 hover:bg-gray-100 cursor-pointer"
-          onClick={() => handleDoctorChange("5+ Years")}
-        >
-          5+ Years
+          <div
+            className="w-full sm:w-auto mt-2 sm:mt-0 relative"
+            ref={specialityDropdownRef}
+          >
+            <button
+              onClick={() => setSpecialityDropdownOpen(!specialityDropdownOpen)}
+              style={{ width: "14rem" }}
+              className="mt-1 block py-3.5 px-4 border border-indigo-500 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 sm:text-sm relative flex justify-between items-center"
+            >
+              {"Search By Speciality"}
+              <svg
+                className={`bg-indigo-500 w-4 h-4 ml-2 transition-transform duration-200 ${specialityDropdownOpen ? "rotate-180" : "rotate-0"}`}
+                fill="none"
+                stroke="white"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M19 9l-7 7-7-7"
+                ></path>
+              </svg>
+            </button>
+          </div>
+          <div
+            className="w-full sm:w-auto mt-2 sm:mt-0 relative"
+            ref={doctorDropdownRef}
+          >
+            <button
+              onClick={() => setDoctorDropdownOpen(!doctorDropdownOpen)}
+              style={{ width: "14rem" }}
+              className="mt-1 block py-3.5 px-4 border border-indigo-500 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 sm:text-sm relative flex justify-between items-center"
+            >
+              {searchDoctor || "Search By Experience"}
+              <svg
+                className={`bg-indigo-500 w-4 h-4 ml-2 transition-transform duration-200 ${doctorDropdownOpen ? "rotate-180" : "rotate-0"}`}
+                fill="none"
+                stroke="white"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M19 9l-7 7-7-7"
+                ></path>
+              </svg>
+            </button>
+            {doctorDropdownOpen && (
+              <div className="absolute left-20 w-55 bg-white border border-indigo-500 rounded-md shadow-lg z-10">
+                <div
+                  className="border-b border-indigo-500 py-2 px-4 hover:bg-gray-100 cursor-pointer"
+                  onClick={() => handleDoctorChange("5+ Years")}
+                >
+                  5+ Years
+                </div>
+                <div
+                  className="border-b border-indigo-500 py-2 px-4 hover:bg-gray-100 cursor-pointer"
+                  onClick={() => handleDoctorChange("10+ Years")}
+                >
+                  10+ Years
+                </div>
+                <div
+                  className="py-2 px-4 hover:bg-gray-100 cursor-pointer"
+                  onClick={() => handleDoctorChange("")}
+                >
+                  Clear filter
+                </div>
+              </div>
+            )}
+          </div>
+          <div
+            className="w-full sm:w-auto mt-2 sm:mt-0 relative"
+            ref={availabilityDropdownRef}
+          >
+            <button
+              onClick={() =>
+                setAvailabilityDropdownOpen(!availabilityDropdownOpen)
+              }
+              style={{ width: "14rem" }}
+              className="mt-1 block py-3.5 px-4 border border-indigo-500 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 sm:text-sm relative flex justify-between items-center"
+            >
+              {availability === null
+                ? "Search By Availability"
+                : availability
+                  ? "🟢 Online now"
+                  : "⚪ Offline now"}
+              <svg
+                className={`bg-indigo-500 w-4 h-4 ml-2 transition-transform duration-200 ${availabilityDropdownOpen ? "rotate-180" : "rotate-0"}`}
+                fill="none"
+                stroke="white"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M19 9l-7 7-7-7"
+                ></path>
+              </svg>
+            </button>
+            {availabilityDropdownOpen && (
+              <div className="absolute left-20 w-58 bg-white border border-indigo-500 rounded-md shadow-lg z-10">
+                <div
+                  className="border-b border-indigo-500 py-2 px-4 hover:bg-gray-100 cursor-pointer"
+                  onClick={() => handleAvailabilityChange("online")}
+                >
+                  🟢 Online now
+                </div>
+                <div
+                  className="border-b border-indigo-500 py-2 px-4 hover:bg-gray-100 cursor-pointer"
+                  onClick={() => handleAvailabilityChange("offline")}
+                >
+                  ⚪ Offline now
+                </div>
+                <div
+                  className="py-2 px-4 hover:bg-gray-100 cursor-pointer"
+                  onClick={() => handleAvailabilityChange("clear")}
+                >
+                  Clear filter
+                </div>
+              </div>
+            )}
+          </div>
         </div>
-        <div
-          className="border-b border-indigo-500 py-2 px-4 hover:bg-gray-100 cursor-pointer"
-          onClick={() => handleDoctorChange("10+ Years")}
-        >
-          10+ Years
-        </div>
-        <div
-          className="py-2 px-4 hover:bg-gray-100 cursor-pointer"
-          onClick={() => handleDoctorChange("")}
-        >
-          Clear filter
-        </div>
-      </div>
-    )}
-  </div>
-  <div className="w-full sm:w-auto mt-2 sm:mt-0 relative" ref={availabilityDropdownRef}>
-    <button
-      onClick={() => setAvailabilityDropdownOpen(!availabilityDropdownOpen)}
-      style={{ width: '14rem' }}
-      className="mt-1 block py-3.5 px-4 border border-indigo-500 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 sm:text-sm relative flex justify-between items-center"
-    >
-      {availability === null ? "Search By Availability" : availability ? "🟢 Online now" : "⚪ Offline now"}
-      <svg
-  className={`bg-indigo-500 w-4 h-4 ml-2 transition-transform duration-200 ${availabilityDropdownOpen ? 'rotate-180' : 'rotate-0'}`}
-  fill="none"
-  stroke="white"
-  viewBox="0 0 24 24"
-  xmlns="http://www.w3.org/2000/svg"
->
-  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path>
-</svg>
-
-    </button>
-    {availabilityDropdownOpen && (
-      <div className="absolute left-20 w-58 bg-white border border-indigo-500 rounded-md shadow-lg z-10">
-        <div
-          className="border-b border-indigo-500 py-2 px-4 hover:bg-gray-100 cursor-pointer"
-          onClick={() => handleAvailabilityChange("online")}
-        >
-          🟢 Online now
-        </div>
-        <div
-          className="border-b border-indigo-500 py-2 px-4 hover:bg-gray-100 cursor-pointer"
-          onClick={() => handleAvailabilityChange("offline")}
-        >
-          ⚪ Offline now
-        </div>
-        <div
-          className="py-2 px-4 hover:bg-gray-100 cursor-pointer"
-          onClick={() => handleAvailabilityChange("clear")}
-        >
-          Clear filter
-        </div>
-      </div>
-    )}
-  </div>
-</div>  
         <div className="flex flex-col gap-4">
-        {doctors?.filter((doctor: any) => {
-            const matchesSearchDoctor = searchDoctor.toLowerCase() === "" || doctor.first_name.toLowerCase().includes(searchDoctor.toLowerCase()) || doctor.last_name.toLowerCase().includes(searchDoctor.toLowerCase());
-            const matchesOnlineStatus = availability === null ? doctor : availability === true ? doctor.online : !doctor.online;
-            return matchesSearchDoctor && matchesOnlineStatus;
-          }).map((doctor: Doctor) => {
+          {doctors
+            ?.filter((doctor: any) => {
+              const matchesSearchDoctor =
+                searchDoctor.toLowerCase() === "" ||
+                doctor.first_name
+                  .toLowerCase()
+                  .includes(searchDoctor.toLowerCase()) ||
+                doctor.last_name
+                  .toLowerCase()
+                  .includes(searchDoctor.toLowerCase());
+              const matchesOnlineStatus =
+                availability === null
+                  ? doctor
+                  : availability === true
+                    ? doctor.online
+                    : !doctor.online;
+              return matchesSearchDoctor && matchesOnlineStatus;
+            })
+            .map((doctor: Doctor) => {
               return (
                 <Link
                   to={`/patient-dashboard/find-doctor/appointment/${doctor.id}`}

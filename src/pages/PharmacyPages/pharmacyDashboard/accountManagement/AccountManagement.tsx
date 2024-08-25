@@ -6,7 +6,12 @@ import {
   PhoneInputComp,
 } from "../../../../components";
 import { Toaster } from "react-hot-toast";
-import { Button, DashboardSection, InputField, PhoneInputComp } from "../../../../components";
+import {
+  Button,
+  DashboardSection,
+  InputField,
+  PhoneInputComp,
+} from "../../../../components";
 
 const inputs = [
   {
