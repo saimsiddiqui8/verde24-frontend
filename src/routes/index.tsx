@@ -36,7 +36,7 @@ import {
   SelectSlot,
   TreatmentPlans,
 } from "../pages/PatientPages";
-import OnlineHospitalAppointment from '../pages/PatientPages/patientDashboard/onlineAppointment/OnlineHospitalAppointment.tsx';
+import OnlineHospitalAppointment from "../pages/PatientPages/patientDashboard/onlineAppointment/OnlineHospitalAppointment.tsx";
 import {
   DoctorProfile,
   DoctorSignIn,
@@ -123,11 +123,12 @@ export const router = createBrowserRouter(
               <Route index element={<PatientProfile />} />
               <Route path="find-doctor">
                 <Route index element={<FindDoctor />} />
-                <Route path="appointment">
-                  <Route path=":id" element={<FindDoctorAppointment />} />
-                  <Route path="select-slot/:id" element={<SelectSlot />} />
-                  <Route path="book-slot/:id" element={<BookSlot />} />
-                </Route>
+                <Route
+                  path="appointment/:id"
+                  element={<FindDoctorAppointment />}
+                />
+                <Route path="select-slot/:id" element={<SelectSlot />} />
+                <Route path="book-slot/:id" element={<BookSlot />} />
                 <Route path="profile/:id" element={<FindDoctorProfile />} />
               </Route>
               <Route path="treatment-plans" element={<TreatmentPlans />} />
@@ -149,12 +150,12 @@ export const router = createBrowserRouter(
           </Route>
           <Route element={<RequireAuth role={USER_ROLES.pharmacy} />}>
             <Route element={<PharmacyLayout />} path="pharmacy-dashboard">
-              <Route index element={<AccountManagement/>} />
+              <Route index element={<AccountManagement />} />
             </Route>
           </Route>
           <Route element={<RequireAuth role={USER_ROLES.lab} />}>
             <Route element={<LabLayout />} path="lab-dashboard">
-              <Route index element={<LabAccount/>} />
+              <Route index element={<LabAccount />} />
             </Route>
           </Route>
           <Route element={<RequireAuth role={USER_ROLES.admin} />}>
@@ -174,6 +175,6 @@ export const router = createBrowserRouter(
         </Route>
       </Route>
       <Route path="/*" element={<Page404 />} />
-    </>
-  )
+    </>,
+  ),
 );

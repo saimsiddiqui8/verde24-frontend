@@ -16,7 +16,7 @@ export const getPatientById = async (
 
 export const updatePatientById = async (
   query: string,
-  variables: { id: string; data: UserData },
+  variables: { updatePatientId: string; data: UserData },
 ) => {
   try {
     const response = await publicRequest.post("/graphql", { query, variables });

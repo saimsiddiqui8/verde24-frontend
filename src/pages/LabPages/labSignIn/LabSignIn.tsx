@@ -63,15 +63,12 @@ export default function LabSignIn() {
     }
   };
 
-
   const onSubmit = async (data: any) => {
     handleLogin(data);
   };
 
- 
-
   return (
-    <main className="grid grid-cols-12 items-center gap-4 px-4 md:px-8">
+    <main className="grid grid-cols-12 items-center gap-8 mb-6 px-4 md:px-8">
       <section className="col-span-12 md:col-start-3 md:col-span-4 order-2 md:order-1">
         <div className="w-full justify-self-center">
           <form onSubmit={handleSubmit(onSubmit)}>
@@ -85,7 +82,8 @@ export default function LabSignIn() {
               </small>
             </div>
             {inputs?.map((input, index) => (
-              <InputField key={index}
+              <InputField
+                key={index}
                 label={input.label}
                 name={input.name}
                 type={input.type}

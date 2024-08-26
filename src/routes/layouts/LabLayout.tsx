@@ -11,7 +11,6 @@ const links = [
   { title: "Available Test", href: "/available-test" },
 ];
 
-
 const BASE_URL = "/lab-dashboard";
 
 export default function LabLayout() {
@@ -28,7 +27,8 @@ export default function LabLayout() {
         </div>
         <div className="mt-5">
           {links.map((link, index) => (
-            <Link key={index}
+            <Link
+              key={index}
               to={BASE_URL + link?.href}
               className={`block py-0.5 px-4 md:px-8 border-y border-[#125DB94D] ${
                 pathname === BASE_URL + link?.href && "text-selected"

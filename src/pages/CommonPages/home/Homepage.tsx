@@ -1,37 +1,36 @@
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { FaApple, FaGooglePlay } from "react-icons/fa";
 import { Link } from "react-router-dom";
-import { z } from "zod";
+import doctorsImg from "../../../assets/doctors.png";
+import whiteLogoImg from "../../../assets/whiteLogo.png";
+import cardImg1 from "../../../assets/homeCards/card1.png";
+import cardImg2 from "../../../assets/homeCards/card2.png";
+import cardImg3 from "../../../assets/homeCards/card3.png";
+import cardImg4 from "../../../assets/homeCards/card4.png";
+import cardImg5 from "../../../assets/homeCards/card5.png";
+import consultImg1 from "../../../assets/consult/Uterus.png";
+import consultImg2 from "../../../assets/consult/CamoCream.png";
+import consultImg3 from "../../../assets/consult/Male.png";
+import consultImg4 from "../../../assets/consult/Baby.png";
+import consultImg5 from "../../../assets/consult/Psychotherapy.png";
+import consultImg6 from "../../../assets/consult/Coughing.png";
 import appImg1 from "../../../assets/appointment/image1.png";
 import appImg2 from "../../../assets/appointment/image2.png";
 import appImg3 from "../../../assets/appointment/image3.png";
 import appImg4 from "../../../assets/appointment/image4.png";
 import appImg5 from "../../../assets/appointment/image5.png";
 import appImg6 from "../../../assets/appointment/image6.png";
-import consultImg4 from "../../../assets/consult/Baby.png";
-import consultImg2 from "../../../assets/consult/CamoCream.png";
-import consultImg6 from "../../../assets/consult/Coughing.png";
-import consultImg3 from "../../../assets/consult/Male.png";
-import consultImg5 from "../../../assets/consult/Psychotherapy.png";
-import consultImg1 from "../../../assets/consult/Uterus.png";
-import doctorsImg from "../../../assets/doctors.png";
-import cardImg1 from "../../../assets/homeCards/card1.png";
-import cardImg2 from "../../../assets/homeCards/card2.png";
-import cardImg3 from "../../../assets/homeCards/card3.png";
-import cardImg4 from "../../../assets/homeCards/card4.png";
-import cardImg5 from "../../../assets/homeCards/card5.png";
 import verdeAppImg1 from "../../../assets/verdeApp/image1.png";
 import verdeAppImg2 from "../../../assets/verdeApp/image2.png";
-import whiteLogoImg from "../../../assets/whiteLogo.png";
 import {
   Button,
   Footer,
   GooglePlayButton,
   InputField,
 } from "../../../components";
+import { FaApple, FaGooglePlay } from "react-icons/fa";
 import DropdownField from "../../../components/DropdownField";
-
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 const cards = [
   {
     title: "Video Consultation",
@@ -72,9 +71,9 @@ const consult = [
   { img: consultImg1, title: "Pregnancy Care " },
   { img: consultImg2, title: "Acne, pimple or skin issues" },
   { img: consultImg3, title: "Performance issues in bed" },
-  { img: consultImg4, title: "Cold, cough or fever" },
-  { img: consultImg5, title: "Child not feeling well " },
-  { img: consultImg6, title: "Depression or anxiety" },
+  { img: consultImg6, title: "Cold, cough or fever" },
+  { img: consultImg4, title: "Child not feeling well " },
+  { img: consultImg5, title: "Depression or anxiety" },
 ];
 
 const appointment = [
@@ -108,7 +107,8 @@ export default function Homepage() {
     formState: { errors },
   } = useForm({ resolver: zodResolver(FormSchema) });
 
-  const onSubmit = () => {
+  const onSubmit = (data: any) => {
+    console.log(data);
   };
   return (
     <div>
@@ -116,7 +116,6 @@ export default function Homepage() {
         <div className="my-8 flex flex-col sm:flex-row gap-2 sm:gap-4 px-8 items-center">
           <div className="w-11/12 sm:w-48">
             <InputField
-              label="Location"
               placeholder="Nigeria"
               properties={{ ...register("location") }}
               error={errors["location"]}
@@ -226,7 +225,7 @@ export default function Homepage() {
             <div className="overflow-clip relative">
               <img src={card?.img} alt="" className="w-full object-cover" />
             </div>
-            <div className="flex flex-col items-center gap-2 justify-center p-2">
+            <div className="flex flex-col items-start gap-2 justify-center p-2">
               <h4 className="text-lg text-center">{card?.title}</h4>
             </div>
           </div>
@@ -297,7 +296,6 @@ export default function Homepage() {
           <div className="flex flex-col items-center sm:flex-row gap-2">
             <GooglePlayButton icon={<FaGooglePlay size={25} fill="white" />} />
             <GooglePlayButton icon={<FaApple size={25} fill="white" />} />
-
           </div>
         </div>
       </div>

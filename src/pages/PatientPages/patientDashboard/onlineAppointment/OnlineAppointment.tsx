@@ -8,6 +8,7 @@ import {
   loadingStart,
 } from "../../../../redux/slices/loadingSlice";
 import { useDispatch } from "react-redux";
+import { notifyFailure } from "../../../../utils/Utils";
 
 const HOSPITAL_QUERY = `
 query {
@@ -40,7 +41,7 @@ export default function OnlineAppointment() {
         dispatch(loadingEnd());
       })
       .catch((err) => {
-        console.log(err.toString());
+        notifyFailure(err.toString());
       });
   }, [dispatch]);
   if (!hospitals) {

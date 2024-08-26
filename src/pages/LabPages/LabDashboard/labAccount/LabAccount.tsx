@@ -1,8 +1,13 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
+import {
+  Button,
+  DashboardSection,
+  InputField,
+  PhoneInputComp,
+} from "../../../../components";
 import { Toaster } from "react-hot-toast";
 import { useQuery } from "react-query";
 import { findLabByEmail } from "../../../../api/apiCalls/labApi";
-import { Button, DashboardSection, InputField, PhoneInputComp } from "../../../../components";
 
 const inputs = [
   {
@@ -52,7 +57,7 @@ query FindLabByEmail($email: String!) {
     is_verified
     createdAt
   }
-}`
+}`;
 const LabAccount: React.FC = () => {
   const [edit, setEdit] = useState(false);
   const [formData, setFormData] = useState({
@@ -70,7 +75,7 @@ const LabAccount: React.FC = () => {
   const { data: labData } = useQuery(
     ["findLabByEmail", email],
     () => findLabByEmail(query, { email }),
-    { enabled: !!email }
+    { enabled: !!email },
   );
 
   useEffect(() => {
@@ -113,7 +118,9 @@ const LabAccount: React.FC = () => {
         <div>
           <form className="pt-2 pb-6" onSubmit={handleSubmit}>
             <div className="flex justify-between items-center my-4">
-              <h2 className="text-2xl md:text-3xl font-semibold">Account Management</h2>
+              <h2 className="text-2xl md:text-3xl font-semibold">
+                Account Management
+              </h2>
               <div className="flex gap-2">
                 <Button
                   title="Edit"
@@ -121,7 +128,14 @@ const LabAccount: React.FC = () => {
                   type="button"
                   onClick={() => setEdit(true)}
                 />
-                {edit && <Button onClick={() => setEdit(false)} title="Save" className="w-20" type="submit" />}
+                {edit && (
+                  <Button
+                    onClick={() => setEdit(false)}
+                    title="Save"
+                    className="w-20"
+                    type="submit"
+                  />
+                )}
               </div>
             </div>
             <div className="flex flex-col md:flex-row">

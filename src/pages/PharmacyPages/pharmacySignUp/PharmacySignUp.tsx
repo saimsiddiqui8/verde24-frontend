@@ -1,27 +1,32 @@
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect, useState } from "react";
-import { Controller, useForm } from "react-hook-form";
-import { Toaster } from "react-hot-toast";
-import OTPInput from "react-otp-input";
-import { useMutation, useQuery } from "react-query";
-import { useDispatch } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
-import { z } from "zod";
-import { createPharmacy, findPharmacyByEmail, sendPharmacyOTP, verifyPharmacyOTP } from "../../../api/apiCalls/pharmacyApi";
 import image from "../../../assets/sign-up.png";
-import {
-  Button,
-  InputField,
-  Modal,
-  PhoneInputComp,
-} from "../../../components";
-import { loadingEnd, loadingStart } from "../../../redux/slices/loadingSlice";
+import { useEffect, useState } from "react";
+import { Button, InputField, Modal, PhoneInputComp } from "../../../components";
+import { Link, useNavigate } from "react-router-dom";
+import { Toaster } from "react-hot-toast";
 import {
   isPhoneValid,
   notifyFailure,
   notifySuccess,
 } from "../../../utils/Utils";
-import { EXISTING_PHARMACY_QUERY, NEW_PHARMACY_QUERY, SEND_OTP_QUERY, VERIFY_OTP_QUERY } from "./queries";
+import { useForm, Controller } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import OTPInput from "react-otp-input";
+import { loadingEnd, loadingStart } from "../../../redux/slices/loadingSlice";
+import {
+  EXISTING_PHARMACY_QUERY,
+  NEW_PHARMACY_QUERY,
+  SEND_OTP_QUERY,
+  VERIFY_OTP_QUERY,
+} from "./queries";
+import {
+  createPharmacy,
+  findPharmacyByEmail,
+  sendPharmacyOTP,
+  verifyPharmacyOTP,
+} from "../../../api/apiCalls/pharmacyApi";
+import { useDispatch } from "react-redux";
+import { useMutation, useQuery } from "react-query";
 
 const inputs = [
   {
@@ -85,7 +90,6 @@ const OtpSchema = z.object({
 });
 
 export default function PharmacySignUp() {
-
   const {
     register,
     handleSubmit,
@@ -109,6 +113,31 @@ export default function PharmacySignUp() {
   const [showOTPModal, setShowOTPModal] = useState(false);
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const initialTime = 300;
+  const [timeLeft, setTimeLeft] = useState<number>(initialTime);
+  const [isDisabled, setIsDisabled] = useState<boolean>(false);
+
+  useEffect(() => {
+    let timer: NodeJS.Timeout;
+    let seconds: number = 1000;
+    if (showOTPModal && timeLeft > 0) {
+      timer = setInterval(() => setTimeLeft((prev) => prev - 1), seconds);
+    }
+
+    if (timeLeft === 0) {
+      setIsDisabled(true);
+    }
+
+    return () => {
+      if (timer) clearInterval(timer);
+    };
+  }, [showOTPModal, timeLeft, setShowOTPModal]);
+
+  const formatTime = (seconds: number) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins}:${secs < 10 ? "0" : ""}${secs}`;
+  };
 
   const createNewPharmacy = async (data: any) => {
     return createPharmacy(NEW_PHARMACY_QUERY, { data });
@@ -156,6 +185,8 @@ export default function PharmacySignUp() {
       setShowOTPModal(true);
     }
     dispatch(loadingEnd());
+    setIsDisabled(false);
+    setTimeLeft(initialTime);
   };
   const handleValidation = async () => {
     dispatch(loadingStart());
@@ -167,7 +198,6 @@ export default function PharmacySignUp() {
       await sendOtp();
     }
   };
-
 
   const onSubmit = async () => {
     handleValidation();
@@ -209,7 +239,7 @@ export default function PharmacySignUp() {
   }, [data]);
 
   return (
-    <main className="grid grid-cols-1 md:grid-cols-12 items-center p-4">
+    <main className="grid grid-cols-1 mb-4 md:grid-cols-12 items-center p-4">
       <section className="col-span-1 md:col-start-2 md:col-span-5 order-2 md:order-1">
         <div className="justify-self-center w-full">
           <form onSubmit={handleSubmit(onSubmit)}>
@@ -290,6 +320,8 @@ export default function PharmacySignUp() {
         title="Verify OTP"
         showModal={showOTPModal}
         setModal={setShowOTPModal}
+        timer={formatTime(timeLeft)}
+        timeLeft={timeLeft}
       >
         <form
           onSubmit={handleSubmitModal(handleOTPSubmit)}
@@ -324,13 +356,15 @@ export default function PharmacySignUp() {
                 errorsModal["otp"].message}
             </small>
           )}
-          <Button title="Verify Code" className="mt-4" />
-          <Button
-            title="Send Code Again"
-            className="mt-2"
-            type="button"
-            onClick={() => notifyFailure("Send OTP is not available")}
-          />
+          {!isDisabled && <Button title="Verify Code" className="mt-4" />}
+          {isDisabled && (
+            <Button
+              title="Send Code Again"
+              className="mt-2"
+              type="button"
+              onClick={sendOtp}
+            />
+          )}
           <small className="text-primary font-bold uppercase mt-4 block text-center">
             OTP will expire after 5 minutes!
           </small>

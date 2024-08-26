@@ -49,13 +49,15 @@ const ForgotPasswordCode = () => {
     }
   };
   return (
-    <main>
-      <div className="mx-auto mt-12 w-2/5 justify-self-center border border-primary rounded-lg">
-        <div className="text-primary border-b border-primary pt-2 pb-4 px-5">
+    <main className="flex justify-center items-center min-h-screen bg-white-100">
+      <div className="w-full max-w-md mx-4 md:mx-0 border border-primary rounded-lg bg-white shadow-lg">
+        <div className="text-primary border-b border-primary pt-4 pb-6 px-6">
           <h3 className="text-2xl font-bold my-3">Forgot Password</h3>
-          <small>Please enter the code sent to your email address</small>
+          <small className="block text-sm text-gray-600">
+            Please enter the code sent to your email address.
+          </small>
         </div>
-        <form onSubmit={handleSubmit(onSubmit)} className="pt-2 pb-6 px-5">
+        <form onSubmit={handleSubmit(onSubmit)} className="pt-4 pb-6 px-6">
           <Controller
             name="otp"
             control={control}
@@ -77,12 +79,14 @@ const ForgotPasswordCode = () => {
             )}
           />
           {errors["otp"] && (
-            <small className="text-red-500 font-medium uppercase">
+            <small className="block text-red-500 font-medium uppercase mt-2">
               {typeof errors["otp"].message === "string" &&
                 errors["otp"].message}
             </small>
           )}
-          <button className="form-btn my-3">Verify Code</button>
+          <button type="submit" className="form-btn w-full py-2 mt-4">
+            Verify Code
+          </button>
         </form>
       </div>
       <Toaster />

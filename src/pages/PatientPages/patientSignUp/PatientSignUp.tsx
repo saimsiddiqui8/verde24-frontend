@@ -144,6 +144,31 @@ export default function () {
   const [showOTPModal, setShowOTPModal] = useState(false);
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const initialTime = 300;
+  const [timeLeft, setTimeLeft] = useState<number>(initialTime);
+  const [isDisabled, setIsDisabled] = useState<boolean>(false);
+
+  useEffect(() => {
+    let timer: NodeJS.Timeout;
+    const seconds: number = 1000;
+    if (showOTPModal && timeLeft > 0) {
+      timer = setInterval(() => setTimeLeft((prev) => prev - 1), seconds);
+    }
+
+    if (timeLeft === 0) {
+      setIsDisabled(true);
+    }
+
+    return () => {
+      if (timer) clearInterval(timer);
+    };
+  }, [showOTPModal, timeLeft, setShowOTPModal]);
+
+  const formatTime = (seconds: number) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins}:${secs < 10 ? "0" : ""}${secs}`;
+  };
 
   const createNewPatient = async (data: CreatePatientType) => {
     return createPatient(NEW_PATIENT_QUERY, data);
@@ -201,6 +226,8 @@ export default function () {
       setShowOTPModal(true);
     }
     dispatch(loadingEnd());
+    setIsDisabled(false);
+    setTimeLeft(initialTime);
   };
 
   const handleValidation = async () => {
@@ -283,7 +310,7 @@ export default function () {
   };
 
   return (
-    <main className="grid grid-cols-1 md:grid-cols-12 items-center p-4">
+    <main className="grid grid-cols-1 md:grid-cols-12 mb-4 items-center p-4">
       <section className="col-span-1 md:col-start-2 md:col-span-5 order-2 md:order-1">
         <div className="justify-self-center w-full">
           <form onSubmit={handleSubmit(onSubmit)}>
@@ -382,6 +409,8 @@ export default function () {
         title="Verify OTP"
         showModal={showOTPModal}
         setModal={setShowOTPModal}
+        timer={formatTime(timeLeft)}
+        timeLeft={timeLeft}
       >
         <form
           onSubmit={handleSubmitModal(handleOTPSubmit)}
@@ -416,13 +445,15 @@ export default function () {
                 errorsModal["otp"].message}
             </small>
           )}
-          <Button title="Verify Code" className="mt-4" />
-          <Button
-            title="Send Code Again"
-            className="mt-2"
-            type="button"
-            onClick={sendOtp}
-          />
+          {!isDisabled && <Button title="Verify Code" className="mt-4" />}
+          {isDisabled && (
+            <Button
+              title="Send Code Again"
+              className="mt-2"
+              type="button"
+              onClick={sendOtp}
+            />
+          )}
           <small className="text-primary font-bold uppercase mt-4 block text-center">
             OTP will expire after 5 minutes!
           </small>

@@ -4,7 +4,7 @@ import {
   InputField,
   PhoneInputComp,
 } from "../../../../components";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -114,7 +114,7 @@ export default function PatientProfile() {
     queryFn: getPatient,
   });
 
-  function defaultPatientData() {
+  const defaultPatientData = useMemo(() => {
     if (patientData.isLoading || !patientData.data) {
       return {};
     }
@@ -140,19 +140,26 @@ export default function PatientProfile() {
       blood_group,
       other_history,
     };
-  }
+  }, [patientData?.data]);
 
   useEffect(() => {
-    reset(defaultPatientData());
-  }, [patientData?.data, defaultPatientData, reset]);
+    if (patientData?.data) {
+      reset(defaultPatientData);
+    }
+  }, [patientData?.data, reset]);
   const updatePatient = async (data: UserData) => {
     if (!id) return;
-    return updatePatientById(UPDATE_PATIENT_QUERY, { id, data });
+    const updatedId = String(id);
+    return updatePatientById(UPDATE_PATIENT_QUERY, {
+      updatePatientId: updatedId,
+      data,
+    });
   };
 
   const { data, mutate } = useMutation(updatePatient);
 
   const onSubmit = (data: any) => {
+    setEdit(false);
     const userData = {
       first_name: data?.patient_name.split(" ")[0],
       last_name: data?.patient_name.split(" ")[1],
@@ -185,26 +192,19 @@ export default function PatientProfile() {
               <h2 className="text-2xl md:text-3xl font-semibold">
                 Patient Profile
               </h2>
-              <div className="flex gap-2">
+              <div className="flex gap-4">
                 <Button
                   title="Edit"
                   className="w-20"
                   type="button"
                   onClick={() => setEdit(true)}
                 />
-                {edit && (
-                  <Button
-                    onClick={() => setEdit(false)}
-                    title="Save"
-                    className="w-20"
-                    type="submit"
-                  />
-                )}
+                {edit && <Button title="Save" className="w-20" type="submit" />}
               </div>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4">
               {inputs.map((input) => (
-                <div key={input.name} className="mb-4">
+                <div key={input.name} className="mb-6 h-16">
                   {input.name === "phone_number" ? (
                     <PhoneInputComp
                       label={input.label}

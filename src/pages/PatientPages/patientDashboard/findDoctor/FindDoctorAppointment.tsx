@@ -11,10 +11,9 @@ import {
 } from "../../../../redux/slices/loadingSlice";
 import { useDispatch } from "react-redux";
 import { GET_DOCTOR_QUERY } from "../../../DoctorPages/doctorDashboard/doctorInputInfo/consultationForm/queries";
+import { notifyFailure } from "../../../../utils/Utils";
 
-const consultations = [
-  { title: "Video Consultation" },
-];
+const consultations = [{ title: "Video Consultation" }];
 
 export default function FindDoctorAppointment() {
   const [doctor, setDoctor] = useState<Doctor | null>(null);
@@ -35,8 +34,8 @@ export default function FindDoctorAppointment() {
         });
         setDoctor(doctorData);
         dispatch(loadingEnd());
-      } catch (err) {
-        console.log(err);
+      } catch (err: any) {
+        notifyFailure(err.toString());
       }
     };
 

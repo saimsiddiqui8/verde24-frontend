@@ -15,9 +15,18 @@ query($id:String!) {
 `;
 
 export const UPDATE_PATIENT_QUERY = `
-mutation($id: String!,$data: PatientInputUpdate!) {
-  updatePatient(id:$id,data: $data) {
+mutation UpdatePatient($data: PatientInputUpdate!, $updatePatientId: String!) {
+  updatePatient(data: $data, id: $updatePatientId) {
     email
+    first_name,
+    last_name,
+    phone_number,
+    gender,
+    insurance_id,
+    age,
+    weight,
+    blood_group,
+    other_history
   }
 }
 `;

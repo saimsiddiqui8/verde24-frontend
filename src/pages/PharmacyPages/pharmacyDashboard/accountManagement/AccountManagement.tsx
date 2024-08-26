@@ -1,6 +1,11 @@
-import React, { useRef, useState } from "react";
+import React, { useState, useRef } from "react";
 import { Toaster } from "react-hot-toast";
-import { Button, DashboardSection, InputField, PhoneInputComp } from "../../../../components";
+import {
+  Button,
+  DashboardSection,
+  InputField,
+  PhoneInputComp,
+} from "../../../../components";
 
 const inputs = [
   {
@@ -81,7 +86,9 @@ const AccountManagement: React.FC = () => {
         <div>
           <form className="pt-2 pb-6" onSubmit={handleSubmit}>
             <div className="flex justify-between items-center my-4">
-              <h2 className="text-2xl md:text-3xl font-semibold">Account Management</h2>
+              <h2 className="text-2xl md:text-3xl font-semibold">
+                Account Management
+              </h2>
               <div className="flex gap-2">
                 <Button
                   title="Edit"
@@ -89,7 +96,14 @@ const AccountManagement: React.FC = () => {
                   type="button"
                   onClick={() => setEdit(true)}
                 />
-                {edit && <Button onClick={() => setEdit(false)} title="Save" className="w-20" type="submit" />}
+                {edit && (
+                  <Button
+                    onClick={() => setEdit(false)}
+                    title="Save"
+                    className="w-20"
+                    type="submit"
+                  />
+                )}
               </div>
             </div>
             <div className="flex flex-col md:flex-row">

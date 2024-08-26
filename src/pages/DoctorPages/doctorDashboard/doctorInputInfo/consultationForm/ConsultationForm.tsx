@@ -39,7 +39,7 @@ const inputs = [
     label: "Gender",
     type: "dropdown",
     placeholder: "Select Your Gender",
-    name: "gender",
+    name: "Gender",
     options: [
       { label: "Male", value: "male" },
       { label: "Female", value: "female" },
@@ -122,11 +122,49 @@ const contactDetails = [
   },
 ];
 
-const options = [
-  { label: "Video Consultation", value: "male" },
-  { label: "Clinic/ Hospital Visit", value: "female" },
-  { label: "Both", value: "female" },
+const Qualification = [
+  {
+    label: "Institute",
+    type: "text",
+    placeholder: "Enter Your Institute Name",
+    name: "Institute",
+  },
+  {
+    label: "Degree",
+    type: "text",
+    placeholder: "Enter Your Specialization",
+    name: "Degree",
+  },
 ];
+
+const Experience = [
+  {
+    label: "Institute",
+    type: "text",
+    placeholder: "Enter Your Institute Name",
+    name: "Institute",
+  },
+  {
+    label: "Designation",
+    type: "text",
+    placeholder: "Enter Your Designation",
+    name: "Designation",
+  },
+  {
+    label: "Years of Experience",
+    type: "dropdown",
+    placeholder: "Select Years",
+    name: "YearsofExperience",
+    options: [
+      { label: "One Year", value: "1" },
+      { label: "Two Years", value: "2" },
+      { label: "Three Years", value: "3" },
+      { label: "Four or More Years", value: "4+" },
+    ],
+  },
+];
+
+const options = [{ label: "Video Consultation", value: "male" }];
 
 const consultationFee = [
   {
@@ -143,8 +181,54 @@ const consultationFee = [
   },
 ];
 
+const Offered_Services = [
+  {
+    label: "Select Specialization",
+    type: "dropdown",
+    placeholder: "Select Specialization",
+    name: "Specialization",
+    options: [
+      { label: "Cardiology", value: "cardiology" },
+      { label: "Neurology", value: "neurology" },
+      { label: "Orthopedics", value: "orthopedics" },
+      { label: "Pediatrics", value: "pediatrics" },
+      { label: "General Medicine", value: "general_medicine" },
+    ],
+  },
+  {
+    label: "Select Services",
+    type: "dropdown",
+    placeholder: "Select Services",
+    name: "Department",
+    options: [
+      { label: "Engineering", value: "engineering" },
+      { label: "Marketing", value: "marketing" },
+      { label: "Sales", value: "sales" },
+    ],
+  },
+];
+
+const Symptoms = [
+  {
+    label: "Enter Symptom",
+    type: "text",
+    placeholder: "Enter Symptom",
+    name: "EnterSymptom",
+  },
+];
+
+const Registration = [
+  {
+    label: "Registration No.",
+    type: "text",
+    placeholder: "Enter Your Registration No.",
+    name: "EnterYourRegistrationNo",
+  },
+];
+
 const aboutMe = {
   label: "Bibliography",
+  type: "text",
   placeholder: "Write About Yourself",
   name: "bibliography",
 };
@@ -171,6 +255,21 @@ const FormSchema = z
       .string()
       .min(1, { message: "Registration No is required" }),
     qualification: z.string().min(1, { message: "Qualification is required" }),
+    Institute: z.string().min(1, { message: "Institute is required" }),
+    Degree: z.string().min(1, { message: "Degree is required" }),
+    Designation: z.string().min(1, { message: "Designation is required" }),
+    YearsofExperience: z
+      .string()
+      .min(1, { message: "Years of Experience is required" }),
+    Specialization: z
+      .string()
+      .min(1, { message: "Specialization is required" }),
+    Department: z.string().min(1, { message: "Department is required" }),
+    EnterSymptom: z.string().min(1, { message: "Symptom is required" }),
+    EnterYourRegistrationNo: z
+      .string()
+      .min(1, { message: "Registration number is required" }),
+    bibliography: z.string().min(1, { message: "Bibliography is required" }),
     consultation_mode: z
       .string({ invalid_type_error: "Consultation Mode is required" })
       .min(1, { message: "Consultation Mode is required" }),
@@ -202,7 +301,7 @@ const FormSchema = z
     experience_detail: z.string().optional(),
     membership: z.string().optional(),
     registration: z.string().optional(),
-    bibliography: z.string().optional(),
+    lead_time: z.string().min(1, { message: "Lead Time is required" }),
   })
   .refine((data) => isPhoneValid(data.phone_number), {
     message: "Invalid Phone Number",
@@ -439,6 +538,7 @@ export default function ConsultationForm() {
         <>
           <div className="flex gap-2">
             <RadioInput
+              // label={input?.label}
               name="consultation_mode"
               options={options}
               properties={{ ...register("consultation_mode") }}
@@ -619,36 +719,106 @@ export default function ConsultationForm() {
           <p>Type and press to add new Services and Specialization.</p>
         </>
       </DashboardSection>
-      <DashboardSection title={"Education (Optional)"}>
+      <DashboardSection title={"Qualification"}>
+        <div className="grid grid-cols-12 gap-x-4 gap-y-0">
+          {Qualification?.map((input, index) => (
+            <div className="col-span-4" key={index}>
+              <InputField
+                label={input.label}
+                name={input.name}
+                placeholder={input.placeholder}
+                properties={{ ...register(input?.name) }}
+                error={errors[input?.name]}
+              />
+            </div>
+          ))}
+        </div>
+      </DashboardSection>
+      <DashboardSection title={"Experience"}>
+        <div className="grid grid-cols-12 gap-x-4 gap-y-0">
+          {Experience?.map((input, index) => (
+            <div className="col-span-4" key={index}>
+              {input.type === "dropdown" ? (
+                <DropdownField
+                  label={input.label}
+                  name={input.name}
+                  options={input.options!}
+                  placeholder={input.placeholder}
+                  properties={{ ...register(input.name) }}
+                  error={errors[input.name]}
+                  disabled={disabledFields?.includes(input.name)}
+                />
+              ) : (
+                <InputField
+                  label={input.label}
+                  name={input.name}
+                  placeholder={input.placeholder}
+                  properties={{ ...register(input.name) }}
+                  error={errors[input.name]}
+                  disabled={disabledFields?.includes(input.name)}
+                />
+              )}
+            </div>
+          ))}
+        </div>
+      </DashboardSection>
+      <DashboardSection title={"Offered Services"}>
+        <div className="grid grid-cols-12 gap-x-4 gap-y-0">
+          {Offered_Services.map((input, index) => (
+            <div className="col-span-4">
+              <DropdownField
+                key={index}
+                label={input?.label}
+                name={input?.name}
+                options={input?.options}
+                placeholder={input?.placeholder}
+                properties={{ ...register(input?.name) }}
+                error={errors[input?.name]}
+                disabled={disabledFields?.includes(input?.name)}
+              />
+            </div>
+          ))}
+        </div>
+      </DashboardSection>
+      <DashboardSection title={"Symptoms"}>
         <div className="flex items-center gap-2 text-base">
+          {Symptoms?.map((input) => (
+            <div className="col-span-4">
+              <InputField
+                label={input.label}
+                name={input.name}
+                placeholder={input.placeholder}
+                properties={{ ...register(input?.name) }}
+                error={errors[input?.name]}
+              />
+            </div>
+          ))}
           <IoMdAddCircle size={20} />
           Add Row
         </div>
       </DashboardSection>
-      <DashboardSection title={"Experience (Optional)"}>
-        <div className="flex items-center gap-2 text-base">
-          <IoMdAddCircle size={20} />
-          Add Row
+      <DashboardSection title={"Registration No."}>
+        <div className="grid grid-cols-12 gap-x-4 gap-y-0">
+          {Registration?.map((input) => (
+            <div className="col-span-4">
+              <InputField
+                label={input.label}
+                name={input.name}
+                placeholder={input.placeholder}
+                properties={{ ...register(input?.name) }}
+                error={errors[input?.name]}
+              />
+            </div>
+          ))}
         </div>
       </DashboardSection>
-      <DashboardSection title={"Membership (Optional)"}>
-        <div className="flex items-center gap-2 text-base">
-          <IoMdAddCircle size={20} />
-          Add Row
-        </div>
-      </DashboardSection>
-      <DashboardSection title={"Registration (Optional)"}>
-        <div className="flex items-center gap-2 text-base">
-          <IoMdAddCircle size={20} />
-          Add Row
-        </div>
-      </DashboardSection>
-      <DashboardSection title={"About Me (Optional)"}>
+      <DashboardSection title={"About Me"}>
         <TextareaField
           properties={{ ...register("bibliography") }}
           label={aboutMe?.label}
           placeholder={aboutMe?.placeholder}
           name={aboutMe?.name}
+          error={errors[aboutMe?.name]}
           rows={4}
         />
       </DashboardSection>

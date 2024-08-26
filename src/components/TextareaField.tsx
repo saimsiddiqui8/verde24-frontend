@@ -3,6 +3,7 @@ export default function TextareaField({
   placeholder,
   name,
   properties,
+  error,
   rows,
 }: TextareaFieldProps) {
   return (
@@ -17,6 +18,11 @@ export default function TextareaField({
       <label className="absolute text-sm text-primary duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-white px-2 peer-focus:px-2 text-primary peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto start-1">
         {label}
       </label>
+      {error && (
+        <small className="text-red-500 font-medium uppercase">
+          {error.message}
+        </small>
+      )}
     </div>
   );
 }
@@ -27,5 +33,6 @@ interface TextareaFieldProps {
   placeholder?: string;
   onChange?: (e: React.SyntheticEvent) => void;
   rows: number;
+  error?: any;
   properties?: any;
 }

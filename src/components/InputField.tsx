@@ -33,7 +33,7 @@ export default function Eld({
         className={`block px-2.5 pb-2.5 pt-4 w-full text-sm text-primary placeholder:text-blue-600 bg-transparent rounded-lg border border-primary appearance-none focus:outline-none peer ${error ? "border-crimson" : ""}`}
       />
       <label
-        htmlFor={name} 
+        htmlFor={name}
         className="absolute text-sm text-primary duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] whitespace-nowrap bg-white px-2 peer-focus:px-2 text-primary peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto start-1"
         style={{ color: error ? "crimson" : "" }}
       >

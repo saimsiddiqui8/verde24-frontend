@@ -138,6 +138,31 @@ export default function DoctorSignUp() {
   const [showOTPModal, setShowOTPModal] = useState(false);
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const initialTime = 300;
+  const [timeLeft, setTimeLeft] = useState<number>(initialTime);
+  const [isDisabled, setIsDisabled] = useState<boolean>(false);
+
+  useEffect(() => {
+    let timer: NodeJS.Timeout;
+    let seconds: number = 1000;
+    if (showOTPModal && timeLeft > 0) {
+      timer = setInterval(() => setTimeLeft((prev) => prev - 1), seconds);
+    }
+
+    if (timeLeft === 0) {
+      setIsDisabled(true);
+    }
+
+    return () => {
+      if (timer) clearInterval(timer);
+    };
+  }, [showOTPModal, timeLeft, setShowOTPModal]);
+
+  const formatTime = (seconds: number) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins}:${secs < 10 ? "0" : ""}${secs}`;
+  };
 
   const createNewDoctor = async (data: any) => {
     return createDoctor(NEW_DOCTOR_QUERY, { data });
@@ -194,6 +219,8 @@ export default function DoctorSignUp() {
       setShowOTPModal(true);
     }
     dispatch(loadingEnd());
+    setIsDisabled(false);
+    setTimeLeft(initialTime);
   };
 
   const onSubmit = async () => {
@@ -240,7 +267,7 @@ export default function DoctorSignUp() {
   };
 
   return (
-    <main className="grid grid-cols-1 md:grid-cols-12 items-center my-8">
+    <main className="grid grid-cols-1 md:grid-cols-12 items-center my-4">
       <section className="col-span-1 md:col-start-2 md:col-span-6 order-2 md:order-1">
         <div className="mx-4 md:mx-8 w-full md:w-4/5 justify-self-center rounded-lg">
           <div className="text-primary my-3 pt-2 pb-4 px-5 flex justify-between items-center">
@@ -327,6 +354,8 @@ export default function DoctorSignUp() {
         title="Verify OTP"
         showModal={showOTPModal}
         setModal={setShowOTPModal}
+        timer={formatTime(timeLeft)}
+        timeLeft={timeLeft}
       >
         <form
           onSubmit={handleSubmitModal(handleOTPSubmit)}
@@ -361,13 +390,15 @@ export default function DoctorSignUp() {
                 errorsModal["otp"].message}
             </small>
           )}
-          <Button title="Verify Code" className="mt-4" />
-          <Button
-            title="Send Code Again"
-            className="mt-2"
-            type="button"
-            onClick={sendOtp}
-          />
+          {!isDisabled && <Button title="Verify Code" className="mt-4" />}
+          {isDisabled && (
+            <Button
+              title="Send Code Again"
+              className="mt-2"
+              type="button"
+              onClick={sendOtp}
+            />
+          )}
           <small className="text-primary font-bold uppercase mt-4 block text-center">
             OTP will expire after 5 minutes!
           </small>

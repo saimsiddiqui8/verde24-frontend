@@ -21,7 +21,7 @@ export default function Navbar() {
     if (!user?.token) {
       return null;
     }
-      await logoutQuery(user?.token);
+    await logoutQuery(user?.token);
     if (user?.role === USER_ROLES.admin) {
       navigate("/admin/sign-in");
     } else if (user?.role === USER_ROLES.doctor) {
