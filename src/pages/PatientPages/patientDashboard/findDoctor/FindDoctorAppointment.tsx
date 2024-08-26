@@ -34,9 +34,8 @@ export default function FindDoctorAppointment() {
         });
         setDoctor(doctorData);
         dispatch(loadingEnd());
-      } catch (err:any) {
+      } catch (err: any) {
         notifyFailure(err.toString());
-        
       }
     };
 
