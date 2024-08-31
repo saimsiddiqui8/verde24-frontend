@@ -49,7 +49,7 @@ export interface UpdateDoctorVariables {
 }
 
 export type FindDoctorByIdVariables = {
-  findDoctorByIdId: string;
+  findDoctorByIdId: number;
 };
 export type DoctorAuthVariables = {
   email: string;
@@ -85,3 +85,15 @@ export type createDoctorData = {
     password: string;
   };
 };
+
+export interface UpdatedPharmacyData {
+  logo: string;
+  name: string;
+  pharmacy_name: string;
+  city: string;
+  registration_number: string;
+  email: string;
+  phone_number: string;
+  is_verified: boolean;
+  createdAt: string;
+}

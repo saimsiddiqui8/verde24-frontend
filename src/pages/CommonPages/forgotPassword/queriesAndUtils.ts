@@ -55,7 +55,7 @@ export const getAdminByEmail = async (email: string) => {
 };
 
 const PATIENT_FORGOT_PASSWORD_QUERY = `
-query ($email: String, $id: ID) {
+query ($email: String, $id: Int) {
   patientForgotPassword(email: $email, id: $id) {
     id
   }
@@ -63,7 +63,7 @@ query ($email: String, $id: ID) {
 `;
 
 const DOCTOR_FORGOT_PASSWORD_QUERY = `
-query ($email: String, $id: ID) {
+query ($email: String, $id: Int) {
   doctorForgotPassword(email: $email, id: $id) {
     id
   }
@@ -71,8 +71,24 @@ query ($email: String, $id: ID) {
 `;
 
 const ADMIN_FORGOT_PASSWORD_QUERY = `
-query ($email: String, $id: ID) {
+query ($email: String, $id: Int) {
   adminForgotPassword(email: $email, id: $id) {
+    id
+  }
+}
+`;
+
+const PHARMACY_FORGOT_PASSWORD_QUERY = `
+query PharmacyForgotPassword($pharmacyForgotPasswordId: Int, $email: String) {
+  pharmacyForgotPassword(id: $pharmacyForgotPasswordId, email: $email) {
+id
+  }
+}
+`;
+
+const LAB_FORGOT_PASSWORD_QUERY = `
+query LabForgotPassword($email: String, $labForgotPasswordId: Int) {
+  labForgotPassword(email: $email, id: $labForgotPasswordId) {
     id
   }
 }
@@ -105,20 +121,32 @@ export const forgotPassword = async (
 };
 
 const PATIENT_VERIFY_CODE_QUERY = `
-query ($code: String, $id: ID) {
+query ($code: String, $id: Int) {
   verifyPatientCode(code: $code, id: $id)
 }
 `;
 
 const DOCTOR_VERIFY_CODE_QUERY = `
-query ($code: String, $id: ID) {
+query ($code: String, $id: Int) {
   verifyDoctorCode(code: $code, id: $id)
 }
 `;
 
 const ADMIN_VERIFY_CODE_QUERY = `
-query ($code: String, $id: ID) {
+query ($code: String, $id: Int) {
   verifyAdminCode(code: $code, id: $id)
+}
+`;
+
+const PHARMACY_VERIFY_CODE_QUERY = `
+query Query($code: String, $verifyPharmacyCodeId: Int) {
+  verifyPharmacyCode(code: $code, id: $verifyPharmacyCodeId)
+}
+`;
+
+const LAB_VERIFY_CODE_QUERY = `
+query Query($code: String, $verifyLabCodeId: Int) {
+  verifyLabCode(code: $code, id: $verifyLabCodeId)
 }
 `;
 
@@ -145,7 +173,7 @@ export const verifyCode = async (code: string, id: number, user: string) => {
 };
 
 const PATIENT_UPDATE_QUERY = `
-mutation($id: String!, $password: String!) {
+mutation($id: Int!, $password: String!) {
   updatePatientPassword(id: $id, password: $password) {
     id
   }
@@ -153,7 +181,7 @@ mutation($id: String!, $password: String!) {
 `;
 
 const DOCTOR_UPDATE_QUERY = `
-mutation($id: String!, $password: String!) {
+mutation($id: Int!, $password: String!) {
   updateDoctorPassword(id: $id, password: $password) {
     id
   }
@@ -161,15 +189,31 @@ mutation($id: String!, $password: String!) {
 `;
 
 const ADMIN_UPDATE_QUERY = `
-mutation($id: String!, $password: String!) {
+mutation($id: Int!, $password: String!) {
   updateAdminPassword(id: $id, password: $password) {
     id
   }
 }
 `;
 
+const PHARMACY_UPDATE_QUERY = `
+mutation UpdatePharmacyPassword($updatePharmacyPasswordId: Int!, $password: String!) {
+  updatePharmacyPassword(id: $updatePharmacyPasswordId, password: $password) {
+    id
+  }
+}
+`;
+
+const LAB_UPDATE_QUERY = `
+mutation UpdateLabPassword($updateLabPasswordId: Int!, $password: String!) {
+  updateLabPassword(id: $updateLabPasswordId, password: $password) {
+    id
+  }
+}
+`;
+
 export const updatePassword = async (
-  id: string,
+  id: number,
   user: string,
   password: string,
 ) => {

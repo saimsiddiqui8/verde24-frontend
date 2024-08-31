@@ -31,7 +31,7 @@ export default function FindDoctorAppointment() {
       dispatch(loadingStart());
       try {
         const doctorData = await getDoctorById(GET_DOCTOR_QUERY, {
-          findDoctorByIdId: String(id),
+          findDoctorByIdId: Number(id),
         });
         setDoctor(doctorData);
         dispatch(loadingEnd());

@@ -21,7 +21,7 @@ query($id:String!) {
 `;
 
 export const UPDATE_PATIENT_QUERY = `
-mutation($id: String!,$data: PatientInputUpdate!) {
+mutation($id: Int!,$data: PatientInputUpdate!) {
   updatePatient(id:$id,data: $data) {
     email
   }

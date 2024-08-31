@@ -3,7 +3,7 @@ import { CreatePatientType, UserData } from "./types";
 
 export const getPatientById = async (
   query: string,
-  variables: { id: string },
+  variables: { id: number },
 ) => {
   try {
     const response = await publicRequest.post("/graphql", { query, variables });
@@ -16,7 +16,7 @@ export const getPatientById = async (
 
 export const updatePatientById = async (
   query: string,
-  variables: { id: string; data: UserData },
+  variables: { updatePatientId: number; data: UserData },
 ) => {
   try {
     const response = await publicRequest.post("/graphql", { query, variables });

@@ -13,7 +13,7 @@ export default function AdminHospitalProfile() {
     try {
       const response = await publicRequest.post("/graphql", {
         query: HOSPITAL_QUERY,
-        variables: { id },
+        variables: { id: Number(id) },
       });
       return response.data.data.findHospitalById;
     } catch (error) {
@@ -58,7 +58,7 @@ export default function AdminHospitalProfile() {
 
   useEffect(() => {
     doctorData.refetch();
-  }, [doctorHospitals, doctorData]);
+  }, [doctorHospitals]);
 
   if (!hospitalData?.data) {
     return (

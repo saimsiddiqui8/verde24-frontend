@@ -9,6 +9,8 @@ import {
 } from "../../../../redux/slices/loadingSlice";
 import { useDispatch } from "react-redux";
 import { io } from "socket.io-client";
+import { notifyFailure } from "../../../../utils/Utils";
+import { BASE_URL } from "../../../../BaseUrl";
 
 interface Doctor {
   id: string;
@@ -66,14 +68,13 @@ export default function FindDoctor() {
   }, [dispatch]);
 
   useEffect(() => {
-    const BASE_URL = import.meta.env.BASE_URL;
     const socket = io(BASE_URL);
 
     socket.on("connect", () => {});
     socket.on("doctorStatusUpdated", (updatedDoctor: Doctor) => {
       setDoctors((prevDoctors) =>
         prevDoctors.map((doctor: Doctor) =>
-          doctor.id === updatedDoctor.id
+          doctor.id == updatedDoctor.id
             ? { ...doctor, online: updatedDoctor.online }
             : doctor,
         ),

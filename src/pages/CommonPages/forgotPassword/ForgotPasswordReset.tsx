@@ -61,11 +61,7 @@ const ForgotPasswordReset = () => {
 
   const onSubmit = async (data: any) => {
     dispatch(loadingStart());
-    const res = await updatePassword(
-      state?.id.toString(),
-      state?.for,
-      data?.password,
-    );
+    const res = await updatePassword(state?.id, state?.for, data?.password);
     dispatch(loadingEnd());
     if (res?.id) {
       notifySuccess("Password Changed Successfully!");
