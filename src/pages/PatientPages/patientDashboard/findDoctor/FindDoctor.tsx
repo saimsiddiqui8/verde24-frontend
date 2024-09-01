@@ -75,7 +75,7 @@ export default function FindDoctor() {
   useEffect(() => {
     const socket = io(BASE_URL);
 
-    socket.on("connect", () => { });
+    socket.on("connect", () => {});
     socket.on("doctorStatusUpdated", (updatedDoctor: Doctor) => {
       setDoctors((prevDoctors) =>
         prevDoctors.map((doctor: Doctor) =>

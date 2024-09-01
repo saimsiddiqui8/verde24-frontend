@@ -38,8 +38,6 @@ export const logoutQuery = async (token: string) => {
   }
 };
 
-
-
 export const updatePharmacyById = async (
   query: string,
   variables: { updatePharmacyId: number; data: UpdatedPharmacyData },

@@ -15,7 +15,6 @@ export const getLabById = async (
   }
 };
 
-
 // Function to update lab by ID
 export const updateLabById = async (
   query: string,
