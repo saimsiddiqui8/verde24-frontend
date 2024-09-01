@@ -48,7 +48,7 @@ export default function AdminDoctorProfile() {
     try {
       const response = await publicRequest.post("/graphql", {
         query: DOCTOR_QUERY,
-        variables: { id },
+        variables: { id : Number(id) },
       });
 
       return response.data.data.findDoctorById;
@@ -181,7 +181,7 @@ export default function AdminDoctorProfile() {
     try {
       const response = await publicRequest.post("/graphql", {
         query: DOCTOR_UPDATE_QUERY,
-        variables: { id, data },
+        variables: { id: Number(id), data },
       });
       return response.data;
     } catch (error) {

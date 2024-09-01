@@ -7,7 +7,7 @@ mutation($id: String!, $data: DoctorInputUpdate!) {
 `;
 
 export const GET_DOCTOR_QUERY = `
-query FindDoctorById($findDoctorByIdId: String!) {
+query FindDoctorById($findDoctorByIdId: Int!) {
     findDoctorById(id: $findDoctorByIdId) {
       id
     online

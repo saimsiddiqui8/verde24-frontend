@@ -72,14 +72,14 @@ export default function FindDoctor() {
   }, [dispatch]);
 
   useEffect(() => {
-    const BASE_URL = import.meta.env.BASE_URL;
-    const socket = io(BASE_URL);
+    // const BASE_URL = import.meta.env.BASE_URL;
+    const socket = io('http://localhost:8000');
 
-    socket.on("connect", () => {});
+    socket.on("connect", () => { });
     socket.on("doctorStatusUpdated", (updatedDoctor: Doctor) => {
       setDoctors((prevDoctors) =>
         prevDoctors.map((doctor: Doctor) =>
-          doctor.id === updatedDoctor.id
+          doctor.id == updatedDoctor.id
             ? { ...doctor, online: updatedDoctor.online }
             : doctor,
         ),

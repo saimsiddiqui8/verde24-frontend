@@ -106,7 +106,7 @@ export default function PatientProfile() {
 
   const getPatient = async () => {
     if (!id) return;
-    return getPatientById(FIND_PATIENT_QUERY, { id });
+    return getPatientById(FIND_PATIENT_QUERY, { id: Number(id) });
   };
 
   const patientData = useQuery({
@@ -149,7 +149,7 @@ export default function PatientProfile() {
   }, [patientData?.data, reset]);
   const updatePatient = async (data: UserData) => {
     if (!id) return;
-    const updatedId = String(id);
+    const updatedId = Number(id);
     return updatePatientById(UPDATE_PATIENT_QUERY, {
       updatePatientId: updatedId,
       data,

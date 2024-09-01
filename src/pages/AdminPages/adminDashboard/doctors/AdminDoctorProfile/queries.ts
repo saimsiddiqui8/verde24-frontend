@@ -8,7 +8,7 @@ query {
 `;
 
 export const DOCTOR_QUERY = `
-query($id:String!) {
+query($id: Int!) {
   findDoctorById(id: $id) {
     id
     first_name
@@ -33,7 +33,7 @@ getDoctorHospitals(id: $id) {
 `;
 
 export const DOCTOR_UPDATE_QUERY = `
-mutation($id: String!, $data: DoctorInputUpdate!) {
+mutation($id: Int!, $data: DoctorInputUpdate!) {
     updateDoctor(id: $id, data: $data) {
       id
     }

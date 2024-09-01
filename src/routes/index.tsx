@@ -163,12 +163,12 @@ export const router = createBrowserRouter(
               <Route index element={<AdminDashboardHome />} />
               <Route path="doctors" element={<AdminDoctors />} />
               <Route path="doctors/:id" element={<AdminDoctorProfile />} />
+              <Route path="doctors/add-new" element={<AdminNewDoctor />} />
               <Route path="patients" element={<AdminPatients />} />
               <Route path="patients/:id" element={<AdminPatientProfile />} />
               <Route path="patients/edit/:id" element={<AdminEditPatient />} />
               <Route path="hospitals" element={<AdminHospitals />} />
               <Route path="hospitals/:id" element={<AdminHospitalProfile />} />
-              <Route path="doctors/add-new" element={<AdminNewDoctor />} />
               <Route path="hospitals/add-new" element={<AdminNewHospital />} />
             </Route>
           </Route>

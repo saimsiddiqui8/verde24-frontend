@@ -1,5 +1,5 @@
 export const HOSPITAL_QUERY = `
-query($id:String!) {
+query($id: Int!) {
   findHospitalById(id: $id) {
     id,
     name,
@@ -14,7 +14,7 @@ query($id:String!) {
 `;
 
 export const DOCTOR_QUERY = `
-query($ids: [Int]!) {
+query FindDoctorsByIds($ids: [Int]!) {
   findDoctorsByIds(ids: $ids) {
     id
     first_name

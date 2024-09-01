@@ -1,11 +1,23 @@
-import React, { useState, useRef } from "react";
-import { Toaster } from "react-hot-toast";
 import {
   Button,
   DashboardSection,
   InputField,
   PhoneInputComp,
 } from "../../../../components";
+import { useEffect, useMemo, useState, useRef } from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { isPhoneValid, notifySuccess } from "../../../../utils/Utils";
+import { useSelector } from "react-redux";
+import { RootState } from "../../../../redux/store";
+import { useMutation, useQuery, useQueryClient } from "react-query";
+import { Toaster } from "react-hot-toast";
+import {
+  getPharmacyById,
+  updatePharmacyById,
+} from "../../../../api/apiCalls/pharmacyApi";
+import { FIND_PHARMACY_QUERY, UPDATED_PHARMACY_QUERY } from "./queries";
 
 const inputs = [
   {
@@ -46,23 +58,117 @@ const inputs = [
   },
 ];
 
-const AccountManagement: React.FC = () => {
-  const [edit, setEdit] = useState(false);
-  const [formData, setFormData] = useState({
-    name: "",
-    pharmacy_name: "",
-    city: "",
-    registration_number: "",
-    registered_email: "",
-    phone_number: "",
+const FormSchema = z
+  .object({
+    name: z.string().min(1, { message: "Name is required" }),
+    pharmacy_name: z.string().min(1, { message: "Pharmacy Name is required" }),
+    city: z.string().min(1, { message: "City is required" }),
+    registration_number: z.string().min(1, { message: "Registration Number is required" }),
+    registered_email: z.string().email({ message: "Invalid email address" }),
+    phone_number: z.string().min(1, { message: "Phone Number is required" }),
+  })
+  .refine((data) => isPhoneValid(data.phone_number), {
+    message: "Invalid Phone Number",
+    path: ["phone_number"],
   });
+
+export default function AccountManagement() {
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm({
+    resolver: zodResolver(FormSchema),
+  });
+
+  const [edit, setEdit] = useState(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const id = useSelector((state: RootState) => state.user.currentUser?.id);
+  const queryClient = useQueryClient();
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+  const getPharmacy = async () => {
+    if (!id) return;
+    return getPharmacyById(FIND_PHARMACY_QUERY, { findPharmacyByIdId: Number(id) });
   };
+
+  const pharmacyData = useQuery({
+    queryKey: ["pharmacy", id],
+    queryFn: getPharmacy,
+  });
+
+  const defaultPharmacyData = useMemo(() => {
+    if (pharmacyData.isLoading || !pharmacyData.data) {
+      return {};
+    }
+
+    const {
+      name,
+      pharmacy_name,
+      city,
+      registration_number,
+      email,
+      phone_number,
+      logo,
+      is_verified,
+    } = pharmacyData.data;
+    return {
+      name,
+      pharmacy_name,
+      city,
+      registration_number,
+      registered_email: email,
+      phone_number,
+      logo,
+      is_verified,
+    };
+  }, [pharmacyData?.data]);
+
+  useEffect(() => {
+    if (pharmacyData?.data) {
+      reset(defaultPharmacyData);
+    }
+  }, [pharmacyData?.data, reset]);
+
+  const updatePharmacy = async (data: any) => {
+    if (!id) return;
+    const updatedId = Number(id);
+    return updatePharmacyById(UPDATED_PHARMACY_QUERY, {
+      updatePharmacyId: updatedId,
+      data: {
+        ...data,
+        logo: data.logo || "",
+        is_verified: data.is_verified || false,
+      },
+    });
+  };
+
+  const { data, mutate } = useMutation(updatePharmacy);
+
+  const onSubmit = (data: any) => {
+    setEdit(false);
+    const updatedData = {
+      name: data.name,
+      pharmacy_name: data.pharmacy_name,
+      city: data.city,
+      registration_number: data.registration_number,
+      email: data.registered_email,
+      phone_number: data.phone_number,
+      logo: selectedFile ? URL.createObjectURL(selectedFile) : "",
+      is_verified: true,
+    };
+    mutate(updatedData);
+  };
+
+  useEffect(() => {
+    if (data?.email) {
+      notifySuccess("Profile Updated!");
+      queryClient.invalidateQueries({
+        queryKey: ["pharmacy"],
+      });
+    }
+  }, [data, queryClient]);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
@@ -76,49 +182,38 @@ const AccountManagement: React.FC = () => {
     }
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-  };
-
   return (
     <>
       <DashboardSection>
-        <div>
-          <form className="pt-2 pb-6" onSubmit={handleSubmit}>
-            <div className="flex justify-between items-center my-4">
-              <h2 className="text-2xl md:text-3xl font-semibold">
-                Account Management
-              </h2>
-              <div className="flex gap-2">
+        <div className="p-4 bg-white shadow-md rounded-md">
+          <form className="pt-2 pb-6 space-y-6" onSubmit={handleSubmit(onSubmit)}>
+            <div className="flex justify-between items-center">
+              <h2 className="text-2xl md:text-3xl font-semibold">Account Management</h2>
+              <div className="flex gap-4">
                 <Button
                   title="Edit"
-                  className="w-20"
+                  className="w-20 bg-blue-500 text-white hover:bg-blue-600"
                   type="button"
                   onClick={() => setEdit(true)}
                 />
                 {edit && (
                   <Button
-                    onClick={() => setEdit(false)}
                     title="Save"
-                    className="w-20"
+                    className="w-20 bg-green-500 text-white hover:bg-green-600"
                     type="submit"
                   />
                 )}
               </div>
             </div>
-            <div className="flex flex-col md:flex-row">
+            <div className="flex flex-col md:flex-row gap-6">
               <div className="w-full md:w-3/5">
                 {inputs.map((input) => (
                   <div key={input.name} className="mb-4">
-                    {input.name === "phone_number" ? (
+                    {input.name === 'phone_number' ? (
                       <PhoneInputComp
                         label={input.label}
-                        properties={{
-                          value: formData[input.name as keyof typeof formData],
-                          onChange: handleInputChange,
-                          name: input.name,
-                        }}
-                        error={null}
+                        properties={{ ...register(input.name) }}
+                        error={errors[input.name]}
                         disabled={!edit}
                       />
                     ) : (
@@ -128,18 +223,15 @@ const AccountManagement: React.FC = () => {
                         placeholder={input.placeholder}
                         type={input.type}
                         disabled={!edit}
-                        properties={{
-                          value: formData[input.name as keyof typeof formData],
-                          onChange: handleInputChange,
-                        }}
-                        error={null}
+                        properties={{ ...register(input.name) }}
+                        error={errors[input.name]}
                       />
                     )}
                   </div>
                 ))}
               </div>
               <div className="w-full md:w-2/5 flex flex-col items-center">
-                <div className="mt-1 flex flex-col items-center">
+                <div className="mt-4 flex flex-col items-center">
                   <span className="inline-block h-32 w-32 rounded-full overflow-hidden bg-gray-100 border-2 border-green-500">
                     {selectedFile ? (
                       <img
@@ -149,7 +241,7 @@ const AccountManagement: React.FC = () => {
                       />
                     ) : (
                       <svg
-                        className="h-full w-full text-gray-300"
+                        className="h-full w-full text-gray-400"
                         fill="currentColor"
                         viewBox="0 0 24 24"
                       >
@@ -158,29 +250,32 @@ const AccountManagement: React.FC = () => {
                       </svg>
                     )}
                   </span>
-                  <button
-                    className="mt-2 bg-white rounded-md px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
-                    type="button"
-                    onClick={handleUploadClick}
-                    style={{ color: "inherit" }}
-                  >
-                    Upload Logo
-                  </button>
-                  <input
-                    type="file"
-                    ref={fileInputRef}
-                    className="hidden"
-                    onChange={handleFileChange}
-                  />
+                  {edit && (
+                    <>
+                      <input
+                        type="file"
+                        ref={fileInputRef}
+                        accept="image/*"
+                        onChange={handleFileChange}
+                        className="hidden"
+                      />
+                      <button
+                        className="mt-2 font-extrabold bg-white rounded-md px-3 py-2 text-sm text-gray-700 hover:bg-gray-50"
+                        type="button"
+                        onClick={handleUploadClick}
+                        style={{ color: "inherit" }}
+                      >
+                        Upload Logo
+                      </button>
+                    </>
+                  )}
                 </div>
               </div>
             </div>
           </form>
         </div>
-        <Toaster />
       </DashboardSection>
+      <Toaster />
     </>
   );
-};
-
-export default AccountManagement;
+}

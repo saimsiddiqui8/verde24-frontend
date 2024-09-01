@@ -7,7 +7,7 @@ findPatientByEmail(email: $email) {
 `;
 
 export const GET_PATIENT_QUERY = `
-query($id:String!) {
+query($id: Int!) {
   findPatientById(id: $id) {
     id,
     first_name,
@@ -21,7 +21,7 @@ query($id:String!) {
 `;
 
 export const UPDATE_PATIENT_QUERY = `
-mutation($id: String!,$data: PatientInputUpdate!) {
+mutation($id: Int!,$data: PatientInputUpdate!) {
   updatePatient(id:$id,data: $data) {
     email
   }

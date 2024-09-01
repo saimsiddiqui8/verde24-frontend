@@ -1,13 +1,15 @@
-import React, { useState, useRef, useEffect } from "react";
-import {
-  Button,
-  DashboardSection,
-  InputField,
-  PhoneInputComp,
-} from "../../../../components";
+import React, { useEffect, useState, useRef, useMemo } from "react";
+import { Button, DashboardSection, InputField, PhoneInputComp } from "../../../../components";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useSelector } from "react-redux";
+import { RootState } from "../../../../redux/store";
+import { useMutation, useQuery, useQueryClient } from "react-query";
 import { Toaster } from "react-hot-toast";
-import { useQuery } from "react-query";
-import { findLabByEmail } from "../../../../api/apiCalls/labApi";
+import { getLabById, updateLabById } from "../../../../api/apiCalls/labApi";
+import { notifySuccess, isPhoneValid } from "../../../../utils/Utils";
+import { FIND_LAB_QUERY, UPDATED_LAB_QUERY } from "./quries";
 
 const inputs = [
   {
@@ -20,7 +22,7 @@ const inputs = [
     label: "Laboratory Name",
     type: "text",
     placeholder: "Enter Laboratory Name",
-    name: "laboratory_name",
+    name: "lab_name",
   },
   {
     label: "City",
@@ -47,54 +49,100 @@ const inputs = [
     name: "phone_number",
   },
 ];
-const query = `
-query FindLabByEmail($email: String!) {
-  findLabByEmail(email: $email) {
-    id
-    name
-    email
-    phone_number
-    is_verified
-    createdAt
-  }
-}`;
-const LabAccount: React.FC = () => {
-  const [edit, setEdit] = useState(false);
-  const [formData, setFormData] = useState({
-    name: "",
-    laboratory_name: "",
-    city: "",
-    registration_number: "",
-    registered_email: "",
-    phone_number: "",
+
+const FormSchema = z
+  .object({
+    name: z.string().min(1, { message: "Name is required" }),
+    lab_name: z.string().min(1, { message: "Laboratory Name is required" }),
+    city: z.string().min(1, { message: "City is required" }),
+    registration_number: z.string().min(1, { message: "Registration Number is required" }),
+    registered_email: z.string().email({ message: "Invalid email address" }),
+    phone_number: z.string().min(1, { message: "Phone Number is required" }),
+  })
+  .refine((data) => isPhoneValid(data.phone_number), {
+    message: "Invalid Phone Number",
+    path: ["phone_number"],
   });
+
+const LabAccountManagement = () => {
+  const { register, handleSubmit, reset, formState: { errors } } = useForm({
+    resolver: zodResolver(FormSchema),
+  });
+
+  const [edit, setEdit] = useState(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const email = formData.registered_email;
+  const id = useSelector((state: RootState) => state.user.currentUser?.id);
+  const queryClient = useQueryClient();
 
-  const { data: labData } = useQuery(
-    ["findLabByEmail", email],
-    () => findLabByEmail(query, { email }),
-    { enabled: !!email },
-  );
+  const getLab = () => {
+    if (!id) return;
+    return getLabById(FIND_LAB_QUERY, { findLabByIdId: Number(id) });
+  };
+
+  const labData = useQuery({
+    queryKey: ["lab", id],
+    queryFn: getLab,
+  });
+
+  const defaultLabData = useMemo(() => {
+    if (labData.isLoading || !labData.data) {
+      return {};
+    }
+
+    const { name, lab_name, city, registration_number, email, phone_number } = labData.data;
+    return {
+      name,
+      lab_name,
+      city,
+      registration_number,
+      registered_email: email,
+      phone_number,
+    };
+  }, [labData.data]);
 
   useEffect(() => {
-    if (labData) {
-      setFormData({
-        name: labData.name,
-        laboratory_name: labData.laboratory_name,
-        city: labData.city,
-        registration_number: labData.registration_number,
-        registered_email: labData.email,
-        phone_number: labData.phone_number,
-      });
+    if (labData.data) {
+      reset(defaultLabData);
     }
-  }, [labData]);
+  }, [labData.data, reset]);
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+  const updateLab = async (data: any) => {
+    if (!id) return;
+    const updatedId = Number(id);
+    return updateLabById(UPDATED_LAB_QUERY, {
+      updateLabId: updatedId,
+      data: {
+        ...data,
+        logo: data.logo || "",
+        is_verified: data.is_verified || false,
+      },
+    });
   };
+
+  const { data, mutate } = useMutation(updateLab);
+
+  const onSubmit = (data: any) => {
+    setEdit(false);
+    const updatedData = {
+      name: data.name,
+      lab_name: data.lab_name,
+      city: data.city,
+      registration_number: data.registration_number,
+      email: data.registered_email,
+      phone_number: data.phone_number,
+      logo: selectedFile ? URL.createObjectURL(selectedFile) : "",
+      is_verified: true,
+    };
+    mutate(updatedData);
+  };
+
+  useEffect(() => {
+    if (data?.email) {
+      notifySuccess("Profile Updated!");
+      queryClient.invalidateQueries(["lab"]);
+    }
+  }, [data, queryClient]);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
@@ -108,49 +156,38 @@ const LabAccount: React.FC = () => {
     }
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-  };
-
   return (
     <>
       <DashboardSection>
-        <div>
-          <form className="pt-2 pb-6" onSubmit={handleSubmit}>
-            <div className="flex justify-between items-center my-4">
-              <h2 className="text-2xl md:text-3xl font-semibold">
-                Account Management
-              </h2>
-              <div className="flex gap-2">
+        <div className="p-4 bg-white shadow-md rounded-md">
+          <form className="pt-2 pb-6 space-y-6" onSubmit={handleSubmit(onSubmit)}>
+            <div className="flex justify-between items-center">
+              <h2 className="text-2xl md:text-3xl font-semibold">Account Management</h2>
+              <div className="flex gap-4">
                 <Button
                   title="Edit"
-                  className="w-20"
+                  className="w-20 bg-blue-500 text-white hover:bg-blue-600"
                   type="button"
                   onClick={() => setEdit(true)}
                 />
                 {edit && (
                   <Button
-                    onClick={() => setEdit(false)}
                     title="Save"
-                    className="w-20"
+                    className="w-20 bg-green-500 text-white hover:bg-green-600"
                     type="submit"
                   />
                 )}
               </div>
             </div>
-            <div className="flex flex-col md:flex-row">
+            <div className="flex flex-col md:flex-row gap-6">
               <div className="w-full md:w-3/5">
                 {inputs.map((input) => (
                   <div key={input.name} className="mb-4">
-                    {input.name === "phone_number" ? (
+                    {input.name === 'phone_number' ? (
                       <PhoneInputComp
                         label={input.label}
-                        properties={{
-                          value: formData[input.name as keyof typeof formData],
-                          onChange: handleInputChange,
-                          name: input.name,
-                        }}
-                        error={null}
+                        properties={{ ...register(input.name) }}
+                        error={errors[input.name]}
                         disabled={!edit}
                       />
                     ) : (
@@ -160,18 +197,15 @@ const LabAccount: React.FC = () => {
                         placeholder={input.placeholder}
                         type={input.type}
                         disabled={!edit}
-                        properties={{
-                          value: formData[input.name as keyof typeof formData],
-                          onChange: handleInputChange,
-                        }}
-                        error={null}
+                        properties={{ ...register(input.name) }}
+                        error={errors[input.name]}
                       />
                     )}
                   </div>
                 ))}
               </div>
               <div className="w-full md:w-2/5 flex flex-col items-center">
-                <div className="mt-1 flex flex-col items-center">
+                <div className="mt-4 flex flex-col items-center">
                   <span className="inline-block h-32 w-32 rounded-full overflow-hidden bg-gray-100 border-2 border-green-500">
                     {selectedFile ? (
                       <img
@@ -181,7 +215,7 @@ const LabAccount: React.FC = () => {
                       />
                     ) : (
                       <svg
-                        className="h-full w-full text-gray-300"
+                        className="h-full w-full text-gray-400"
                         fill="currentColor"
                         viewBox="0 0 24 24"
                       >
@@ -190,29 +224,33 @@ const LabAccount: React.FC = () => {
                       </svg>
                     )}
                   </span>
-                  <button
-                    className="mt-2 bg-white rounded-md px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
-                    type="button"
-                    onClick={handleUploadClick}
-                    style={{ color: "inherit" }}
-                  >
-                    Upload Logo
-                  </button>
-                  <input
-                    type="file"
-                    ref={fileInputRef}
-                    className="hidden"
-                    onChange={handleFileChange}
-                  />
+                  {edit && (
+                    <>
+                      <input
+                        type="file"
+                        ref={fileInputRef}
+                        accept="image/*"
+                        onChange={handleFileChange}
+                        className="hidden"
+                      />
+                      <button
+                        className="mt-2 font-extrabold bg-white rounded-md px-3 py-2 text-sm text-gray-700 hover:bg-gray-50"
+                        type="button"
+                        onClick={handleUploadClick}
+                      >
+                        Upload Logo
+                      </button>
+                    </>
+                  )}
                 </div>
               </div>
             </div>
           </form>
         </div>
-        <Toaster />
       </DashboardSection>
+      <Toaster />
     </>
   );
 };
 
-export default LabAccount;
+export default LabAccountManagement;

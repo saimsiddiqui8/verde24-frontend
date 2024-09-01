@@ -8,7 +8,7 @@ export default function AdminPatientProfile() {
   const navigate = useNavigate();
 
   const PATIENT_QUERY = `
-    query($id:String!) {
+    query($id: Int!) {
       findPatientById(id: $id) {
         id,
         first_name,
@@ -25,7 +25,7 @@ export default function AdminPatientProfile() {
     return publicRequest
       .post("/graphql", {
         query: PATIENT_QUERY,
-        variables: { id },
+        variables: { id : Number(id) },
       })
       .then((response) => response.data.data.findPatientById);
   };

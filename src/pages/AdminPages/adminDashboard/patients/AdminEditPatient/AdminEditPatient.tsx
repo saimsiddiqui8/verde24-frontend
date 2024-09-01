@@ -111,7 +111,7 @@ export default function AdminEditPatient() {
     return publicRequest
       .post("/graphql", {
         query: UPDATE_PATIENT_QUERY,
-        variables: { id, data: other },
+        variables: { id : Number(id), data: other },
       })
       .then((response) => response?.data?.data?.updatePatient);
   };
@@ -188,7 +188,7 @@ export default function AdminEditPatient() {
     return publicRequest
       .post("/graphql", {
         query: GET_PATIENT_QUERY,
-        variables: { id },
+        variables: { id : Number(id) },
       })
       .then((response) => response?.data?.data?.findPatientById);
   };

@@ -38,7 +38,7 @@ export default function AdminPatients() {
             <div className="flex justify-center">
               <FaUserCircle size={50} />
             </div>
-            <h3 className="text-primary text-lg font-medium text-center my-2 whitespace-nowrap">
+            <h3 className="text-primary text-lg font-medium text-center my-2 whitespace-nowrap overflow-hidden text-ellipsis">
               {patient?.first_name + " " + patient?.last_name}
             </h3>
             <div className="w-4/5 mx-auto mt-4">

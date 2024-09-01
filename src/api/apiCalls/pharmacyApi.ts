@@ -1,8 +1,9 @@
 import { publicRequest } from "../requestMethods";
+import { updatepharmacybyid } from "./types";
 
 export const getPharmacyById = async (
   query: string,
-  variables: { id: string },
+  variables: { findPharmacyByIdId: number },
 ) => {
   try {
     const response = await publicRequest.post("/graphql", { query, variables });
@@ -37,9 +38,11 @@ export const logoutQuery = async (token: string) => {
   }
 };
 
+
+
 export const updatePharmacyById = async (
   query: string,
-  variables: { id: string },
+  variables: { updatePharmacyId: number, data: updatepharmacybyid },
 ) => {
   try {
     const response = await publicRequest.post("/graphql", { query, variables });

@@ -12,7 +12,7 @@ import {
 import { useDispatch } from "react-redux";
 
 const HOSPITAL_QUERY = `
-query($id:String!) {
+query($id: Int!) {
   findHospitalById(id: $id) {
     id,
     name,
@@ -39,7 +39,7 @@ export default function OnlineHospitalAppointment() {
     try {
       const response = await publicRequest.post("/graphql", {
         query: HOSPITAL_QUERY,
-        variables: { id },
+        variables: { id : Number(id) },
       });
       setHospital(response.data.data.findHospitalById);
       dispatch(loadingEnd());
@@ -53,7 +53,7 @@ export default function OnlineHospitalAppointment() {
     if (id) {
       getHospital();
     }
-  }, [id, getHospital]);
+  }, [id]);
 
   if (!hospital) {
     return <div>Loading or no hospital data available...</div>;
