@@ -39,7 +39,7 @@ export default function OnlineHospitalAppointment() {
     try {
       const response = await publicRequest.post("/graphql", {
         query: HOSPITAL_QUERY,
-        variables: { id : Number(id) },
+        variables: { id: Number(id) },
       });
       setHospital(response.data.data.findHospitalById);
       dispatch(loadingEnd());

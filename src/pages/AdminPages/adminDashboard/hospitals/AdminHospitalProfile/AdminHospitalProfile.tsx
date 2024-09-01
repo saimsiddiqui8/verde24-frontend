@@ -13,7 +13,7 @@ export default function AdminHospitalProfile() {
     try {
       const response = await publicRequest.post("/graphql", {
         query: HOSPITAL_QUERY,
-        variables: { id : Number(id) },
+        variables: { id: Number(id) },
       });
       return response.data.data.findHospitalById;
     } catch (error) {

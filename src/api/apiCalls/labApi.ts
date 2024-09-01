@@ -1,8 +1,11 @@
 import { publicRequest } from "../requestMethods";
-import { updatelabbyid } from "./types";
+import { UpdateLabResponse } from "./types";
 
 // Function to get lab by ID
-export const getLabById = async (query: string, variables: { findLabByIdId: number }) => {
+export const getLabById = async (
+  query: string,
+  variables: { findLabByIdId: number },
+) => {
   try {
     const response = await publicRequest.post("/graphql", { query, variables });
     return response?.data?.data?.findLabById;
@@ -16,10 +19,11 @@ export const getLabById = async (query: string, variables: { findLabByIdId: numb
 // Function to update lab by ID
 export const updateLabById = async (
   query: string,
-  variables: { updateLabId: number, data:updatelabbyid },
+  variables: { updateLabId: number; data: UpdateLabResponse },
 ) => {
   try {
     const response = await publicRequest.post("/graphql", { query, variables });
+    console.log("GraphQL Response:", response);
     return response?.data?.data?.updateLab;
   } catch (error) {
     console.error("Error updating lab:", error);

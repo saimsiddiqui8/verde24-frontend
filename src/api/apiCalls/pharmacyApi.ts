@@ -1,5 +1,5 @@
 import { publicRequest } from "../requestMethods";
-import { updatepharmacybyid } from "./types";
+import { UpdatedPharmacyData } from "./types";
 
 export const getPharmacyById = async (
   query: string,
@@ -42,7 +42,7 @@ export const logoutQuery = async (token: string) => {
 
 export const updatePharmacyById = async (
   query: string,
-  variables: { updatePharmacyId: number, data: updatepharmacybyid },
+  variables: { updatePharmacyId: number; data: UpdatedPharmacyData },
 ) => {
   try {
     const response = await publicRequest.post("/graphql", { query, variables });

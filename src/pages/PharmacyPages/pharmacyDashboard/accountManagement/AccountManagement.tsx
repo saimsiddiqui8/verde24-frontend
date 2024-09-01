@@ -12,12 +12,12 @@ import { isPhoneValid, notifySuccess } from "../../../../utils/Utils";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../redux/store";
 import { useMutation, useQuery, useQueryClient } from "react-query";
+import { FIND_PHARMACY_QUERY, UPDATED_PHARMACY_QUERY } from "./queries";
 import { Toaster } from "react-hot-toast";
 import {
   getPharmacyById,
   updatePharmacyById,
 } from "../../../../api/apiCalls/pharmacyApi";
-import { FIND_PHARMACY_QUERY, UPDATED_PHARMACY_QUERY } from "./queries";
 
 const inputs = [
   {
@@ -63,7 +63,9 @@ const FormSchema = z
     name: z.string().min(1, { message: "Name is required" }),
     pharmacy_name: z.string().min(1, { message: "Pharmacy Name is required" }),
     city: z.string().min(1, { message: "City is required" }),
-    registration_number: z.string().min(1, { message: "Registration Number is required" }),
+    registration_number: z
+      .string()
+      .min(1, { message: "Registration Number is required" }),
     registered_email: z.string().email({ message: "Invalid email address" }),
     phone_number: z.string().min(1, { message: "Phone Number is required" }),
   })
@@ -90,7 +92,9 @@ export default function AccountManagement() {
 
   const getPharmacy = async () => {
     if (!id) return;
-    return getPharmacyById(FIND_PHARMACY_QUERY, { findPharmacyByIdId: Number(id) });
+    return getPharmacyById(FIND_PHARMACY_QUERY, {
+      findPharmacyByIdId: Number(id),
+    });
   };
 
   const pharmacyData = useQuery({
@@ -186,9 +190,14 @@ export default function AccountManagement() {
     <>
       <DashboardSection>
         <div className="p-4 bg-white shadow-md rounded-md">
-          <form className="pt-2 pb-6 space-y-6" onSubmit={handleSubmit(onSubmit)}>
+          <form
+            className="pt-2 pb-6 space-y-6"
+            onSubmit={handleSubmit(onSubmit)}
+          >
             <div className="flex justify-between items-center">
-              <h2 className="text-2xl md:text-3xl font-semibold">Account Management</h2>
+              <h2 className="text-2xl md:text-3xl font-semibold">
+                Account Management
+              </h2>
               <div className="flex gap-4">
                 <Button
                   title="Edit"
@@ -209,7 +218,7 @@ export default function AccountManagement() {
               <div className="w-full md:w-3/5">
                 {inputs.map((input) => (
                   <div key={input.name} className="mb-4">
-                    {input.name === 'phone_number' ? (
+                    {input.name === "phone_number" ? (
                       <PhoneInputComp
                         label={input.label}
                         properties={{ ...register(input.name) }}

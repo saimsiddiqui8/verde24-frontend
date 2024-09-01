@@ -86,10 +86,10 @@ export type createDoctorData = {
   };
 };
 
-export interface updatelabbyid {
-  logo?: string;
+export interface UpdatedPharmacyData {
+  logo: string;
   name: string;
-  lab_name: string;
+  pharmacy_name: string;
   city: string;
   registration_number: string;
   email: string;
@@ -98,9 +98,9 @@ export interface updatelabbyid {
   createdAt: string;
 }
 
-export interface updatepharmacybyid {
+export interface UpdateLabResponse {
   logo?: string;
-  name: string;
+  name?: string;
   lab_name: string;
   city: string;
   registration_number: string;

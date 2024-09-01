@@ -48,7 +48,7 @@ export default function AdminDoctorProfile() {
     try {
       const response = await publicRequest.post("/graphql", {
         query: DOCTOR_QUERY,
-        variables: { id : Number(id) },
+        variables: { id: Number(id) },
       });
 
       return response.data.data.findDoctorById;

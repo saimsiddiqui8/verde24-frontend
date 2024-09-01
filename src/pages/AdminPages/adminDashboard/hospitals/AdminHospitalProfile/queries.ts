@@ -16,9 +16,9 @@ query($id: Int!) {
 export const DOCTOR_QUERY = `
 query FindDoctorsByIds($ids: [Int]!) {
   findDoctorsByIds(ids: $ids) {
-    id
-    first_name
-    last_name
+  id
+  first_name
+  last_name
   }
 }
 `;

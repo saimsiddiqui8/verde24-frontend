@@ -10,6 +10,7 @@ import {
 import { useDispatch } from "react-redux";
 import { io } from "socket.io-client";
 import { notifyFailure } from "../../../../utils/Utils";
+import { BASE_URL } from "../../../../BaseUrl";
 
 interface Doctor {
   id: string;
@@ -72,8 +73,7 @@ export default function FindDoctor() {
   }, [dispatch]);
 
   useEffect(() => {
-    // const BASE_URL = import.meta.env.BASE_URL;
-    const socket = io('http://localhost:8000');
+    const socket = io(BASE_URL);
 
     socket.on("connect", () => { });
     socket.on("doctorStatusUpdated", (updatedDoctor: Doctor) => {

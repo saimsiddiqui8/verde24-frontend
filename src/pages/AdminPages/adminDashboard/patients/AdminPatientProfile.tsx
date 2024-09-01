@@ -25,7 +25,7 @@ export default function AdminPatientProfile() {
     return publicRequest
       .post("/graphql", {
         query: PATIENT_QUERY,
-        variables: { id : Number(id) },
+        variables: { id: Number(id) },
       })
       .then((response) => response.data.data.findPatientById);
   };

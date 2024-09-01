@@ -112,10 +112,10 @@ export const router = createBrowserRouter(
             <Route element={<DoctorLayout />} path="doctor-dashboard">
               <Route index element={<div>Doctor Home</div>} />
               <Route path="profile" element={<DoctorProfile />} />
+              <Route path="calendar" element={<DoctorProfile />} />
               <Route path="appointments" element={<DoctorProfile />} />
-              <Route path="my-patients" element={<DoctorProfile />} />
-              <Route path="schedule-slots" element={<DoctorProfile />} />
-              <Route path="payment-and-payouts" element={<DoctorProfile />} />
+              <Route path="mypatients" element={<DoctorProfile />} />
+              <Route path="schedule" element={<DoctorProfile />} />
             </Route>
           </Route>
           <Route element={<RequireAuth role={USER_ROLES.patient} />}>

@@ -1,5 +1,10 @@
 import React, { useEffect, useState, useRef, useMemo } from "react";
-import { Button, DashboardSection, InputField, PhoneInputComp } from "../../../../components";
+import {
+  Button,
+  DashboardSection,
+  InputField,
+  PhoneInputComp,
+} from "../../../../components";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -8,8 +13,8 @@ import { RootState } from "../../../../redux/store";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { Toaster } from "react-hot-toast";
 import { getLabById, updateLabById } from "../../../../api/apiCalls/labApi";
+import { FIND_LAB_QUERY, UPDATED_LAB_QUERY } from "./queries";
 import { notifySuccess, isPhoneValid } from "../../../../utils/Utils";
-import { FIND_LAB_QUERY, UPDATED_LAB_QUERY } from "./quries";
 
 const inputs = [
   {
@@ -55,7 +60,9 @@ const FormSchema = z
     name: z.string().min(1, { message: "Name is required" }),
     lab_name: z.string().min(1, { message: "Laboratory Name is required" }),
     city: z.string().min(1, { message: "City is required" }),
-    registration_number: z.string().min(1, { message: "Registration Number is required" }),
+    registration_number: z
+      .string()
+      .min(1, { message: "Registration Number is required" }),
     registered_email: z.string().email({ message: "Invalid email address" }),
     phone_number: z.string().min(1, { message: "Phone Number is required" }),
   })
@@ -65,7 +72,12 @@ const FormSchema = z
   });
 
 const LabAccountManagement = () => {
-  const { register, handleSubmit, reset, formState: { errors } } = useForm({
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm({
     resolver: zodResolver(FormSchema),
   });
 
@@ -90,7 +102,8 @@ const LabAccountManagement = () => {
       return {};
     }
 
-    const { name, lab_name, city, registration_number, email, phone_number } = labData.data;
+    const { name, lab_name, city, registration_number, email, phone_number } =
+      labData.data;
     return {
       name,
       lab_name,
@@ -160,9 +173,14 @@ const LabAccountManagement = () => {
     <>
       <DashboardSection>
         <div className="p-4 bg-white shadow-md rounded-md">
-          <form className="pt-2 pb-6 space-y-6" onSubmit={handleSubmit(onSubmit)}>
+          <form
+            className="pt-2 pb-6 space-y-6"
+            onSubmit={handleSubmit(onSubmit)}
+          >
             <div className="flex justify-between items-center">
-              <h2 className="text-2xl md:text-3xl font-semibold">Account Management</h2>
+              <h2 className="text-2xl md:text-3xl font-semibold">
+                Account Management
+              </h2>
               <div className="flex gap-4">
                 <Button
                   title="Edit"
@@ -183,7 +201,7 @@ const LabAccountManagement = () => {
               <div className="w-full md:w-3/5">
                 {inputs.map((input) => (
                   <div key={input.name} className="mb-4">
-                    {input.name === 'phone_number' ? (
+                    {input.name === "phone_number" ? (
                       <PhoneInputComp
                         label={input.label}
                         properties={{ ...register(input.name) }}

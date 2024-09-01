@@ -115,7 +115,7 @@ query ($email: String, $id: Int) {
 const PHARMACY_FORGOT_PASSWORD_QUERY = `
 query PharmacyForgotPassword($pharmacyForgotPasswordId: Int, $email: String) {
   pharmacyForgotPassword(id: $pharmacyForgotPasswordId, email: $email) {
-  id
+id
   }
 }
 `;
@@ -271,7 +271,7 @@ mutation UpdateLabPassword($updateLabPasswordId: Int!, $password: String!) {
 `;
 
 export const updatePassword = async (
-  id: string,
+  id: number,
   user: string,
   password: string,
 ) => {
