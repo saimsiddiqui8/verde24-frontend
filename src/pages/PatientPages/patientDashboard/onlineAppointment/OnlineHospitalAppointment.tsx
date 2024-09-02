@@ -31,7 +31,8 @@ const consultations = [
 
 export default function OnlineHospitalAppointment() {
   const [hospital, setHospital] = useState<any>(null);
-  const { id } = useParams<{ id: string }>();
+  const { id } = useParams();
+  const numericId = parseInt(id ?? "", 10);
   const dispatch = useDispatch();
 
   const getHospital = async () => {
@@ -39,7 +40,7 @@ export default function OnlineHospitalAppointment() {
     try {
       const response = await publicRequest.post("/graphql", {
         query: HOSPITAL_QUERY,
-        variables: { id: Number(id) },
+        variables: { id: numericId },
       });
       setHospital(response.data.data.findHospitalById);
       dispatch(loadingEnd());

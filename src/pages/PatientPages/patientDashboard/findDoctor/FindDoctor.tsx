@@ -13,7 +13,7 @@ import { notifyFailure } from "../../../../utils/Utils";
 import { BASE_URL } from "../../../../BaseUrl";
 
 interface Doctor {
-  id: string;
+  id: number;
   first_name: string;
   last_name: string;
   online: boolean;

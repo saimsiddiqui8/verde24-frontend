@@ -93,7 +93,7 @@ export default function AccountManagement() {
   const getPharmacy = async () => {
     if (!id) return;
     return getPharmacyById(FIND_PHARMACY_QUERY, {
-      findPharmacyByIdId: Number(id),
+      findPharmacyByIdId: id,
     });
   };
 
@@ -137,9 +137,8 @@ export default function AccountManagement() {
 
   const updatePharmacy = async (data: any) => {
     if (!id) return;
-    const updatedId = Number(id);
     return updatePharmacyById(UPDATED_PHARMACY_QUERY, {
-      updatePharmacyId: updatedId,
+      updatePharmacyId: id,
       data: {
         ...data,
         logo: data.logo || "",

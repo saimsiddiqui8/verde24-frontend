@@ -106,7 +106,7 @@ export default function PatientProfile() {
 
   const getPatient = async () => {
     if (!id) return;
-    return getPatientById(FIND_PATIENT_QUERY, { id: Number(id) });
+    return getPatientById(FIND_PATIENT_QUERY, { id: id });
   };
 
   const patientData = useQuery({

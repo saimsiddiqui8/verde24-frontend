@@ -28,7 +28,7 @@ export default function DoctorDashboard() {
 
   const getDoctor = async () => {
     return await getDoctorById(GET_DOCTOR_QUERY, {
-      findDoctorByIdId: Number(id),
+      findDoctorByIdId: id,
     });
   };
 

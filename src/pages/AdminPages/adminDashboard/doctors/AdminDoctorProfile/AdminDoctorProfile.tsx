@@ -29,6 +29,7 @@ export default function AdminDoctorProfile() {
     useState<CheckboxOption[]>();
   const [verified, setVerified] = useState(false);
   const { id } = useParams();
+  const numericId = id ? parseInt(id, 10) : undefined;
   const queryClient = useQueryClient();
   const navigate = useNavigate();
 
@@ -48,7 +49,7 @@ export default function AdminDoctorProfile() {
     try {
       const response = await publicRequest.post("/graphql", {
         query: DOCTOR_QUERY,
-        variables: { id: Number(id) },
+        variables: { id: numericId },
       });
 
       return response.data.data.findDoctorById;
@@ -85,7 +86,7 @@ export default function AdminDoctorProfile() {
   useEffect(() => {
     setSelectedHospitals(hospitals);
     setVerified(doctorData?.data?.is_verified);
-  }, [doctorData.data, hospitals]);
+  }, [doctorData.data]);
 
   const createDoctorHospital = async (data: {
     doctor_id: number;
@@ -286,7 +287,7 @@ export default function AdminDoctorProfile() {
 }
 
 type Hospital = {
-  id: string;
+  id: number;
   name: string;
   checked?: boolean;
 };

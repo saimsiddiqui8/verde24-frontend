@@ -44,12 +44,12 @@ interface UpdateDoctorData {
   specialty?: string;
 }
 export interface UpdateDoctorVariables {
-  id: string;
+  id: number | null;
   data: UpdateDoctorData;
 }
 
 export type FindDoctorByIdVariables = {
-  findDoctorByIdId: number;
+  findDoctorByIdId: number | null;
 };
 export type DoctorAuthVariables = {
   email: string;

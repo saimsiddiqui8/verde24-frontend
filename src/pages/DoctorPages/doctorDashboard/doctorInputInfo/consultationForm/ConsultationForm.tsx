@@ -426,7 +426,7 @@ export default function ConsultationForm() {
 
   const getDoctor = () => {
     if (!id) return;
-    return getDoctorById(GET_DOCTOR_QUERY, { findDoctorByIdId: Number(id) });
+    return getDoctorById(GET_DOCTOR_QUERY, { findDoctorByIdId: id });
   };
 
   const doctorData = useQuery({
@@ -443,11 +443,10 @@ export default function ConsultationForm() {
   }, [doctorData?.data, reset]);
 
   const onSubmit = async () => {
-    console.log("checking");
     const image_url = await imageUpload();
     if (image_url) {
       await updateDoctor(DOCTOR_UPDATE_QUERY, {
-        id: String(id),
+        id: id,
         data: { image: image_url, ...getInfo() },
       });
     }

@@ -7,13 +7,14 @@ import { DOCTOR_QUERY, HOSPITAL_QUERY } from "./queries";
 
 export default function AdminHospitalProfile() {
   const { id } = useParams();
+  const numericId = id ? parseInt(id, 10) : undefined;
   const navigate = useNavigate();
 
   const getHospital = async () => {
     try {
       const response = await publicRequest.post("/graphql", {
         query: HOSPITAL_QUERY,
-        variables: { id: Number(id) },
+        variables: { id: numericId },
       });
       return response.data.data.findHospitalById;
     } catch (error) {

@@ -154,13 +154,13 @@ export const forgotPassword = async (
   } else if (user === users.pharmacy) {
     const response = await publicRequest.post("/graphql", {
       query: PHARMACY_FORGOT_PASSWORD_QUERY,
-      variables: { email, pharmacyForgotPasswordId: Number(id) },
+      variables: { email, pharmacyForgotPasswordId: id },
     });
     return response.data.data.pharmacyForgotPassword;
   } else if (user === users.lab) {
     const response = await publicRequest.post("/graphql", {
       query: LAB_FORGOT_PASSWORD_QUERY,
-      variables: { email, labForgotPasswordId: Number(id) },
+      variables: { email, labForgotPasswordId: id },
     });
     return response.data.data.labForgotPassword;
   }
@@ -218,13 +218,13 @@ export const verifyCode = async (code: string, id: number, user: string) => {
   } else if (user === users.pharmacy) {
     const response = await publicRequest.post("/graphql", {
       query: PHARMACY_VERIFY_CODE_QUERY,
-      variables: { code, verifyPharmacyCodeId: Number(id) },
+      variables: { code, verifyPharmacyCodeId: id },
     });
     return response.data.data.verifyPharmacyCode;
   } else if (user === users.lab) {
     const response = await publicRequest.post("/graphql", {
       query: LAB_VERIFY_CODE_QUERY,
-      variables: { code, verifyLabCodeId: Number(id) },
+      variables: { code, verifyLabCodeId: id },
     });
     return response.data.data.verifyLabCode;
   }
@@ -278,31 +278,31 @@ export const updatePassword = async (
   if (user === users.patient) {
     const response = await publicRequest.post("/graphql", {
       query: PATIENT_UPDATE_QUERY,
-      variables: { id: Number(id), password },
+      variables: { id: id, password },
     });
     return response.data.data.updatePatientPassword;
   } else if (user === users.doctor) {
     const response = await publicRequest.post("/graphql", {
       query: DOCTOR_UPDATE_QUERY,
-      variables: { id: Number(id), password },
+      variables: { id: id, password },
     });
     return response.data.data.updateDoctorPassword;
   } else if (user === users.admin) {
     const response = await publicRequest.post("/graphql", {
       query: ADMIN_UPDATE_QUERY,
-      variables: { id: Number(id), password },
+      variables: { id: id, password },
     });
     return response.data.data.updateAdminPassword;
   } else if (user === users.pharmacy) {
     const response = await publicRequest.post("/graphql", {
       query: PHARMACY_UPDATE_QUERY,
-      variables: { updatePharmacyPasswordId: Number(id), password },
+      variables: { updatePharmacyPasswordId: id, password },
     });
     return response.data.data.updatePharmacyPassword;
   } else if (user === users.lab) {
     const response = await publicRequest.post("/graphql", {
       query: LAB_UPDATE_QUERY,
-      variables: { updateLabPasswordId: Number(id), password },
+      variables: { updateLabPasswordId: id, password },
     });
     return response.data.data.updateLabPassword;
   }

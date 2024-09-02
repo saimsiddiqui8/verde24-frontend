@@ -89,7 +89,7 @@ const LabAccountManagement = () => {
 
   const getLab = () => {
     if (!id) return;
-    return getLabById(FIND_LAB_QUERY, { findLabByIdId: Number(id) });
+    return getLabById(FIND_LAB_QUERY, { findLabByIdId: id });
   };
 
   const labData = useQuery({
@@ -122,9 +122,8 @@ const LabAccountManagement = () => {
 
   const updateLab = async (data: any) => {
     if (!id) return;
-    const updatedId = Number(id);
     return updateLabById(UPDATED_LAB_QUERY, {
-      updateLabId: updatedId,
+      updateLabId: id,
       data: {
         ...data,
         logo: data.logo || "",

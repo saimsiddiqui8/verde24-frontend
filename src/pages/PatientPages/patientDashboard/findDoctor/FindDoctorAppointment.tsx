@@ -17,7 +17,8 @@ const consultations = [{ title: "Video Consultation" }];
 
 export default function FindDoctorAppointment() {
   const [doctor, setDoctor] = useState<Doctor | null>(null);
-  const { id } = useParams<{ id: string }>();
+  const { id } = useParams();
+  const numericId = id ? parseInt(id, 10) : null;
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -30,7 +31,7 @@ export default function FindDoctorAppointment() {
       dispatch(loadingStart());
       try {
         const doctorData = await getDoctorById(GET_DOCTOR_QUERY, {
-          findDoctorByIdId: Number(id),
+          findDoctorByIdId: numericId,
         });
         setDoctor(doctorData);
         dispatch(loadingEnd());
