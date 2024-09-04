@@ -1,5 +1,5 @@
 export const FIND_PATIENT_QUERY = `
-query($id:String!) {
+query($id: Int!) {
   findPatientById(id: $id) {
     first_name,
     last_name,
@@ -15,7 +15,7 @@ query($id:String!) {
 `;
 
 export const UPDATE_PATIENT_QUERY = `
-mutation UpdatePatient($data: PatientInputUpdate!, $updatePatientId: String!) {
+mutation UpdatePatient($data: PatientInputUpdate!, $updatePatientId: Int!) {
   updatePatient(data: $data, id: $updatePatientId) {
     email
     first_name,

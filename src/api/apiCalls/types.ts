@@ -44,12 +44,12 @@ interface UpdateDoctorData {
   specialty?: string;
 }
 export interface UpdateDoctorVariables {
-  id: string;
+  id: number | null;
   data: UpdateDoctorData;
 }
 
 export type FindDoctorByIdVariables = {
-  findDoctorByIdId: string;
+  findDoctorByIdId: number | null;
 };
 export type DoctorAuthVariables = {
   email: string;
@@ -85,3 +85,27 @@ export type createDoctorData = {
     password: string;
   };
 };
+
+export interface UpdatedPharmacyData {
+  logo: string;
+  name: string;
+  pharmacy_name: string;
+  city: string;
+  registration_number: string;
+  email: string;
+  phone_number: string;
+  is_verified: boolean;
+  createdAt: string;
+}
+
+export interface UpdateLabResponse {
+  logo?: string;
+  name?: string;
+  lab_name: string;
+  city: string;
+  registration_number: string;
+  email: string;
+  phone_number: string;
+  is_verified: boolean;
+  createdAt: string;
+}

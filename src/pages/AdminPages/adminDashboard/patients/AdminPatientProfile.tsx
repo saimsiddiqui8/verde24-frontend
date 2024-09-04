@@ -5,10 +5,11 @@ import { useQuery } from "react-query";
 
 export default function AdminPatientProfile() {
   const { id } = useParams();
+  const numericId = id ? parseInt(id, 10) : undefined;
   const navigate = useNavigate();
 
   const PATIENT_QUERY = `
-    query($id:String!) {
+    query($id: Int!) {
       findPatientById(id: $id) {
         id,
         first_name,
@@ -25,7 +26,7 @@ export default function AdminPatientProfile() {
     return publicRequest
       .post("/graphql", {
         query: PATIENT_QUERY,
-        variables: { id },
+        variables: { id: numericId },
       })
       .then((response) => response.data.data.findPatientById);
   };

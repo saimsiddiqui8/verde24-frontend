@@ -338,7 +338,7 @@ const FormSchema = z
     path: ["doctor_image"],
   });
 
-const disabledFields = ["complete_name", "email", "gender", "phone_number"];
+const disabledFields = ["complete_name", "email", "gender"];
 
 export default function ConsultationForm() {
   const {
@@ -425,7 +425,8 @@ export default function ConsultationForm() {
   };
 
   const getDoctor = () => {
-    return getDoctorById(GET_DOCTOR_QUERY, { findDoctorByIdId: String(id) });
+    if (!id) return;
+    return getDoctorById(GET_DOCTOR_QUERY, { findDoctorByIdId: id });
   };
 
   const doctorData = useQuery({
@@ -445,7 +446,7 @@ export default function ConsultationForm() {
     const image_url = await imageUpload();
     if (image_url) {
       await updateDoctor(DOCTOR_UPDATE_QUERY, {
-        id: String(id),
+        id: id,
         data: { image: image_url, ...getInfo() },
       });
     }
@@ -491,7 +492,7 @@ export default function ConsultationForm() {
           <div className="col-span-7">
             <div className="grid grid-cols-12 gap-x-4 gap-y-0">
               {inputs?.map((input) => (
-                <div className="col-span-6">
+                <div className="col-span-6 h-20">
                   {input?.name === "phone_number" ? (
                     <PhoneInputComp
                       label={input?.label}
