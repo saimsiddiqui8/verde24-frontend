@@ -13,41 +13,94 @@ import { notifyFailure } from "../../../../utils/Utils";
 import { BASE_URL } from "../../../../BaseUrl";
 
 interface Doctor {
-  id: number;
+  id: string;
   first_name: string;
   last_name: string;
-  online: boolean;
+  email: string;
+  phone_number: string;
+  gender: string;
+  password: string;
+  is_verified: boolean;
+  form_submitted: boolean;
+  verification_code: string;
+  verification_code_expiry: string;
+  image: string;
+  city: string;
+  country: string;
+  department: string;
   experience: string;
-  specialization: string;
+  registration_no: string;
+  qualification: string;
+  consultation_mode: string;
   consultation_fee_regular: number;
+  consultation_fee_discounted: number;
+  booking_lead_time: number;
+  payout_method: string;
+  payout_method_id: string;
+  address: string;
+  postal_code: string;
+  services: string;
+  specialization: string;
+  bibliography: string;
+  online: boolean;
 }
 
+
 const DOCTOR_QUERY = `
-query {
-  doctors {
-    id,
-    first_name,
-    last_name,
-    online,
-    experience,
-    specialization,
+query FindDoctorsByVerificationStatus($isVerified: Boolean!) {
+  findDoctorsByVerificationStatus(isVerified: $isVerified) {
+    id
+    online
+    first_name
+    last_name
+    email
+    phone_number
+    gender
+    password
+    is_verified
+    form_submitted
+    verification_code
+    verification_code_expiry
+    image
+    city
+    country
+    department
+    experience
+    registration_no
+    qualification
+    consultation_mode
     consultation_fee_regular
+    consultation_fee_discounted
+    booking_lead_time
+    payout_method
+    payout_method_id
+    address
+    postal_code
+    services
+    specialization
+    bibliography
   }
 }
 `;
+
+const variables = {
+  isVerified: true, 
+};
 const getDoctors = async () => {
   try {
     const response = await publicRequest.post("/graphql", {
       query: DOCTOR_QUERY,
+      variables: variables,
     });
-    return response.data.data.doctors;
+    return response.data.data.findDoctorsByVerificationStatus;
   } catch (error) {
     console.error("Error fetching doctors:", error);
     throw error;
   }
 };
 
-export default function FindDoctor() {
+export default function 
+FindDoctor() {
   const [doctors, setDoctors] = useState<Doctor[]>([]);
   const [searchDoctor, setSearchDoctor] = useState<string>("");
   const [availability, setAvailability] = useState<boolean | null>(null);
@@ -300,7 +353,7 @@ export default function FindDoctor() {
               return matchesSearchDoctor && matchesOnlineStatus;
             })
             .map((doctor: Doctor) => {
-              return (
+              return  (
                 <Link
                   to={`/patient-dashboard/find-doctor/appointment/${doctor.id}`}
                   key={doctor.id}

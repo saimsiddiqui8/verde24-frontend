@@ -5,12 +5,15 @@ import FindDoctorIcon from "../../assets/sidemenu/patient/FindDoctor.svg";
 
 const links = [
   { title: "Profile", href: "/", icon: ProfileIcon },
+  { title: "Notification", href: "/notification", icon: ProfileIcon },
   { title: "Find Doctor", href: "/find-doctor", icon: FindDoctorIcon },
   { title: "Treatment Plans", href: "/treatment-plans" },
+  { title: "Transaction History", href: "/treatment-plans" },
   { title: "Completed Procedures", href: "/completed-procedures" },
   { title: "Files", href: "/files" },
   { title: "Prescriptions", href: "/prescriptions" },
   { title: "Online Appointment", href: "/online-appointment" },
+  { title: "Book Lab Test", href: "/book-lab-test" },
 ];
 
 const BASE_URL = "/patient-dashboard";

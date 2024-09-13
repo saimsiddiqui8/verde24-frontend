@@ -12,7 +12,7 @@ import feedback from "../../assets/sidemenu/doctor/feedback.png";
 import dashboard from "../../assets/sidemenu/doctor/dashboard.png";
 
 const links = [
-  { title: "My Profile", href: "/profile", icon: Profile },
+  { title: "My Profile", href: "/", icon: Profile },
   { title: "Calendar", href: "/calendar", icon: calendar },
   { title: "Appointments", href: "/appointments", icon: appointments },
   { title: "My Patients", href: "/mypatients", icon: mypatients },
@@ -28,9 +28,9 @@ const links = [
   { title: "Communications", href: "/communications", icon: dashboard },
 ];
 
-const BASE_URL = "/doctor-dashboard";
+const BASE_URL = "/verified-doctor-dashboard";
 
-export default function DrDashboardAfterApproval() {
+export default function DoctorDashboardAfterApproval() {
   const [collapsed, setCollapsed] = useState(false);
   const { pathname } = useLocation();
 

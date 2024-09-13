@@ -27,6 +27,7 @@ import { app } from "../../../../../firebase/config";
 import { RootState } from "../../../../../redux/store";
 import { isPhoneValid } from "../../../../../utils/Utils";
 import { DOCTOR_UPDATE_QUERY, GET_DOCTOR_QUERY } from "./queries";
+import { useNavigate } from "react-router-dom";
 
 const inputs = [
   {
@@ -354,6 +355,7 @@ export default function ConsultationForm() {
   const [image, setImage] = useState();
   const [payout, setPayout] = useState("upi");
   const id = useSelector((state: RootState) => state.user.currentUser?.id);
+  const navigate = useNavigate(); 
 
   const imageUpload = async () => {
     try {
@@ -435,6 +437,12 @@ export default function ConsultationForm() {
   });
 
   useEffect(() => {
+    if (doctorData?.data?.is_verified) {
+      navigate("/verified-doctor-dashboard/verifiedprofile");
+    }
+  }, [doctorData, navigate]);
+
+  useEffect(() => {
     reset({
       complete_name:
         doctorData?.data?.first_name + " " + doctorData?.data?.last_name,
@@ -491,8 +499,8 @@ export default function ConsultationForm() {
           </div>
           <div className="col-span-7">
             <div className="grid grid-cols-12 gap-x-4 gap-y-0">
-              {inputs?.map((input) => (
-                <div className="col-span-6 h-20">
+              {inputs?.map((input,index) => (
+                <div key={index} className="col-span-6 h-20">
                   {input?.name === "phone_number" ? (
                     <PhoneInputComp
                       label={input?.label}

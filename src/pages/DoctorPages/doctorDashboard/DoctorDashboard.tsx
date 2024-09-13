@@ -1,23 +1,18 @@
 import { useQuery } from "react-query";
-import AddSlots from "./doctorInputInfo/addSlots/AddSlots";
-import ConsultationForm from "./doctorInputInfo/consultationForm/ConsultationForm";
 import { getDoctorById } from "../../../api/apiCalls/doctorsApi";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../redux/store";
 import { loadingEnd, loadingStart } from "../../../redux/slices/loadingSlice";
 import { useDispatch } from "react-redux";
+import DoctorLayout from "../../../routes/layouts/DoctorLayout";
 
 const GET_DOCTOR_QUERY = `
 query FindDoctorById($findDoctorByIdId: Int!) {
   findDoctorById(id: $findDoctorByIdId) {
-    first_name
     id
-    last_name
     email
-    phone_number
-    gender
     is_verified
-    country
+    form_submitted
   }
 }
 `;
@@ -25,18 +20,19 @@ query FindDoctorById($findDoctorByIdId: Int!) {
 export default function DoctorDashboard() {
   const id = useSelector((state: RootState) => state.user.currentUser?.id);
   const dispatch = useDispatch();
-
   const getDoctor = async () => {
+    if(!id) return ;
     return await getDoctorById(GET_DOCTOR_QUERY, {
       findDoctorByIdId: id,
     });
   };
 
   const doctorData = useQuery({
-    queryKey: ["Doctors", id, "profile"],
+    queryKey: ["Doctors", id],
     queryFn: getDoctor,
-    enabled: !!id,
   });
+
+
 
   if (doctorData?.isLoading) {
     dispatch(loadingStart());
@@ -47,15 +43,7 @@ export default function DoctorDashboard() {
 
   return (
     <>
-      {doctorData?.data?.isVerified ? (
-        <div></div>
-      ) : doctorData?.data?.timeSlots?.length > 0 ? (
-        <div>Your Profile is pending verification!</div>
-      ) : doctorData?.data?.consultation_mode ? (
-        <AddSlots />
-      ) : (
-        <ConsultationForm />
-      )}
+      <DoctorLayout />
     </>
   );
 }

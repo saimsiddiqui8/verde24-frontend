@@ -65,6 +65,15 @@ import PharmacyLayout from "./layouts/PharmacyLayout.tsx";
 import LabLayout from "./layouts/LabLayout.tsx";
 import AccountManagement from "../pages/PharmacyPages/pharmacyDashboard/accountManagement/AccountManagement.tsx";
 import LabAccount from "../pages/LabPages/LabDashboard/labAccount/LabAccount.tsx";
+import BookLabTest from "../pages/PatientPages/patientDashboard/booklabtest/BookLabTest.tsx";
+import ConsultationForm from "../pages/DoctorPages/doctorDashboard/doctorInputInfo/consultationForm/ConsultationForm.tsx";
+import Calendar from "../pages/DoctorPages/doctorDashboard/doctorInputInfo/calendar/Calendar.tsx";
+import Appointments from "../pages/DoctorPages/doctorDashboard/doctorInputInfo/appointments/Appointments.tsx";
+import MyPatientsSection from "../pages/DoctorPages/doctorDashboard/doctorInputInfo/mypatients/MyPatients.tsx";
+import AddSlots from "../pages/DoctorPages/doctorDashboard/doctorInputInfo/addSlots/AddSlots.tsx";
+import VerifiedProfile from "../pages/DoctorPages/doctorDashboard/doctorInputInfo/verifiedprofile/VerifiedProfile.tsx";
+import DoctorDashboardAfterApproval from "./layouts/DoctorDashboardAfterApproval.tsx";
+import Notification from "../pages/PatientPages/patientDashboard/notification/Notification.tsx";
 
 interface RequireAuthProps {
   role: string;
@@ -109,14 +118,17 @@ export const router = createBrowserRouter(
         </Route>
         <Route element={<ProtectedRoutes />}>
           <Route element={<RequireAuth role={USER_ROLES.doctor} />}>
-            <Route element={<DoctorLayout />} path="doctor-dashboard">
-              <Route index element={<div>Doctor Home</div>} />
-              <Route path="profile" element={<DoctorProfile />} />
-              <Route path="calendar" element={<DoctorProfile />} />
-              <Route path="appointments" element={<DoctorProfile />} />
-              <Route path="mypatients" element={<DoctorProfile />} />
-              <Route path="schedule" element={<DoctorProfile />} />
+            <Route element={<DoctorLayout/>} path="doctor-dashboard">
+              <Route index element={<ConsultationForm/>} />
             </Route>
+            <Route element={<DoctorDashboardAfterApproval />} path="verified-doctor-dashboard">
+              <Route path="verifiedprofile" element={<VerifiedProfile />} />
+              <Route path="calendar" element={<Calendar />} />
+              <Route path="appointments" element={<Appointments />} />
+              <Route path="mypatients" element={<MyPatientsSection />} />
+              <Route path="schedule" element={<AddSlots />} />
+            </Route>
+
           </Route>
           <Route element={<RequireAuth role={USER_ROLES.patient} />}>
             <Route element={<PatientLayout />} path="patient-dashboard">
@@ -145,6 +157,14 @@ export const router = createBrowserRouter(
               <Route
                 path="/patient-dashboard/online-appointment/online-hospital-profile/:id"
                 element={<OnlineHospitalAppointment />}
+              />
+              <Route
+                path="book-lab-test"
+                element={<BookLabTest/>}
+              />
+              <Route
+                path="notification"
+                element={<Notification/>}
               />
             </Route>
           </Route>
