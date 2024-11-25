@@ -6,31 +6,18 @@ import { RootState } from "../../redux/store";
 import { getDoctorById } from "../../api/apiCalls/doctorsApi";
 import { useQuery } from "react-query";
 import { loadingEnd, loadingStart } from "../../redux/slices/loadingSlice";
+import { GET_DOCTOR_QUERY } from "../../pages/DoctorPages/doctorDashboard/doctorInputInfo/consultationForm/queries";
 
 const links = [{ title: "My Profile", href: "/", icon: ProfileIcon }];
 
 const BASE_URL = "/doctor-dashboard";
-
-const GET_DOCTOR_QUERY = `
-query FindDoctorById($findDoctorByIdId: Int!) {
-  findDoctorById(id: $findDoctorByIdId) {
-    id
-    first_name
-    last_name
-    email
-    image
-    is_verified
-    form_submitted
-  }
-}
-`;
 
 export default function DoctorLayout() {
   const id = useSelector((state: RootState) => state.user.currentUser?.id);
   const dispatch = useDispatch();
 
   const getDoctor = async () => {
-    if(!id) return ;
+    if (!id) return;
     return await getDoctorById(GET_DOCTOR_QUERY, {
       findDoctorByIdId: id,
     });
@@ -40,7 +27,7 @@ export default function DoctorLayout() {
     queryKey: ["Doctors", id],
     queryFn: getDoctor,
   });
-  
+
   if (doctorData?.isLoading) {
     dispatch(loadingStart());
     return null;
@@ -48,14 +35,15 @@ export default function DoctorLayout() {
     dispatch(loadingEnd());
   }
 
-
   return (
     <main className="grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-8 my-8 mx-4 md:mx-8 text-primary">
-      <section className="md:col-span-4 col-span-1 pt-10 pb-5 h-fit border border-primary rounded-md relative">
+      <section className="md:col-span-3 col-span-1 pt-10 pb-5 h-fit border border-primary rounded-md relative">
         {doctorData?.data && (
           <div>
             <div className="bg-[#FFF500] text-[#125DB9] font-bold px-2 py-1 absolute top-2 right-4 rounded">
-              {doctorData?.data?.form_submitted ? ("YOUR APPROVAL IS PENDING") : ("PLEASE SUBMIT THE FORM")}
+              {doctorData?.data?.form_submitted
+                ? "YOUR APPROVAL IS PENDING"
+                : "PLEASE SUBMIT THE FORM"}
             </div>
             <div className="py-1 px-4 my-5">
               <img
@@ -70,7 +58,6 @@ export default function DoctorLayout() {
           </div>
         )}
 
-
         <div className="mt-5 flex flex-col items-center w-full">
           {links.map((link, index) => (
             <Link
@@ -84,7 +71,7 @@ export default function DoctorLayout() {
           ))}
         </div>
       </section>
-      <section className="md:col-span-8 col-span-1">
+      <section className="md:col-span-9 col-span-1">
         <Outlet />
       </section>
     </main>

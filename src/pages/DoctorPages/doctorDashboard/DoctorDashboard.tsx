@@ -5,6 +5,7 @@ import { RootState } from "../../../redux/store";
 import { loadingEnd, loadingStart } from "../../../redux/slices/loadingSlice";
 import { useDispatch } from "react-redux";
 import DoctorLayout from "../../../routes/layouts/DoctorLayout";
+import DoctorDashboardAfterApproval from "../../../routes/layouts/DoctorDashboardAfterApproval";
 
 const GET_DOCTOR_QUERY = `
 query FindDoctorById($findDoctorByIdId: Int!) {
@@ -21,7 +22,7 @@ export default function DoctorDashboard() {
   const id = useSelector((state: RootState) => state.user.currentUser?.id);
   const dispatch = useDispatch();
   const getDoctor = async () => {
-    if(!id) return ;
+    if (!id) return;
     return await getDoctorById(GET_DOCTOR_QUERY, {
       findDoctorByIdId: id,
     });
@@ -30,9 +31,8 @@ export default function DoctorDashboard() {
   const doctorData = useQuery({
     queryKey: ["Doctors", id],
     queryFn: getDoctor,
+    enabled: !!id,
   });
-
-
 
   if (doctorData?.isLoading) {
     dispatch(loadingStart());
@@ -43,7 +43,11 @@ export default function DoctorDashboard() {
 
   return (
     <>
-      <DoctorLayout />
+      {doctorData?.data.is_verified ? (
+        <DoctorDashboardAfterApproval />
+      ) : (
+        <DoctorLayout />
+      )}
     </>
   );
 }

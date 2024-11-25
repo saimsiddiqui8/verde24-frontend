@@ -28,7 +28,7 @@ const links = [
   { title: "Communications", href: "/communications", icon: dashboard },
 ];
 
-const BASE_URL = "/verified-doctor-dashboard";
+const BASE_URL = "/doctor-dashboard";
 
 export default function DoctorDashboardAfterApproval() {
   const [collapsed, setCollapsed] = useState(false);
@@ -41,15 +41,17 @@ export default function DoctorDashboardAfterApproval() {
   return (
     <main className="grid grid-cols-12 gap-4 md:gap-8 my-8 mx-4 md:mx-8 text-primary transition-all duration-500">
       <section
-        className={`transition-all duration-500 ${collapsed ? "col-span-2" : "col-span-3"} pt-10 pb-5 h-fit border border-primary rounded-md`}
+        className={`transition-all duration-500 ${
+          collapsed ? "col-span-2" : "col-span-12 md:col-span-3"
+        } pt-10 pb-5 h-fit border border-primary rounded-md`}
       >
         <div className="py-1 px-4">
           <img
             src={doctorImg}
             alt="Doctor"
-            className="w-24 h-24 md:w-36 md:h-36 rounded-full block mx-auto"
+            className="w-16 h-16 md:w-24 md:h-24 lg:w-36 lg:h-36 rounded-full block mx-auto"
           />
-          <p className="text-[#5C89D8] text-sm text-center font-semibold my-1">
+          <p className="text-[#5C89D8] text-xs md:text-sm lg:text-base text-center font-semibold my-1">
             Doctor Name
           </p>
         </div>
@@ -65,19 +67,22 @@ export default function DoctorDashboardAfterApproval() {
               <Link
                 key={index}
                 to={BASE_URL + link?.href}
-                className={`flex items-center justify-start gap-2 py-1 px-4 ${collapsed ? "w-12" : "w-full"} border-b-2 border-grey-400 transition-all duration-500`}
+                className={`flex items-center justify-start gap-2 py-1 px-4 ${
+                  collapsed ? "w-12" : "w-full"
+                } border-b-2 border-grey-400 transition-all duration-500`}
                 onClick={() => handleToggle(link.title.trim())}
               >
                 <img
                   src={link?.icon}
                   alt="Icon"
-                  className="w-5 h-5 md:w-6 md:h-6 object-contain"
+                  className="w-4 h-4 md:w-5 md:h-5 lg:w-6 lg:h-6 object-contain"
                   style={{ filter: iconFilter }}
                 />
                 {!collapsed && (
                   <span
-                    className={`truncate text-sm md:text-base ${isActive ? `text-[${activeColor}]` : "text-[#5C89D8]"} transition-all duration-500`}
-                    style={{ minWidth: "0" }}
+                    className={`truncate text-xs md:text-sm lg:text-base ${
+                      isActive ? `text-[${activeColor}]` : "text-[#5C89D8]"
+                    } transition-all duration-500`}
                   >
                     {link?.title}
                   </span>
@@ -87,8 +92,11 @@ export default function DoctorDashboardAfterApproval() {
           })}
         </div>
       </section>
+      {/* Content Section */}
       <section
-        className={`transition-all duration-500 ${collapsed ? "col-span-10" : "col-span-9"} min-w-0`}
+        className={`transition-all duration-500 ${
+          collapsed ? "col-span-10" : "col-span-12 md:col-span-9"
+        } min-w-0`}
       >
         <Outlet />
       </section>

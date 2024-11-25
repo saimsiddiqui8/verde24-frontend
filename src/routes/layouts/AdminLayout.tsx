@@ -3,6 +3,7 @@ import verdeImage from "../../assets/form-img.png";
 
 const links = [
   { title: "Dashboard", href: "/" },
+  { title: "All Transaction Histories", href: "/transaction-histories" },
   { title: "Doctors", href: "/doctors" },
   { title: "Patients", href: "/patients" },
   { title: "Hospitals", href: "/hospitals" },

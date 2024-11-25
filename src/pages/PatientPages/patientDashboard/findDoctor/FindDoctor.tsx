@@ -45,7 +45,6 @@ interface Doctor {
   online: boolean;
 }
 
-
 const DOCTOR_QUERY = `
 query FindDoctorsByVerificationStatus($isVerified: Boolean!) {
   findDoctorsByVerificationStatus(isVerified: $isVerified) {
@@ -84,7 +83,7 @@ query FindDoctorsByVerificationStatus($isVerified: Boolean!) {
 `;
 
 const variables = {
-  isVerified: true, 
+  isVerified: true,
 };
 const getDoctors = async () => {
   try {
@@ -99,8 +98,7 @@ const getDoctors = async () => {
   }
 };
 
-export default function 
-FindDoctor() {
+export default function FindDoctor() {
   const [doctors, setDoctors] = useState<Doctor[]>([]);
   const [searchDoctor, setSearchDoctor] = useState<string>("");
   const [availability, setAvailability] = useState<boolean | null>(null);
@@ -353,7 +351,7 @@ FindDoctor() {
               return matchesSearchDoctor && matchesOnlineStatus;
             })
             .map((doctor: Doctor) => {
-              return  (
+              return (
                 <Link
                   to={`/patient-dashboard/find-doctor/appointment/${doctor.id}`}
                   key={doctor.id}
@@ -411,8 +409,6 @@ FindDoctor() {
                           Smile Solutions | Dental Clinic | Orthodontic &
                           Implant Centre, Model Town, Lahore
                         </h5>
-                        <p className="text-sm">Available today</p>
-                        <p className="text-sm">Rs 1000</p>
                       </div>
                     </div>
                   </div>

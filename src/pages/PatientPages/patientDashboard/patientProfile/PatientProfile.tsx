@@ -113,7 +113,6 @@ export default function PatientProfile() {
     queryKey: ["patient", id],
     queryFn: getPatient,
   });
-
   const defaultPatientData = useMemo(() => {
     if (patientData.isLoading || !patientData.data) {
       return {};
