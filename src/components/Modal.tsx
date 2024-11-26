@@ -26,7 +26,7 @@ export default function Modal({
           </div>
           {showModal && (
             <p className="text-center text-primary font-semibold mb-2">
-              Time left: {timer}
+              {timer && `Time left:${timer}`}
             </p>
           )}
           {timeLeft === 0 && (

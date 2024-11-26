@@ -1,5 +1,5 @@
 import { publicRequest } from "../requestMethods";
-import { CreatePatientType, UserData } from "./types";
+import { CreateAppointmentData, CreatePatientType, UserData } from "./types";
 
 export const getPatientById = async (
   query: string,
@@ -59,6 +59,22 @@ export const createPatient = async (
   }
 };
 
+export const createAppointment = async (
+  query: string,
+  variables: CreateAppointmentData,
+) => {
+  try {
+    const response = await publicRequest.post("/graphql", {
+      query,
+      variables,
+    });
+    return response?.data?.data?.createAppointment;
+  } catch (error) {
+    console.error("Error creating appointment:", error);
+    throw error;
+  }
+};
+
 export const findPatientByEmail = async (
   query: string,
   variables: { email: string },
@@ -91,9 +107,41 @@ export const verifyPatientOTP = async (
 ) => {
   try {
     const response = await publicRequest.post("/graphql", { query, variables });
-    return response.data.data.verifyUserOtp;
+    return response?.data?.data?.verifyUserOtp;
   } catch (error) {
     console.error("Error verifying patient OTP:", error);
+    throw error;
+  }
+};
+
+export const findAppointmentByPatient = async (
+  query: string,
+  variables: { findAppointmentByPatientId: number | null },
+) => {
+  try {
+    const response = await publicRequest.post("/graphql", {
+      query,
+      variables,
+    });
+    return response?.data?.data?.findAppointmentByPatient;
+  } catch (error) {
+    console.error("Error fetching appointments for patient:", error);
+    throw error;
+  }
+};
+
+export const findPaymentByPatient = async (
+  query: string,
+  variables: { findPaymentByPatientId: number | null },
+) => {
+  try {
+    const response = await publicRequest.post("/graphql", {
+      query,
+      variables: { findPaymentByPatientIdId: variables.findPaymentByPatientId },
+    });
+    return response?.data?.data?.findPaymentByPatientId;
+  } catch (error) {
+    console.error("Error fetching payments for patient:", error);
     throw error;
   }
 };

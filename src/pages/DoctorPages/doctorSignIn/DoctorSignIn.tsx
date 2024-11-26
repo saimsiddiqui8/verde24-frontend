@@ -53,7 +53,7 @@ export default function DoctorSignIn() {
       dispatch(setUser(userData));
       notifySuccess("Login Success! Redirecting...");
       setTimeout(() => {
-        navigate("/doctor-dashboard/profile");
+        navigate("/doctor-dashboard");
       }, 1000);
     } else {
       notifyFailure(tokenRes?.error || "Login Failed!");

@@ -5,9 +5,10 @@ import {
   ref as storageRef,
   uploadBytesResumable,
 } from "firebase/storage";
-import { useEffect, useMemo, useState } from "react";
+import { KeyboardEvent, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { useMutation, useQuery, useQueryClient } from "react-query";
+import { IoMdAddCircle } from "react-icons/io";
+import { useMutation, useQuery } from "react-query";
 import { useSelector } from "react-redux";
 import { z } from "zod";
 import {
@@ -15,6 +16,7 @@ import {
   updateDoctor,
 } from "../../../../../api/apiCalls/doctorsApi";
 import {
+  Button,
   DashboardSection,
   DropdownField,
   InputField,
@@ -24,8 +26,11 @@ import {
 } from "../../../../../components";
 import { app } from "../../../../../firebase/config";
 import { RootState } from "../../../../../redux/store";
-import { isPhoneValid, notifySuccess } from "../../../../../utils/Utils";
-import { DOCTOR_UPDATE_QUERY, GET_DOCTOR_QUERY } from "./queries";
+import { isPhoneValid } from "../../../../../utils/Utils";
+import {
+  DOCTOR_UPDATE_QUERY,
+  GET_DOCTOR_QUERY,
+} from "../consultationForm/queries";
 
 const inputs = [
   {
@@ -102,10 +107,16 @@ const inputs = [
 
 const contactDetails = [
   {
-    label: "Address",
+    label: "Address Line 1",
     type: "text",
     placeholder: "Enter Your Address here",
-    name: "address",
+    name: "address_line_1",
+  },
+  {
+    label: "Address Line 2",
+    type: "text",
+    placeholder: "Enter Your Address here",
+    name: "address_line_2",
   },
   {
     label: "Postal Code",
@@ -143,9 +154,21 @@ const Experience = [
     placeholder: "Enter Your Designation",
     name: "Designation",
   },
+  {
+    label: "Years of Experience",
+    type: "dropdown",
+    placeholder: "Select Years",
+    name: "YearsofExperience",
+    options: [
+      { label: "One Year", value: "1" },
+      { label: "Two Years", value: "2" },
+      { label: "Three Years", value: "3" },
+      { label: "Four or More Years", value: "4+" },
+    ],
+  },
 ];
 
-const options = [{ label: "Video Consultation", value: "Video Consultation" }];
+const options = [{ label: "Video Consultation", value: "male" }];
 
 const consultationFee = [
   {
@@ -162,12 +185,48 @@ const consultationFee = [
   },
 ];
 
+const Offered_Services = [
+  {
+    label: "Select Specialization",
+    type: "dropdown",
+    placeholder: "Select Specialization",
+    name: "Specialization",
+    options: [
+      { label: "Cardiology", value: "cardiology" },
+      { label: "Neurology", value: "neurology" },
+      { label: "Orthopedics", value: "orthopedics" },
+      { label: "Pediatrics", value: "pediatrics" },
+      { label: "General Medicine", value: "general_medicine" },
+    ],
+  },
+  {
+    label: "Select Services",
+    type: "dropdown",
+    placeholder: "Select Services",
+    name: "Department",
+    options: [
+      { label: "Engineering", value: "engineering" },
+      { label: "Marketing", value: "marketing" },
+      { label: "Sales", value: "sales" },
+    ],
+  },
+];
+
 const Symptoms = [
   {
     label: "Enter Symptom",
     type: "text",
     placeholder: "Enter Symptom",
     name: "EnterSymptom",
+  },
+];
+
+const Registration = [
+  {
+    label: "Registration No.",
+    type: "text",
+    placeholder: "Enter Your Registration No.",
+    name: "EnterYourRegistrationNo",
   },
 ];
 
@@ -203,7 +262,17 @@ const FormSchema = z
     Institute: z.string().min(1, { message: "Institute is required" }),
     Degree: z.string().min(1, { message: "Degree is required" }),
     Designation: z.string().min(1, { message: "Designation is required" }),
+    YearsofExperience: z
+      .string()
+      .min(1, { message: "Years of Experience is required" }),
+    Specialization: z
+      .string()
+      .min(1, { message: "Specialization is required" }),
+    Department: z.string().min(1, { message: "Department is required" }),
     EnterSymptom: z.string().min(1, { message: "Symptom is required" }),
+    EnterYourRegistrationNo: z
+      .string()
+      .min(1, { message: "Registration number is required" }),
     bibliography: z.string().min(1, { message: "Bibliography is required" }),
     consultation_mode: z
       .string({ invalid_type_error: "Consultation Mode is required" })
@@ -214,9 +283,10 @@ const FormSchema = z
     consultation_fee_discounted: z.string().min(1, {
       message: "Discounted Consultation Fee is required",
     }),
-    address: z.string().min(1, {
+    address_line_1: z.string().min(1, {
       message: "Address is required",
     }),
+    address_line_2: z.string().optional(),
     postal_code: z.string().min(1, {
       message: "Postal Code is required",
     }),
@@ -235,6 +305,7 @@ const FormSchema = z
     experience_detail: z.string().optional(),
     membership: z.string().optional(),
     registration: z.string().optional(),
+    lead_time: z.string().min(1, { message: "Lead Time is required" }),
   })
   .refine((data) => isPhoneValid(data.phone_number), {
     message: "Invalid Phone Number",
@@ -271,19 +342,23 @@ const FormSchema = z
     path: ["doctor_image"],
   });
 
-const disabledFields = ["complete_name", "email", "Gender", "phone_number"];
+const disabledFields = ["complete_name", "email", "gender"];
 
-export default function ConsultationForm() {
+export default function VerifiedProfile() {
   const {
     register,
     handleSubmit,
+    getValues,
     setValue,
     reset,
-    getValues,
     formState: { errors },
   } = useForm({ resolver: zodResolver(FormSchema) });
+  const [services, setServices] = useState<string[]>([]);
+  const [specializations, setSpecializations] = useState<string[]>([]);
   const [image, setImage] = useState();
   const [payout, setPayout] = useState("upi");
+  const [edit, setEdit] = useState(false);
+
   const id = useSelector((state: RootState) => state.user.currentUser?.id);
 
   const imageUpload = async () => {
@@ -304,7 +379,23 @@ export default function ConsultationForm() {
     }
   };
 
-  const queryClient = useQueryClient();
+  const handleServices = (e: KeyboardEvent) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      if (getValues("services")) {
+        setServices((prev) => [...prev, getValues("services")]);
+      }
+    }
+  };
+
+  const handleSpecializations = (e: KeyboardEvent) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      if (getValues("specializations")) {
+        setSpecializations((prev) => [...prev, getValues("specializations")]);
+      }
+    }
+  };
 
   const handleFileChange = (e: any) => {
     const newImage = e.target.files[0];
@@ -322,83 +413,6 @@ export default function ConsultationForm() {
     queryFn: getDoctor,
   });
 
-  const defaultDoctorData = useMemo(() => {
-    if (doctorData.isLoading || !doctorData.data) {
-      return {};
-    }
-
-    const {
-      id,
-      online,
-      first_name,
-      last_name,
-      email,
-      phone_number,
-      gender,
-      password,
-      is_verified,
-      form_submitted,
-      verification_code,
-      verification_code_expiry,
-      image,
-      city,
-      country,
-      department,
-      experience,
-      registration_no,
-      qualification,
-      consultation_mode,
-      consultation_fee_regular,
-      consultation_fee_discounted,
-      booking_lead_time,
-      payout_method,
-      payout_method_id,
-      address,
-      postal_code,
-      services,
-      specialization,
-      bibliography,
-    } = doctorData.data;
-
-    return {
-      id,
-      online,
-      complete_name: `${first_name} ${last_name}`,
-      email,
-      phone_number,
-      gender,
-      password,
-      is_verified,
-      form_submitted,
-      verification_code,
-      verification_code_expiry,
-      image,
-      city,
-      country,
-      department,
-      experience,
-      registration_no,
-      qualification,
-      consultation_mode,
-      consultation_fee_regular,
-      consultation_fee_discounted,
-      booking_lead_time,
-      payout_method,
-      payout_method_id,
-      address,
-      postal_code,
-      services,
-      specialization,
-      bibliography,
-    };
-  }, [doctorData?.data]);
-
-  useEffect(() => {
-    if (doctorData?.data) {
-      reset(defaultDoctorData);
-    }
-  }, [doctorData?.data, reset]);
-
   const updateDoctorId = async (data: any) => {
     if (!id) return;
     const response = await updateDoctor(DOCTOR_UPDATE_QUERY, {
@@ -408,7 +422,7 @@ export default function ConsultationForm() {
     return response;
   };
 
-  const { data, mutate } = useMutation(updateDoctorId);
+  const { mutate } = useMutation(updateDoctorId);
 
   const onSubmit = async (data: any) => {
     const image_url = await imageUpload();
@@ -444,17 +458,33 @@ export default function ConsultationForm() {
   };
 
   useEffect(() => {
-    if (data?.email) {
-      notifySuccess("Profile Updated!");
-      queryClient.invalidateQueries({
-        queryKey: ["Doctors"],
-      });
-    }
-  }, [data, queryClient]);
+    reset({
+      complete_name:
+        doctorData?.data?.first_name + " " + doctorData?.data?.last_name,
+      ...doctorData?.data,
+    });
+  }, [doctorData?.data, reset]);
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="pb-6 ">
-      <DashboardSection title="Basic Information">
+      <DashboardSection title="Doctor Profile">
+        <div className="flex justify-end">
+          <div className="flex gap-4">
+            <Button
+              title="Edit"
+              className="w-20 bg-blue-500 text-white hover:bg-blue-600"
+              type="button"
+              onClick={() => setEdit(true)}
+            />
+            {edit && (
+              <Button
+                title="Save"
+                className="w-20 bg-green-500 text-white hover:bg-green-600"
+                type="submit"
+              />
+            )}
+          </div>
+        </div>
         <div className="grid grid-cols-12 mt-6">
           <div className="col-span-4">
             <input
@@ -466,7 +496,7 @@ export default function ConsultationForm() {
             />
             <label
               htmlFor="upload-file"
-              className="bg-[#D9D9D9] w-40 h-40 rounded-full mx-auto block relative overflow-clip mt-16"
+              className="bg-[#D9D9D9] w-40 h-40 rounded-full mx-auto block relative overflow-clip"
             >
               {image ? (
                 <img
@@ -492,8 +522,8 @@ export default function ConsultationForm() {
           </div>
           <div className="col-span-7">
             <div className="grid grid-cols-12 gap-x-4 gap-y-0">
-              {inputs?.map((input, index) => (
-                <div key={index} className="col-span-6 h-20">
+              {inputs?.map((input) => (
+                <div className="col-span-6 h-20">
                   {input?.name === "phone_number" ? (
                     <PhoneInputComp
                       label={input?.label}
@@ -525,8 +555,8 @@ export default function ConsultationForm() {
               ))}
             </div>
             <div className="grid grid-cols-12">
-              <h5 className="col-span-2 font-semibold mt-4">Note:</h5>
-              <small className="col-span-9 mt-4">
+              <h5 className="col-span-2 font-semibold">Note:</h5>
+              <small className="col-span-9">
                 Your Email Id will not be shared with anyone. Registration No.
                 will be printed on Prescription. Please specify the complete
                 Registration No. Medical Qualification will be displayed under
@@ -576,6 +606,30 @@ export default function ConsultationForm() {
           <p>
             We charge 30% (plus GST) as transaction fee for digital branding and
             platform services.
+          </p>
+        </>
+      </DashboardSection>
+      <DashboardSection title={"Booking Lead Time"}>
+        <>
+          <div className="grid grid-cols-12 gap-x-4 gap-y-0">
+            <div className="col-span-4">
+              <DropdownField
+                label="Lead Time"
+                name="lead_time"
+                placeholder="immediate"
+                options={[
+                  { label: "Option 1", value: "Option 1" },
+                  { label: "Option 2", value: "Option 2" },
+                ]}
+                properties={{ ...register("lead_time") }}
+                error={errors["lead_time"]}
+              />
+            </div>
+          </div>
+          <p>
+            Minimum time in advance for patients to book your appointments. e.g.
+            if you set it to 3 hours, a patient booking at 1 PM will only see
+            slots for 4 pm or later.
           </p>
         </>
       </DashboardSection>
@@ -666,7 +720,15 @@ export default function ConsultationForm() {
                 placeholder="Enter Your Services"
                 properties={{ ...register("services") }}
                 error={errors["services"]}
+                onKeyDown={handleServices}
               />
+              <div className="flex gap-2 flex-wrap mb-2">
+                {services?.map((service: string) => (
+                  <span className="py-1 px-2 rounded-md bg-primary text-white text-sm">
+                    {service}
+                  </span>
+                ))}
+              </div>
             </div>
             <div className="col-span-4">
               <InputField
@@ -675,7 +737,15 @@ export default function ConsultationForm() {
                 placeholder="Enter Your Specialization"
                 properties={{ ...register("specializations") }}
                 error={errors["specializations"]}
+                onKeyDown={handleSpecializations}
               />
+              <div className="flex gap-2 flex-wrap mb-2">
+                {specializations?.map((specialization: string) => (
+                  <span className="py-1 px-2 rounded-md bg-primary text-white text-sm">
+                    {specialization}
+                  </span>
+                ))}
+              </div>
             </div>
           </div>
           <p>Type and press to add new Services and Specialization.</p>
@@ -700,13 +770,43 @@ export default function ConsultationForm() {
         <div className="grid grid-cols-12 gap-x-4 gap-y-0">
           {Experience?.map((input, index) => (
             <div className="col-span-4" key={index}>
-              <InputField
-                label={input.label}
-                name={input.name}
-                placeholder={input.placeholder}
-                properties={{ ...register(input.name) }}
-                error={errors[input.name]}
-                disabled={disabledFields?.includes(input.name)}
+              {input.type === "dropdown" ? (
+                <DropdownField
+                  label={input.label}
+                  name={input.name}
+                  options={input.options!}
+                  placeholder={input.placeholder}
+                  properties={{ ...register(input.name) }}
+                  error={errors[input.name]}
+                  disabled={disabledFields?.includes(input.name)}
+                />
+              ) : (
+                <InputField
+                  label={input.label}
+                  name={input.name}
+                  placeholder={input.placeholder}
+                  properties={{ ...register(input.name) }}
+                  error={errors[input.name]}
+                  disabled={disabledFields?.includes(input.name)}
+                />
+              )}
+            </div>
+          ))}
+        </div>
+      </DashboardSection>
+      <DashboardSection title={"Offered Services"}>
+        <div className="grid grid-cols-12 gap-x-4 gap-y-0">
+          {Offered_Services.map((input, index) => (
+            <div className="col-span-4">
+              <DropdownField
+                key={index}
+                label={input?.label}
+                name={input?.name}
+                options={input?.options}
+                placeholder={input?.placeholder}
+                properties={{ ...register(input?.name) }}
+                error={errors[input?.name]}
+                disabled={disabledFields?.includes(input?.name)}
               />
             </div>
           ))}
@@ -715,6 +815,23 @@ export default function ConsultationForm() {
       <DashboardSection title={"Symptoms"}>
         <div className="flex items-center gap-2 text-base">
           {Symptoms?.map((input) => (
+            <div className="col-span-4">
+              <InputField
+                label={input.label}
+                name={input.name}
+                placeholder={input.placeholder}
+                properties={{ ...register(input?.name) }}
+                error={errors[input?.name]}
+              />
+            </div>
+          ))}
+          <IoMdAddCircle size={20} />
+          Add Row
+        </div>
+      </DashboardSection>
+      <DashboardSection title={"Registration No."}>
+        <div className="grid grid-cols-12 gap-x-4 gap-y-0">
+          {Registration?.map((input) => (
             <div className="col-span-4">
               <InputField
                 label={input.label}
@@ -737,13 +854,6 @@ export default function ConsultationForm() {
           rows={4}
         />
       </DashboardSection>
-      <div className="w-96 mx-auto">
-        {!doctorData?.data?.form_submitted && (
-          <button type="submit" className="form-btn">
-            Save Changes
-          </button>
-        )}
-      </div>
     </form>
   );
 }

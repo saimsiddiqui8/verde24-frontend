@@ -53,7 +53,7 @@ export default function Navbar() {
         )}
       </div>
       <div className="flex gap-3 items-center">
-        {location.pathname === "/" ? (
+        {location.pathname === "/" && (
           <div className="gap-3 items-center hidden lg:flex">
             <Link className="flex gap-1 items-center" to="#">
               For Corporate <BiChevronDown size={20} />
@@ -65,12 +65,12 @@ export default function Navbar() {
               Security & Help <BiChevronDown size={20} />
             </Link>
           </div>
-        ) : (
-          <button className="py-1.5 px-6 rounded-[30px] btn-back text-white flex items-center gap-2">
-            <FiPhoneCall fill="transparent" stroke="white" />
-            Help
-          </button>
         )}
+        <button className="py-1.5 px-6 rounded-[30px] btn-back text-white flex items-center gap-2">
+          <FiPhoneCall fill="transparent" stroke="white" />
+          Help
+        </button>
+
         <div className="relative">
           <div
             className="border-2 border-[#3FB946] flex gap-2 py-1.5 px-3 rounded"
