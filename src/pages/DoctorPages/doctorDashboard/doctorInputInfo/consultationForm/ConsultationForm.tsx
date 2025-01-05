@@ -738,7 +738,7 @@ export default function ConsultationForm() {
         />
       </DashboardSection>
       <div className="w-96 mx-auto">
-        {!doctorData?.data?.form_submitted && (
+        {doctorData?.data?.form_submitted && (
           <button type="submit" className="form-btn">
             Save Changes
           </button>

@@ -73,6 +73,13 @@ import Notification from "../pages/PatientPages/patientDashboard/notification/No
 import TransactionHistory from "../pages/PatientPages/patientDashboard/transactionHistory/TransactionHistory.tsx";
 import Checkout from "../pages/PatientPages/patientDashboard/checkout/Checkout.tsx";
 import Wallet from "../pages/PatientPages/patientDashboard/wallet/Wallet.tsx";
+import UpcomingLaboratoryTests from "../pages/LabPages/LabDashboard/labAccount/UpcomingLaboratoryTests.tsx";
+import LabBookedAppointments from "../pages/LabPages/LabDashboard/labAccount/LabBookedAppointments.tsx";
+import DeclinedAppointments from "../pages/LabPages/LabDashboard/labAccount/DeclinedAppointments.tsx";
+import PaymentsAndPayouts from "../pages/LabPages/LabDashboard/labAccount/PaymentsAndPayouts.tsx";
+import CollectionCenter from "../pages/LabPages/LabDashboard/labAccount/CollectionCenter.tsx";
+import AvailableTest from "../pages/LabPages/LabDashboard/labAccount/AvailableTest.tsx";
+import LabPatientProfile from "../pages/LabPages/LabDashboard/labAccount/LabPatientProfile.tsx";
 
 interface RequireAuthProps {
   role: string;
@@ -116,7 +123,7 @@ export const router = createBrowserRouter(
         </Route>
         <Route element={<ProtectedRoutes />}>
           <Route element={<RequireAuth role={USER_ROLES.doctor} />}>
-            {!verified ? (
+            {verified ? (
               <Route element={<DoctorLayout />} path="doctor-dashboard">
                 <Route index element={<ConsultationForm />} />
               </Route>
@@ -161,12 +168,13 @@ export const router = createBrowserRouter(
               <Route path="prescriptions" element={<Prescriptions />} />
               <Route
                 path="online-appointment"
-                element={<OnlineAppointment />}
-              />
+              >
+              <Route index element={<OnlineAppointment />} />
               <Route
-                path="/patient-dashboard/online-appointment/online-hospital-profile/:id"
+                path="online-hospital-profile/:id"
                 element={<OnlineHospitalAppointment />}
               />
+               </Route>
               <Route path="book-lab-test" element={<BookLabTest />} />
               <Route path="notification" element={<Notification />} />
             </Route>
@@ -179,6 +187,15 @@ export const router = createBrowserRouter(
           <Route element={<RequireAuth role={USER_ROLES.lab} />}>
             <Route element={<LabLayout />} path="lab-dashboard">
               <Route index element={<LabAccount />} />
+              <Route path="upcoming-lab-test" >
+              <Route index element={<UpcomingLaboratoryTests/>} />
+              <Route path="labpatientprofile/:id" element={<LabPatientProfile/>} />
+              </Route>
+              <Route path="lab-booked-appointments" element={<LabBookedAppointments/>} />
+              <Route path="declined-appointments" element={<DeclinedAppointments/>} />
+              <Route path="payments-and-payouts" element={<PaymentsAndPayouts/>} />
+              <Route path="collection-center" element={<CollectionCenter/>} />
+              <Route path="available-test" element={<AvailableTest/>} />
             </Route>
           </Route>
           <Route element={<RequireAuth role={USER_ROLES.admin} />}>

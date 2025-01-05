@@ -2,7 +2,7 @@ import { Link, Outlet, useLocation } from "react-router-dom";
 import doctorImg from "../../assets/doctor.png";
 
 const links = [
-  { title: "Account Management", href: "/account-management" },
+  { title: "Account Management", href: "/" },
   { title: "Upcoming Lab Test", href: "/upcoming-lab-test" },
   { title: "Lab Booked Appointments", href: "/lab-booked-appointments" },
   { title: "Declined Appointments", href: "/declined-appointments" },
@@ -17,7 +17,7 @@ export default function LabLayout() {
   const { pathname } = useLocation();
   return (
     <main className="grid grid-cols-1 md:grid-cols-12 my-8 mx-4 md:mx-8 text-primary gap-4 md:gap-8">
-      <section className="col-span-1 md:col-span-4 pt-10 pb-5 h-fit border border-primary rounded-md relative">
+      <section className="col-span-1 md:col-span-3 pt-10 pb-5 h-fit border border-primary rounded-md relative">
         <div className="py-1 px-4">
           <img
             src={doctorImg}
@@ -39,7 +39,7 @@ export default function LabLayout() {
           ))}
         </div>
       </section>
-      <section className="col-span-1 md:col-span-8">
+      <section className="col-span-1 md:col-span-9">
         <Outlet />
       </section>
     </main>
