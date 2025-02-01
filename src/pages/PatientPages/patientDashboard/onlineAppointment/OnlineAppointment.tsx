@@ -1,7 +1,6 @@
 import doctorImg from "../../../../assets/doctor.png";
 import { Link } from "react-router-dom";
 import { Button, DashboardSection, InputField } from "../../../../components";
-import { publicRequest } from "../../../../api/requestMethods";
 import { useEffect, useState } from "react";
 import {
   loadingEnd,
@@ -9,6 +8,8 @@ import {
 } from "../../../../redux/slices/loadingSlice";
 import { useDispatch } from "react-redux";
 import { notifyFailure } from "../../../../utils/Utils";
+import { getAllHospitals } from "../../../../api/apiCalls/hospitalsApi";
+import { hospitalsType } from "../../../../api/apiCalls/types";
 
 const HOSPITAL_QUERY = `
 query {
@@ -18,16 +19,15 @@ query {
   }
 }
 `;
+
 export default function OnlineAppointment() {
-  const [hospitals, setHospitals] = useState([]);
+  const [hospitals, setHospitals] = useState<hospitalsType[]>([]);
   const dispatch = useDispatch();
 
   const getHospitals = async () => {
     try {
-      const response = await publicRequest.post("/graphql", {
-        query: HOSPITAL_QUERY,
-      });
-      return response.data.data.hospitals;
+      const response = await getAllHospitals(HOSPITAL_QUERY);
+      return response;
     } catch (error) {
       console.error("Error fetching hospitals:", error);
       throw error;
@@ -64,7 +64,7 @@ export default function OnlineAppointment() {
           <Button title="Search" secondary={true} />
         </div>
       </div>
-      {hospitals.map((hospital: any) => (
+      {hospitals?.length > 0 ? (hospitals.map((hospital: hospitalsType) => (
         <div key={hospital?.id} className="flex flex-col gap-4">
           <Link
             to={`/patient-dashboard/online-appointment/online-hospital-profile/${hospital?.id}`}
@@ -124,7 +124,9 @@ export default function OnlineAppointment() {
             </div>
           </Link>
         </div>
-      ))}
+      ))):( <div className="text-center text-gray-500 p-4 text-2xl text-primary">
+        No hospitals found.
+      </div>)}
     </DashboardSection>
   );
 }

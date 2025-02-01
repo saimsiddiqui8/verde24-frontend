@@ -235,3 +235,10 @@ mutation CreateMeeting($data: CreateGoogleMeet!) {
   }
 }
 `;
+
+
+
+export  const DOCTOR_FILE_UPLOAD = `
+mutation Mutation($file: Upload!) {
+ uploadFile(file: $file)
+}`

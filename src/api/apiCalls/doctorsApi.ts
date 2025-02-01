@@ -260,3 +260,24 @@ export const createMeeting = async (query: string, data: CreateMeetingLink) => {
     throw error;
   }
 };
+
+
+export const uploadFileDoctor = async (query: string, file: File) => {
+  try {
+    const formData = new FormData();
+    formData.append("operations", JSON.stringify({ query, variables: { file: null } }));
+    formData.append("map", JSON.stringify({ "0": ["variables.file"] }));
+    formData.append("0", file); 
+    const response = await publicRequest.post("/graphql", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+    return response?.data?.data?.uploadFile;
+  } catch (error) {
+    console.error("Error uploading file:", error);
+    throw error;
+  }
+};
+
+

@@ -51,9 +51,9 @@ export default function TreatmentPlans() {
   const dispatch = useDispatch();
   const [searchQuery, setSearchQuery] = useState("");
 
-  const filteredAppointments = patientAppointments.filter(({ doctor }) => {
+  const filteredAppointments = patientAppointments?.filter(({ doctor }) => {
     const fullName = `${doctor?.first_name} ${doctor?.last_name}`.toLowerCase();
-    return fullName.includes(searchQuery.toLowerCase());
+    return fullName.includes(searchQuery?.toLowerCase());
   });
 
   const getPatientAppointments = async () => {
@@ -66,7 +66,7 @@ export default function TreatmentPlans() {
         },
       );
 
-      setPatientAppointments(response);
+      setPatientAppointments(response || []);
       dispatch(loadingEnd());
     } catch (err: any) {
       dispatch(loadingEnd());
@@ -77,10 +77,6 @@ export default function TreatmentPlans() {
   useEffect(() => {
     getPatientAppointments();
   }, []);
-  patientAppointments.map((data) => {
-    console.log("appoint", data?.meeting);
-  });
-
   return (
     <DashboardSection>
       <div className="flex flex-col sm:flex-row justify-between my-4">
@@ -101,7 +97,7 @@ export default function TreatmentPlans() {
         <table className="w-full min-w-max table-auto text-left">
           <thead>
             <tr>
-              {TABLE_HEAD.map((head) => (
+              {TABLE_HEAD?.map((head) => (
                 <th key={head} className="bg-white p-2 sm:p-4">
                   <Typography
                     variant="small"
@@ -114,8 +110,8 @@ export default function TreatmentPlans() {
             </tr>
           </thead>
           <tbody>
-            {filteredAppointments.length > 0 ? (
-              filteredAppointments.map(
+            {filteredAppointments?.length > 0 ? (
+              filteredAppointments?.map(
                 ({
                   appointment_date,
                   appointment_time,
@@ -176,9 +172,12 @@ export default function TreatmentPlans() {
               <tr>
                 <td
                   colSpan={TABLE_HEAD.length}
-                  className="text-center p-4 text-gray-500"
+                  className="text-center p-4 text-gray-500 text-primary text-2xl"
                 >
-                  No appointments found for "{searchQuery}"
+            {searchQuery 
+  ? `No appointments found for "${searchQuery}"` 
+  : "No appointments found"}
+                  
                 </td>
               </tr>
             )}

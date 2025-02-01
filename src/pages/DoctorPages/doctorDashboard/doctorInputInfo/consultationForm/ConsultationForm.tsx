@@ -1,18 +1,13 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  getDownloadURL,
-  getStorage,
-  ref as storageRef,
-  uploadBytesResumable,
-} from "firebase/storage";
 import { useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useMutation, useQuery, useQueryClient } from "react-query";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { z } from "zod";
 import {
   getDoctorById,
   updateDoctor,
+  uploadFileDoctor,
 } from "../../../../../api/apiCalls/doctorsApi";
 import {
   DashboardSection,
@@ -22,10 +17,10 @@ import {
   RadioInput,
   TextareaField,
 } from "../../../../../components";
-import { app } from "../../../../../firebase/config";
 import { RootState } from "../../../../../redux/store";
 import { isPhoneValid, notifySuccess } from "../../../../../utils/Utils";
-import { DOCTOR_UPDATE_QUERY, GET_DOCTOR_QUERY } from "./queries";
+import { DOCTOR_FILE_UPLOAD, DOCTOR_UPDATE_QUERY, GET_DOCTOR_QUERY } from "./queries";
+import { loadingEnd, loadingStart } from "../../../../../redux/slices/loadingSlice";
 
 const inputs = [
   {
@@ -258,18 +253,18 @@ const FormSchema = z
       path: ["upi_id"],
     },
   )
-  .refine((data) => data.doctor_image, {
-    message: "Image is required.",
-    path: ["doctor_image"],
-  })
-  .refine((data) => ACCEPTED_IMAGE_TYPES.includes(data.doctor_image?.type), {
-    message: ".jpg, .jpeg and .png files are accepted.",
-    path: ["doctor_image"],
-  })
-  .refine((data) => data.doctor_image?.size <= MAX_FILE_SIZE, {
-    message: `Max file size is 2MB.`,
-    path: ["doctor_image"],
-  });
+  // .refine((data) => data.doctor_image, {
+  //   message: "Image is required.",
+  //   path: ["doctor_image"],
+  // })
+  // .refine((data) => ACCEPTED_IMAGE_TYPES.includes(data.doctor_image?.type), {
+  //   message: ".jpg, .jpeg and .png files are accepted.",
+  //   path: ["doctor_image"],
+  // })
+  // .refine((data) => data.doctor_image?.size <= MAX_FILE_SIZE, {
+  //   message: `Max file size is 2MB.`,
+  //   path: ["doctor_image"],
+  // });
 
 const disabledFields = ["complete_name", "email", "Gender", "phone_number"];
 
@@ -285,32 +280,29 @@ export default function ConsultationForm() {
   const [image, setImage] = useState();
   const [payout, setPayout] = useState("upi");
   const id = useSelector((state: RootState) => state.user.currentUser?.id);
-
-  const imageUpload = async () => {
-    try {
-      const storage = getStorage(app);
-      const storageReference = storageRef(
-        storage,
-        `images/${getValues("doctor_image").name}`,
-      );
-      const uploadTask = await uploadBytesResumable(
-        storageReference,
-        getValues("doctor_image"),
-      );
-      const url = await getDownloadURL(uploadTask.ref);
-      return url;
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
+  const dispatch = useDispatch();
   const queryClient = useQueryClient();
 
-  const handleFileChange = (e: any) => {
-    const newImage = e.target.files[0];
-    setImage(newImage);
-    setValue("doctor_image", newImage);
-  };
+ 
+
+const handleFileChange = async (e: any) => {
+  const newImage = e.target.files[0];
+  setImage(newImage);
+  try {
+    dispatch(loadingStart());
+    const uploadedFileUrl = await uploadFileDoctor(
+      DOCTOR_FILE_UPLOAD
+      ,
+      newImage
+    );
+
+    setValue("doctor_image_url", uploadedFileUrl)
+    dispatch(loadingEnd());
+  } catch (error) {
+    dispatch(loadingEnd());
+    console.error("File upload failed:", error);
+  }
+};
 
   const getDoctor = () => {
     if (!id) return;
@@ -411,7 +403,7 @@ export default function ConsultationForm() {
   const { data, mutate } = useMutation(updateDoctorId);
 
   const onSubmit = async (data: any) => {
-    const image_url = await imageUpload();
+    // console.log("before..... data submit on submit.......:", data?.doctor_image_url);
     const doctorData = {
       first_name: data?.complete_name.split(" ")[0],
       last_name: data?.complete_name.split(" ")[1],
@@ -420,7 +412,7 @@ export default function ConsultationForm() {
       email: data?.email,
       city: data?.city,
       country: data?.country,
-      image: image_url,
+      image: getValues("doctor_image_url"),
       department: data?.department,
       experience: data?.experience,
       registration_no: data?.registration_no,
@@ -440,6 +432,8 @@ export default function ConsultationForm() {
       bibliography: data?.bibliography,
       form_submitted: true,
     };
+
+    console.log("data submit on submit.......:", doctorData);
     mutate(doctorData);
   };
 

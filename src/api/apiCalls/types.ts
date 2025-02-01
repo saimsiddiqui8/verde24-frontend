@@ -225,3 +225,9 @@ export interface CreateMeetingLink {
     refresh_token: string;
   };
 }
+
+
+export interface hospitalsType {
+  id : string,
+  name : string
+}

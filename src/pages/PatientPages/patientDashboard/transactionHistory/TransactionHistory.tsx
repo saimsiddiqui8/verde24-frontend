@@ -37,7 +37,7 @@ export default function TransactionHistory() {
       const response = await findPaymentByPatient(FIND_PAYMENT_BY_PATIENTID, {
         findPaymentByPatientId: id,
       });
-      setPaymentDetails(response);
+      setPaymentDetails(response || []);
       dispatch(loadingEnd());
     } catch (err: any) {
       notifyFailure(err.toString());
@@ -61,7 +61,7 @@ export default function TransactionHistory() {
         <table className="w-full min-w-max table-auto text-left">
           <thead>
             <tr>
-              {TABLE_HEAD.map((head) => (
+              {TABLE_HEAD?.map((head) => (
                 <th key={head} className="bg-white p-2 sm:p-4">
                   <Typography
                     variant="small"
@@ -108,7 +108,7 @@ export default function TransactionHistory() {
               ))
             ) : (
               <tr>
-                <td colSpan={5} className="text-center p-4">
+                <td colSpan={5} className="text-center p-4 text-2xl">
                   No payment found.
                 </td>
               </tr>
