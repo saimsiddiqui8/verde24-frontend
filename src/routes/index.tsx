@@ -80,6 +80,7 @@ import PaymentsAndPayouts from "../pages/LabPages/LabDashboard/labAccount/Paymen
 import CollectionCenter from "../pages/LabPages/LabDashboard/labAccount/CollectionCenter.tsx";
 import AvailableTest from "../pages/LabPages/LabDashboard/labAccount/AvailableTest.tsx";
 import LabPatientProfile from "../pages/LabPages/LabDashboard/labAccount/LabPatientProfile.tsx";
+import Patientgoogleauth from "../pages/PatientPages/patientSignIn/Patientgoogleauth.tsx";
 
 interface RequireAuthProps {
   role: string;
@@ -106,6 +107,7 @@ export const router = createBrowserRouter(
       <Route element={<AppLayout />}>
         <Route element={<PublicRoutes />}>
           <Route index element={<Homepage />} />
+          <Route path="auth" element={<Patientgoogleauth />} />
           <Route path="patient/sign-in" element={<PatientSignIn />} />
           <Route path="patient/sign-up" element={<PatientSignUp />} />
           <Route path="doctor/sign-in" element={<DoctorSignIn />} />
