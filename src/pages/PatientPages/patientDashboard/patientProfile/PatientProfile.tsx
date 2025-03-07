@@ -1,11 +1,12 @@
 import {
   Button,
   DashboardSection,
+  DropdownField,
   InputField,
   PhoneInputComp,
 } from "../../../../components";
 import { useEffect, useMemo, useState } from "react";
-import { useForm } from "react-hook-form";
+import { SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { isPhoneValid, notifySuccess } from "../../../../utils/Utils";
@@ -41,9 +42,13 @@ const inputs = [
   },
   {
     label: "Gender",
-    type: "text",
-    placeholder: "Enter Your Gender",
+    type: "dropdown",
+    placeholder: "Select Your Gender",
     name: "gender",
+    options: [
+      { label: "Male", value: "male" },
+      { label: "Female", value: "female" },
+    ],
   },
   {
     label: "Weight",
@@ -74,7 +79,14 @@ const inputs = [
 const FormSchema = z
   .object({
     patient_name: z.string().min(1, { message: "Patient Name is required" }),
-    patient_age: z.coerce.number().int({ message: "Age is required" }),
+    patient_age: z
+    .coerce
+    .number({
+      required_error: "Age is required",
+      invalid_type_error: "Age must be a number",
+    })
+    .min(1, { message: "Age is required" }) 
+    .gt(18, { message: "Age must be greater than 18" }),
     insurance_id: z.string().min(1, { message: "Insurance Id is required" }),
     phone_number: z.string().min(1, { message: "Phone Number is required" }),
     gender: z
@@ -82,7 +94,13 @@ const FormSchema = z
         invalid_type_error: "Gender is required",
       })
       .min(1, { message: "Gender is required" }),
-    weight: z.coerce.number().int({ message: "Weight is required" }),
+      weight: z
+      .coerce
+      .number({
+        required_error: "Weight is required",
+        invalid_type_error: "Weight must be a number",
+      })
+      .min(1, { message: "Weight is required" }), 
     blood_group: z.string().min(1, { message: "Blood Group is required" }),
     other_history: z.string().min(1, { message: "Other History is required" }),
   })
@@ -97,7 +115,7 @@ export default function PatientProfile() {
     handleSubmit,
     reset,
     formState: { errors },
-  } = useForm({
+  } = useForm<UserData>({
     resolver: zodResolver(FormSchema),
   });
   const [edit, setEdit] = useState(false);
@@ -131,11 +149,11 @@ export default function PatientProfile() {
     } = patientData.data;
     return {
       patient_name: `${first_name} ${last_name}`,
-      patient_age: age,
+      patient_age: age === 0 ? null : age,
       insurance_id,
       phone_number,
       gender,
-      weight,
+      weight:weight === 0 ? null : weight,
       blood_group,
       other_history,
     };
@@ -157,15 +175,15 @@ export default function PatientProfile() {
 
   const { data, mutate } = useMutation(updatePatient);
 
-  const onSubmit = (data: any) => {
+  const onSubmit: SubmitHandler<UserData> = (data: UserData) => {
     setEdit(false);
-    const userData = {
-      first_name: data?.patient_name.split(" ")[0],
-      last_name: data?.patient_name.split(" ")[1],
+    const userData: UserData = {
+      first_name: data?.patient_name?.split(" ")[0] ?? "",
+      last_name: data?.patient_name?.split(" ")[1] ?? "",
       gender: data?.gender,
       phone_number: data?.phone_number,
       insurance_id: data?.insurance_id,
-      age: data?.patient_age,
+      age: data?.patient_age ? parseInt(data.patient_age) : 0,
       weight: data?.weight,
       blood_group: data?.blood_group,
       other_history: data?.other_history,
@@ -211,15 +229,25 @@ export default function PatientProfile() {
                       error={errors[input.name]}
                       disabled={!edit}
                     />
-                  ) : (
+                  ) : input?.type === "dropdown" ? (
+                    <DropdownField
+                      label={input?.label}
+                      name={input?.name}
+                      options={input?.options!}
+                      placeholder={input?.placeholder}
+                      properties={{ ...register(input?.name as keyof UserData) }}
+                      error={errors[input?.name as keyof UserData]?.message}
+                    />
+                  )
+                  : (
                     <InputField
                       label={input.label}
                       name={input.name}
                       placeholder={input.placeholder}
                       type={input.type}
                       disabled={!edit}
-                      properties={{ ...register(input.name) }}
-                      error={errors[input.name]}
+                      properties={{ ...register(input.name as keyof UserData) }}
+                      error={errors[input.name as keyof UserData]?.message}
                     />
                   )}
                 </div>

@@ -5,16 +5,21 @@ import {
   InputField,
   PhoneInputComp,
 } from "../../../../components";
-import { useForm } from "react-hook-form";
+import { SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../../redux/store";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { Toaster } from "react-hot-toast";
 import { getLabById, updateLabById } from "../../../../api/apiCalls/labApi";
 import { FIND_LAB_QUERY, UPDATED_LAB_QUERY } from "./queries";
 import { notifySuccess, isPhoneValid } from "../../../../utils/Utils";
+import { loadingEnd, loadingStart } from "../../../../redux/slices/loadingSlice";
+import { uploadFileDoctor } from "../../../../api/apiCalls/doctorsApi";
+import { FILE_UPLOAD } from "../../../DoctorPages/doctorDashboard/doctorInputInfo/consultationForm/queries";
+import { UpdateLabResponse } from "../../../../api/apiCalls/types";
+import ImageUrl from "../../../../components/Icons/Sidemenu/ImageUrl";
 
 const inputs = [
   {
@@ -45,7 +50,7 @@ const inputs = [
     label: "Registered Email",
     type: "email",
     placeholder: "Enter Registered Email",
-    name: "registered_email",
+    name: "email",
   },
   {
     label: "Phone Number",
@@ -63,7 +68,7 @@ const FormSchema = z
     registration_number: z
       .string()
       .min(1, { message: "Registration Number is required" }),
-    registered_email: z.string().email({ message: "Invalid email address" }),
+      email: z.string().email({ message: "Invalid email address" }),
     phone_number: z.string().min(1, { message: "Phone Number is required" }),
   })
   .refine((data) => isPhoneValid(data.phone_number), {
@@ -76,16 +81,38 @@ const LabAccountManagement = () => {
     register,
     handleSubmit,
     reset,
+    setValue,
+    getValues,
     formState: { errors },
-  } = useForm({
+  } = useForm<UpdateLabResponse>({
     resolver: zodResolver(FormSchema),
   });
 
   const [edit, setEdit] = useState(false);
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [image, setImage] = useState<string | null>();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const id = useSelector((state: RootState) => state.user.currentUser?.id);
   const queryClient = useQueryClient();
+  const dispatch = useDispatch();
+
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setImage(URL.createObjectURL(file));
+    try {
+      dispatch(loadingStart());
+      const uploadedFileUrl = await uploadFileDoctor(
+        FILE_UPLOAD
+        ,
+        file
+      );
+      setValue("logo", uploadedFileUrl)
+      dispatch(loadingEnd());
+    } catch (error) {
+      dispatch(loadingEnd());
+      console.error("File upload failed:", error);
+    }
+  };
 
   const getLab = () => {
     if (!id) return;
@@ -102,15 +129,16 @@ const LabAccountManagement = () => {
       return {};
     }
 
-    const { name, lab_name, city, registration_number, email, phone_number } =
+    const { name, lab_name, city, registration_number, email, phone_number ,logo} =
       labData.data;
     return {
       name,
       lab_name,
       city,
       registration_number,
-      registered_email: email,
+      email,
       phone_number,
+      logo,
     };
   }, [labData.data]);
 
@@ -120,30 +148,26 @@ const LabAccountManagement = () => {
     }
   }, [labData.data, reset]);
 
-  const updateLab = async (data: any) => {
+  const updateLab = async (data: UpdateLabResponse) => {
     if (!id) return;
     return updateLabById(UPDATED_LAB_QUERY, {
       updateLabId: id,
-      data: {
-        ...data,
-        logo: data.logo || "",
-        is_verified: data.is_verified || false,
-      },
+      data,
     });
   };
 
   const { data, mutate } = useMutation(updateLab);
 
-  const onSubmit = (data: any) => {
+  const onSubmit:SubmitHandler<UpdateLabResponse> = (data: UpdateLabResponse) => {
     setEdit(false);
     const updatedData = {
       name: data.name,
       lab_name: data.lab_name,
       city: data.city,
       registration_number: data.registration_number,
-      email: data.registered_email,
+      email: data.email,
       phone_number: data.phone_number,
-      logo: selectedFile ? URL.createObjectURL(selectedFile) : "",
+      logo: getValues("logo") ?? "",
       is_verified: true,
     };
     mutate(updatedData);
@@ -156,11 +180,6 @@ const LabAccountManagement = () => {
     }
   }, [data, queryClient]);
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      setSelectedFile(e.target.files[0]);
-    }
-  };
 
   const handleUploadClick = () => {
     if (fileInputRef.current) {
@@ -214,8 +233,8 @@ const LabAccountManagement = () => {
                         placeholder={input.placeholder}
                         type={input.type}
                         disabled={!edit}
-                        properties={{ ...register(input.name) }}
-                        error={errors[input.name]}
+                        properties={{ ...register(input.name as keyof UpdateLabResponse) }}
+                        error={errors[input.name as keyof UpdateLabResponse]}
                       />
                     )}
                   </div>
@@ -224,22 +243,24 @@ const LabAccountManagement = () => {
               <div className="w-full md:w-2/5 flex flex-col items-center">
                 <div className="mt-4 flex flex-col items-center">
                   <span className="inline-block h-32 w-32 rounded-full overflow-hidden bg-gray-100 border-2 border-green-500">
-                    {selectedFile ? (
-                      <img
-                        src={URL.createObjectURL(selectedFile)}
-                        alt="Selected logo"
-                        className="h-full w-full object-cover"
-                      />
-                    ) : (
-                      <svg
-                        className="h-full w-full text-gray-400"
-                        fill="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path d="M24 24H0V0h24v24z" fill="none" />
-                        <path d="M12 0c-1.65 0-3.22.67-4.38 1.76L0 12h5v7h7v5l6.24-6.24c1.09-1.16 1.76-2.73 1.76-4.38 0-3.31-2.69-6-6-6zm2 13.5v-2h-4v-2h4V7l3 3-3 3.5z" />
-                      </svg>
-                    )}
+                  {image ? (
+  <img
+    src={image}
+    alt="Selected logo"
+    className="h-full w-full object-cover"
+  />
+) : defaultLabData?.logo ? (
+  <ImageUrl fileKey={defaultLabData.logo} />
+) : (
+  <svg
+    className="h-full w-full text-gray-400"
+    fill="currentColor"
+    viewBox="0 0 24 24"
+  >
+    <path d="M24 24H0V0h24v24z" fill="none" />
+    <path d="M12 0c-1.65 0-3.22.67-4.38 1.76L0 12h5v7h7v5l6.24-6.24c1.09-1.16 1.76-2.73 1.76-4.38 0-3.31-2.69-6-6-6zm2 13.5v-2h-4v-2h4V7l3 3-3 3.5z" />
+  </svg>
+)}
                   </span>
                   {edit && (
                     <>

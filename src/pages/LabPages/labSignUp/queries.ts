@@ -1,7 +1,13 @@
 export const NEW_LAB_QUERY = `
-mutation($data: LabInput!) {
+mutation Mutation($data: LabInput!) {
   createLab(data: $data) {
+    id
+    latitude
+    longitude
+    place_name
+    name
     email
+    phone_number
   }
 }
 `;

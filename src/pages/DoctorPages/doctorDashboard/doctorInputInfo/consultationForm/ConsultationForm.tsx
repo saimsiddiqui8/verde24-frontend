@@ -19,8 +19,11 @@ import {
 } from "../../../../../components";
 import { RootState } from "../../../../../redux/store";
 import { isPhoneValid, notifySuccess } from "../../../../../utils/Utils";
-import { DOCTOR_FILE_UPLOAD, DOCTOR_UPDATE_QUERY, GET_DOCTOR_QUERY } from "./queries";
+import { FILE_UPLOAD, DOCTOR_UPDATE_QUERY, GET_DOCTOR_QUERY } from "./queries";
 import { loadingEnd, loadingStart } from "../../../../../redux/slices/loadingSlice";
+import { UpdateDoctorData } from "../../../../../api/apiCalls/types";
+import { Toaster } from "react-hot-toast";
+import ImageUrl from "../../../../../components/Icons/Sidemenu/ImageUrl";
 
 const inputs = [
   {
@@ -33,7 +36,7 @@ const inputs = [
     label: "Gender",
     type: "dropdown",
     placeholder: "Select Your Gender",
-    name: "Gender",
+    name: "gender",
     options: [
       { label: "Male", value: "male" },
       { label: "Female", value: "female" },
@@ -115,28 +118,45 @@ const Qualification = [
     label: "Institute",
     type: "text",
     placeholder: "Enter Your Institute Name",
-    name: "Institute",
+    name: "institute",
   },
   {
     label: "Degree",
     type: "text",
-    placeholder: "Enter Your Specialization",
-    name: "Degree",
+    placeholder: "Enter Your Degree",
+    name: "degree",
   },
 ];
 
+
+const servicesAndSpecializations = [
+  {
+    label: "Services",
+    type: "text",
+    placeholder: "Enter Your Services",
+    name: "services",
+  },
+  {
+    label: "Specialization",
+    type: "text",
+    placeholder: "Enter Your Specialization",
+    name: "specialization",
+  },
+];
+
+
 const Experience = [
   {
-    label: "Institute",
+    label: "Work",
     type: "text",
-    placeholder: "Enter Your Institute Name",
-    name: "Institute",
+    placeholder: "Enter Your Workplace Name",
+    name: "work",
   },
   {
     label: "Designation",
     type: "text",
     placeholder: "Enter Your Designation",
-    name: "Designation",
+    name: "designation",
   },
 ];
 
@@ -162,7 +182,7 @@ const Symptoms = [
     label: "Enter Symptom",
     type: "text",
     placeholder: "Enter Symptom",
-    name: "EnterSymptom",
+    name: "enterSymptom",
   },
 ];
 
@@ -174,7 +194,7 @@ const aboutMe = {
 };
 
 const MAX_FILE_SIZE = 2 * 1024 * 1024;
-const ACCEPTED_IMAGE_TYPES = ["image/jpeg", "image/jpg", "image/png"];
+const ACCEPTED_IMAGE_TYPES = ["image/jpeg", "image/jpg"];
 
 const FormSchema = z
   .object({
@@ -195,20 +215,19 @@ const FormSchema = z
       .string()
       .min(1, { message: "Registration No is required" }),
     qualification: z.string().min(1, { message: "Qualification is required" }),
-    Institute: z.string().min(1, { message: "Institute is required" }),
-    Degree: z.string().min(1, { message: "Degree is required" }),
-    Designation: z.string().min(1, { message: "Designation is required" }),
-    EnterSymptom: z.string().min(1, { message: "Symptom is required" }),
+    institute: z.string().min(1, { message: "Institute is required" }),
+    work: z.string().min(1, { message: "Work is required" }),
+    degree: z.string().min(1, { message: "Degree is required" }),
+    designation: z.string().min(1, { message: "Designation is required" }),
+    enterSymptom: z.string().min(1, { message: "Symptom is required" }),
     bibliography: z.string().min(1, { message: "Bibliography is required" }),
     consultation_mode: z
       .string({ invalid_type_error: "Consultation Mode is required" })
       .min(1, { message: "Consultation Mode is required" }),
-    consultation_fee_regular: z.string().min(1, {
-      message: "Regular Consultation Fee is required",
-    }),
-    consultation_fee_discounted: z.string().min(1, {
-      message: "Discounted Consultation Fee is required",
-    }),
+    consultation_fee_regular: z
+    .preprocess((val) => Number(val), z.number().min(1, { message: "Discounted Consultation Fee is required" })),
+    consultation_fee_discounted: z
+    .preprocess((val) => Number(val), z.number().min(1, { message: "Discounted Consultation Fee is required" })),
     address: z.string().min(1, {
       message: "Address is required",
     }),
@@ -218,7 +237,7 @@ const FormSchema = z
     services: z.string().min(1, {
       message: "Services is required",
     }),
-    specializations: z.string().min(1, {
+    specialization: z.string().min(1, {
       message: "Specialization is required",
     }),
     payout_method: z.string().min(1, {
@@ -253,20 +272,28 @@ const FormSchema = z
       path: ["upi_id"],
     },
   )
-  // .refine((data) => data.doctor_image, {
-  //   message: "Image is required.",
-  //   path: ["doctor_image"],
-  // })
-  // .refine((data) => ACCEPTED_IMAGE_TYPES.includes(data.doctor_image?.type), {
-  //   message: ".jpg, .jpeg and .png files are accepted.",
-  //   path: ["doctor_image"],
-  // })
-  // .refine((data) => data.doctor_image?.size <= MAX_FILE_SIZE, {
-  //   message: `Max file size is 2MB.`,
-  //   path: ["doctor_image"],
-  // });
+  .refine((data) => !!data.doctor_image, {
+    message: "Image is required.",
+    path: ["doctor_image"],
+  })
+  .refine((data) => {
+    if (typeof data.doctor_image === "string") return true; 
+    return ACCEPTED_IMAGE_TYPES.includes(data.doctor_image?.type?.toLowerCase());
+  }, {
+    message: ".JPG, .JPEG files are accepted.".toUpperCase(),
+    path: ["doctor_image"],
+  })
+  .refine((data) => {
+    if (typeof data.doctor_image === "string") return true; 
+    return data.doctor_image?.size && data.doctor_image.size <= MAX_FILE_SIZE;
+  }, {
+    message: `Max file size is 2MB.`,
+    path: ["doctor_image"],
+  });
+  
 
-const disabledFields = ["complete_name", "email", "Gender", "phone_number"];
+
+const disabledFields = ["complete_name", "email", "gender", "phone_number"];
 
 export default function ConsultationForm() {
   const {
@@ -277,26 +304,26 @@ export default function ConsultationForm() {
     getValues,
     formState: { errors },
   } = useForm({ resolver: zodResolver(FormSchema) });
-  const [image, setImage] = useState();
+  const [image, setImage] = useState<string | null>();
   const [payout, setPayout] = useState("upi");
   const id = useSelector((state: RootState) => state.user.currentUser?.id);
   const dispatch = useDispatch();
   const queryClient = useQueryClient();
 
- 
 
-const handleFileChange = async (e: any) => {
-  const newImage = e.target.files[0];
-  setImage(newImage);
+const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const file = e.target.files?.[0];
+  if (!file) return;
+  setImage(URL.createObjectURL(file));
   try {
     dispatch(loadingStart());
     const uploadedFileUrl = await uploadFileDoctor(
-      DOCTOR_FILE_UPLOAD
+      FILE_UPLOAD
       ,
-      newImage
+      file
     );
-
-    setValue("doctor_image_url", uploadedFileUrl)
+    
+    setValue("doctor_image", uploadedFileUrl)
     dispatch(loadingEnd());
   } catch (error) {
     dispatch(loadingEnd());
@@ -321,17 +348,13 @@ const handleFileChange = async (e: any) => {
 
     const {
       id,
-      online,
       first_name,
       last_name,
       email,
       phone_number,
       gender,
-      password,
       is_verified,
       form_submitted,
-      verification_code,
-      verification_code_expiry,
       image,
       city,
       country,
@@ -342,11 +365,16 @@ const handleFileChange = async (e: any) => {
       consultation_mode,
       consultation_fee_regular,
       consultation_fee_discounted,
-      booking_lead_time,
-      payout_method,
       payout_method_id,
       address,
       postal_code,
+      work,
+      degree,
+      designation,
+      enterSymptom,
+      institute,
+      ac_no,
+      upi_id,
       services,
       specialization,
       bibliography,
@@ -354,16 +382,12 @@ const handleFileChange = async (e: any) => {
 
     return {
       id,
-      online,
       complete_name: `${first_name} ${last_name}`,
       email,
       phone_number,
       gender,
-      password,
       is_verified,
       form_submitted,
-      verification_code,
-      verification_code_expiry,
       image,
       city,
       country,
@@ -374,11 +398,16 @@ const handleFileChange = async (e: any) => {
       consultation_mode,
       consultation_fee_regular,
       consultation_fee_discounted,
-      booking_lead_time,
-      payout_method,
       payout_method_id,
       address,
       postal_code,
+      work,
+      degree,
+      designation,
+      enterSymptom,
+      institute,
+      ac_no,
+      upi_id,
       services,
       specialization,
       bibliography,
@@ -391,7 +420,7 @@ const handleFileChange = async (e: any) => {
     }
   }, [doctorData?.data, reset]);
 
-  const updateDoctorId = async (data: any) => {
+  const updateDoctorId = async (data: UpdateDoctorData) => {
     if (!id) return;
     const response = await updateDoctor(DOCTOR_UPDATE_QUERY, {
       updateDoctorId: id,
@@ -400,40 +429,69 @@ const handleFileChange = async (e: any) => {
     return response;
   };
 
+
   const { data, mutate } = useMutation(updateDoctorId);
 
-  const onSubmit = async (data: any) => {
-    // console.log("before..... data submit on submit.......:", data?.doctor_image_url);
+  const onSubmit = async (data: UpdateDoctorData) => {
+    const { 
+      work,
+      degree,
+      designation,
+      enterSymptom,
+      institute,
+      complete_name, 
+      gender, 
+      phone_number, 
+      email, 
+      city, 
+      country, 
+      department, 
+      experience, 
+      registration_no, 
+      ac_no,
+      upi_id,
+      qualification, 
+      consultation_mode, 
+      consultation_fee_regular, 
+      consultation_fee_discounted, 
+      payout_method, 
+      address, 
+      postal_code, 
+      services, 
+      specialization, 
+      bibliography 
+    } = data;
     const doctorData = {
-      first_name: data?.complete_name.split(" ")[0],
-      last_name: data?.complete_name.split(" ")[1],
-      gender: data?.gender,
-      phone_number: data?.phone_number,
-      email: data?.email,
-      city: data?.city,
-      country: data?.country,
-      image: getValues("doctor_image_url"),
-      department: data?.department,
-      experience: data?.experience,
-      registration_no: data?.registration_no,
-      qualification: data?.qualification,
-      consultation_mode: data?.consultation_mode,
-      consultation_fee_regular: parseFloat(data?.consultation_fee_regular),
-      consultation_fee_discounted: parseFloat(
-        data?.consultation_fee_discounted,
-      ),
-      booking_lead_time: data?.booking_lead_time,
-      payout_method: data?.payout_method,
-      payout_method_id: data?.payout_method_id,
-      address: data?.address,
-      postal_code: data?.postal_code,
-      services: data?.services,
-      specialization: data?.specialization,
-      bibliography: data?.bibliography,
+      first_name: complete_name?.split(" ")[0],
+      last_name: complete_name?.split(" ")[1],
+      gender,
+      ac_no,
+      upi_id,
+      phone_number,
+      email,
+      city,
+      country,
+      image: getValues("doctor_image") ?? "",
+      department,
+      experience,
+      registration_no,
+      qualification,
+      consultation_mode,
+      consultation_fee_regular: consultation_fee_regular !== undefined ? parseFloat(consultation_fee_regular.toString()) : 0,
+      consultation_fee_discounted: consultation_fee_discounted !== undefined ? parseFloat(consultation_fee_discounted.toString()) : 0,
+      payout_method_id: payout_method ,
+      address,
+      postal_code,
+      services,
+      specialization,
+      bibliography,
+      work,
+      degree,
+      designation,
+      enterSymptom,
+      institute,
       form_submitted: true,
     };
-
-    console.log("data submit on submit.......:", doctorData);
     mutate(doctorData);
   };
 
@@ -460,14 +518,17 @@ const handleFileChange = async (e: any) => {
             />
             <label
               htmlFor="upload-file"
-              className="bg-[#D9D9D9] w-40 h-40 rounded-full mx-auto block relative overflow-clip mt-16"
+              className="bg-[#D9D9D9] w-36 h-36 rounded-full mx-auto block relative overflow-clip mt-16"
             >
               {image ? (
                 <img
                   className="w-full h-full object-cover"
-                  src={URL.createObjectURL(image)}
+                  src={image}
                   alt=""
                 />
+              ) :
+                defaultDoctorData?.image ? (
+                <ImageUrl fileKey={defaultDoctorData.image} />
               ) : (
                 ""
               )}
@@ -481,7 +542,7 @@ const handleFileChange = async (e: any) => {
               Upload Photo
             </h5>
             <small className="text-xs text-center block text-primary">
-              Allowed JPG, PNG; Max size of 2 MB
+              Allowed JPG JPEG, Max size of 2 MB
             </small>
           </div>
           <div className="col-span-7">
@@ -534,7 +595,6 @@ const handleFileChange = async (e: any) => {
         <>
           <div className="flex gap-2">
             <RadioInput
-              // label={input?.label}
               name="consultation_mode"
               options={options}
               properties={{ ...register("consultation_mode") }}
@@ -555,8 +615,8 @@ const handleFileChange = async (e: any) => {
       <DashboardSection title={"Consultation Fee"}>
         <>
           <div className="grid grid-cols-12 gap-x-4 gap-y-0">
-            {consultationFee?.map((input) => (
-              <div className="col-span-4">
+            {consultationFee?.map((input,index) => (
+              <div key={index} className="col-span-4">
                 <InputField
                   label={input?.label}
                   name={input?.name}
@@ -637,8 +697,8 @@ const handleFileChange = async (e: any) => {
       </DashboardSection>
       <DashboardSection title={"Contact Details"}>
         <div className="grid grid-cols-12 gap-x-4 gap-y-0">
-          {contactDetails?.map((input) => (
-            <div className="col-span-4">
+          {contactDetails?.map((input,index) => (
+            <div key={index} className="col-span-4">
               <InputField
                 label={input.label}
                 name={input.name}
@@ -653,24 +713,18 @@ const handleFileChange = async (e: any) => {
       <DashboardSection title={"Services and Specialization"}>
         <>
           <div className="grid grid-cols-12 gap-x-4 gap-y-0">
-            <div className="col-span-4">
-              <InputField
-                label="Services"
-                name="services"
-                placeholder="Enter Your Services"
-                properties={{ ...register("services") }}
-                error={errors["services"]}
-              />
-            </div>
-            <div className="col-span-4">
-              <InputField
-                label="Specialization"
-                name="specializations"
-                placeholder="Enter Your Specialization"
-                properties={{ ...register("specializations") }}
-                error={errors["specializations"]}
-              />
-            </div>
+          {servicesAndSpecializations.map((input,index) => (
+      <div key={index} className="col-span-4">
+             <InputField
+                    label={input.label}
+                    name={input.name}
+                    placeholder={input.placeholder}
+                    properties={{ ...register(input.name) }}
+                    error={errors[input.name]}
+                  />
+    
+      </div>
+    ))}
           </div>
           <p>Type and press to add new Services and Specialization.</p>
         </>
@@ -708,8 +762,8 @@ const handleFileChange = async (e: any) => {
       </DashboardSection>
       <DashboardSection title={"Symptoms"}>
         <div className="flex items-center gap-2 text-base">
-          {Symptoms?.map((input) => (
-            <div className="col-span-4">
+          {Symptoms?.map((input,index) => (
+            <div key={index} className="col-span-4">
               <InputField
                 label={input.label}
                 name={input.name}
@@ -731,8 +785,9 @@ const handleFileChange = async (e: any) => {
           rows={4}
         />
       </DashboardSection>
+      <Toaster />
       <div className="w-96 mx-auto">
-        {doctorData?.data?.form_submitted && (
+        {!doctorData?.data?.form_submitted && (
           <button type="submit" className="form-btn">
             Save Changes
           </button>

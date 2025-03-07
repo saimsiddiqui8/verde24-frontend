@@ -117,6 +117,44 @@ export default function PharmacySignUp() {
   const [timeLeft, setTimeLeft] = useState<number>(initialTime);
   const [isDisabled, setIsDisabled] = useState<boolean>(false);
 
+ const getLocation = () => {
+    if (!navigator.geolocation) {
+      alert("Geolocation is not supported by your browser");
+      return;
+    }
+  
+    navigator.geolocation.getCurrentPosition(
+      async (position) => {
+        const latitude = position.coords.latitude;
+        const longitude = position.coords.longitude;
+  
+        setValue("latitude", latitude);
+        setValue("longitude", longitude);
+  
+        const apiKey = "AIzaSyD_UG0Q5SzKVBFPbxwfs1q9dRjnxsmhQBo"; 
+        const url = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=${apiKey}`;
+  
+        try {
+          const response = await fetch(url);
+          const data = await response.json();
+  
+          if (data.status === "OK" && data.results.length > 0) {
+            const place_name = data.results[0].formatted_address;
+            setValue("place_name", place_name);
+          } else {
+            notifyFailure("Address not found");
+          }
+        } catch (error) {
+          notifyFailure("Error fetching address: " + error);
+        }
+      },
+      (error) => {
+        notifyFailure("Location access denied. Please enable it in browser settings. " + error.message);
+      }
+    );
+  };
+   
+  
   useEffect(() => {
     let timer: NodeJS.Timeout;
     let seconds: number = 1000;
@@ -200,6 +238,12 @@ export default function PharmacySignUp() {
   };
 
   const onSubmit = async () => {
+    const lat = getValues("latitude");
+    const lng = getValues("longitude");
+    if (!lat || !lng) {
+      getLocation();
+      return;
+    }
     handleValidation();
   };
 
@@ -257,11 +301,13 @@ export default function PharmacySignUp() {
                 <div key={index} className="col-span-1">
                   {input.type === "number" ? (
                     <PhoneInputComp
+                    className={"my-4"}
                       properties={{ ...register(input?.name) }}
                       error={errors[input?.name]}
                     />
                   ) : (
                     <InputField
+                    className={"my-4"}
                       label={input.label}
                       name={input.name}
                       type={input.type}
@@ -273,6 +319,7 @@ export default function PharmacySignUp() {
                 </div>
               ))}
             </div>
+            
             <div className="mb-5">
               <small className="text-primary">
                 <span className="font-bold">Note:</span>&nbsp;Password must be

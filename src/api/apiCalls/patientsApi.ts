@@ -1,5 +1,6 @@
+import { VERIFIED_DOCTOR_QUERY } from "../../pages/PatientPages/patientDashboard/findDoctor/queries";
 import { publicRequest } from "../requestMethods";
-import { CreateAppointmentData, CreatePatientType, UserData } from "./types";
+import { CreateAppointmentData, CreatePatientType, CreateReportType, NearestLabType, UserData } from "./types";
 
 export const getPatientById = async (
   query: string,
@@ -142,6 +143,64 @@ export const findPaymentByPatient = async (
     return response?.data?.data?.findPaymentByPatientId;
   } catch (error) {
     console.error("Error fetching payments for patient:", error);
+    throw error;
+  }
+};
+
+
+
+export const findPatientReportById = async (
+  query: string,
+  variables: { getPatientReportId: number | null },
+) => {
+  try {
+    const response = await publicRequest.post("/graphql", {
+      query,
+      variables,
+    });
+    return response?.data?.data?.getPatientReport;
+  } catch (error) {
+    console.error("Error fetching report for patient:", error);
+    throw error;
+  }
+};
+
+
+export const getVerifiedDoctors = async () => {
+  try {
+    const response = await publicRequest.post("/graphql", {
+      query: VERIFIED_DOCTOR_QUERY,
+      variables: {isVerified: true,},
+    });
+    return response.data.data.findDoctorsByVerificationStatus;
+  } catch (error) {
+    console.error("Error fetching doctors:", error);
+    throw error;
+  }
+};
+
+
+export const CreateReportByPatient = async (query: string, data: CreateReportType) => {
+  try {
+    const response = await publicRequest.post("/graphql", {
+      query,
+      variables: { data },
+    });
+    return response?.data?.data?.createReport;
+  } catch (error) {
+    console.error("Error creating by patient Report:", error);
+    throw error;
+  }
+};
+export const findNearestLabs = async (query: string, data: NearestLabType) => {
+  try {
+    const response = await publicRequest.post("/graphql", {
+      query,
+      variables: { data },
+    });
+    return response?.data?.data?.findNearestLabs;
+  } catch (error) {
+    console.error("Error finding labs:", error);
     throw error;
   }
 };

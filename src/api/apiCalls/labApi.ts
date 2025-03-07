@@ -1,7 +1,6 @@
 import { publicRequest } from "../requestMethods";
-import { UpdateLabResponse } from "./types";
+import { AddlabtestType, UpdateLabResponse } from "./types";
 
-// Function to get lab by ID
 export const getLabById = async (
   query: string,
   variables: { findLabByIdId: number },
@@ -15,7 +14,6 @@ export const getLabById = async (
   }
 };
 
-// Function to update lab by ID
 export const updateLabById = async (
   query: string,
   variables: { updateLabId: number; data: UpdateLabResponse },
@@ -30,7 +28,6 @@ export const updateLabById = async (
   }
 };
 
-// Function to get lab token
 export const getLabToken = async (
   query: string,
   variables: { email: string; password: string },
@@ -44,7 +41,6 @@ export const getLabToken = async (
   }
 };
 
-// Function to create a new lab
 export const createLab = async (query: string, variables: object) => {
   try {
     const response = await publicRequest.post("/graphql", { query, variables });
@@ -55,7 +51,6 @@ export const createLab = async (query: string, variables: object) => {
   }
 };
 
-// Function to find lab by email
 export const findLabByEmail = async (
   query: string,
   variables: { email: string },
@@ -69,7 +64,6 @@ export const findLabByEmail = async (
   }
 };
 
-// Function to send OTP to lab
 export const sendLabOTP = async (
   query: string,
   variables: { email: string; role: string },
@@ -83,7 +77,6 @@ export const sendLabOTP = async (
   }
 };
 
-// Function to verify lab OTP
 export const verifyLabOTP = async (
   query: string,
   variables: { email: string; role: string; code: string },
@@ -93,6 +86,111 @@ export const verifyLabOTP = async (
     return response?.data?.data?.verifyUserOtp;
   } catch (error) {
     console.error("Error verifying lab OTP:", error);
+    throw error;
+  }
+};
+
+
+export const updateLabCordinatesById = async (
+  query: string,
+  variables: { updateLabCoordinatesId: number; latitude: number; longitude: number ,placeName: string},
+) => {
+  try {
+    const response = await publicRequest.post("/graphql",
+       { query,
+         variables,
+       }
+      );
+    return response?.data?.data?.updateLabCoordinates;
+  } catch (error) {
+    console.error("Error updating pharmacy cordinates:", error);
+    throw error;
+  }
+};
+
+
+export const AddLabTest = async (
+  query: string,
+  variables: { data: AddlabtestType  },
+) => {
+  try {
+    const response = await publicRequest.post("/graphql",
+       { query,
+         variables,
+       }
+      );
+    return response?.data?.data?.createLabTest;
+  } catch (error) {
+    console.error("Error creating lab test:", error);
+    throw error;
+  }
+};
+
+export const FindAllLabTestByLabId = async (
+  query: string,
+  variables: { findAllLabTestsByLabIdId: number  },
+) => {
+  try {
+    const response = await publicRequest.post("/graphql",
+       { query,
+         variables,
+       }
+      );
+    return response?.data?.data?.findAllLabTestsByLabId;
+  } catch (error) {
+    console.error("Error finding all lab test by id:", error);
+    throw error;
+  }
+};
+
+
+export const DeleteLabTestById = async (
+  query: string,
+  variables: { deleteLabTestId: number  },
+) => {
+  try {
+    const response = await publicRequest.post("/graphql",
+       { query,
+         variables,
+       }
+      );
+    return response?.data?.data?.deleteLabTest;
+  } catch (error) {
+    console.error("Error deleting lab test by id:", error);
+    throw error;
+  }
+};
+
+export const FindLabTestById = async (
+  query: string,
+  variables: { findLabTestByIdId: number  },
+) => {
+  try {
+    const response = await publicRequest.post("/graphql",
+       { query,
+         variables,
+       }
+      );
+    return response?.data?.data?.findLabTestById;
+  } catch (error) {
+    console.error("Error finding lab test by id:", error);
+    throw error;
+  }
+};
+
+export const UpdateLabTestById = async (
+  query: string,
+  variables: { updateLabTestId: number , data: AddlabtestType },
+) => {
+  try {
+    const response = await publicRequest.post("/graphql",
+       { query,
+         variables,
+       }
+      );
+    return response?.data?.data?.updateLabTest;
+  } catch (error) {
+    console.error("Error updating lab test by id:", error);
     throw error;
   }
 };

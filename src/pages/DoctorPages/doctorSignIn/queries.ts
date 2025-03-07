@@ -4,7 +4,8 @@ query DoctorToken($email: String!, $password: String!) {
     id,
     token,
     email,
-    error
+    error,
+    isVerified
   }
 }
 `;

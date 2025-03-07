@@ -58,3 +58,22 @@ query FindAppointmentByPatient($findAppointmentByPatientId: Int!) {
     }
   }
 }`;
+export const GET_NEAREST_LABS = `
+query FindNearestLabs($data: LabLocationData!) {
+  findNearestLabs(data: $data) {
+    id
+    latitude
+    longitude
+    distance
+    duration
+    logo
+    name
+    lab_name
+    city
+    registration_number
+    email
+    phone_number
+    is_verified
+    createdAt
+  }
+}`;

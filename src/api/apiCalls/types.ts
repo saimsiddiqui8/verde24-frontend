@@ -1,4 +1,3 @@
-import { floated } from "@material-tailwind/react/types/components/card";
 
 export interface Doctor {
   first_name: string;
@@ -33,6 +32,8 @@ export interface PatientData {
   other_history: string;
 }
 export interface CreatePatientType {
+  latitude: number;
+  longitude: number;
   first_name: string;
   last_name: string;
   email: string;
@@ -55,20 +56,20 @@ export interface UserData {
   weight: number;
   blood_group: string;
   other_history: string;
+  patient_name?:string;
+  patient_age?:string;
 }
 
-interface UpdateDoctorData {
+export interface UpdateDoctorData {
+  online?: boolean;
   id?: number;
   first_name?: string;
   last_name?: string;
   email?: string;
   phone_number?: string;
   gender?: string;
-  password?: string;
   is_verified?: boolean;
   form_submitted?: boolean;
-  verification_code?: string;
-  verification_code_expiry?: number;
   image?: string;
   city?: string;
   country?: string;
@@ -77,9 +78,8 @@ interface UpdateDoctorData {
   registration_no?: string;
   qualification?: string;
   consultation_mode?: string;
-  consultation_fee_regular?: floated;
-  consultation_fee_discounted?: floated;
-  booking_lead_time?: string;
+  consultation_fee_regular?: number | undefined; 
+  consultation_fee_discounted?: number | undefined; 
   payout_method?: string;
   payout_method_id?: string;
   address?: string;
@@ -87,11 +87,16 @@ interface UpdateDoctorData {
   services?: string[];
   specialization?: string[];
   bibliography?: string;
+  work?: string;
+  degree?: string;
+  designation?: string;
+  enterSymptom?: string;
+  institute?: string;
+  complete_name?: string;
+  ac_no?: string;
+  upi_id?: string;
 }
 
-export interface UpdateDoctorVariables {
-  data: UpdateDoctorData;
-}
 
 export type FindDoctorByIdVariables = {
   findDoctorByIdId: number | null;
@@ -172,7 +177,7 @@ export type createDoctorData = {
 };
 
 export interface UpdatedPharmacyData {
-  logo: string;
+  logo?: string;
   name: string;
   pharmacy_name: string;
   city: string;
@@ -180,19 +185,45 @@ export interface UpdatedPharmacyData {
   email: string;
   phone_number: string;
   is_verified: boolean;
-  createdAt: string;
+  createdAt?: string;
+}
+
+export interface updatePharmacyCoordinatesFData {
+  latitude:number;
+  longitude:number;
+  placeName:string;
 }
 
 export interface UpdateLabResponse {
   logo?: string;
-  name?: string;
+  name: string;
   lab_name: string;
   city: string;
   registration_number: string;
   email: string;
   phone_number: string;
   is_verified: boolean;
-  createdAt: string;
+  createdAt?: string;
+}
+
+
+export interface CreateLabResponse {
+  name: string;
+  email: string;
+  phone_number: string;
+  password: string;
+  longitude:number;
+  latitude:number;
+}
+
+export interface AddlabtestType {
+  id?:number;
+  title: string;
+  price: number;
+  pickupCharge: number;
+  labId?: number | null;
+  images?: string[];
+  description: string;
 }
 
 export interface CreateAppointmentType {
@@ -230,4 +261,16 @@ export interface CreateMeetingLink {
 export interface hospitalsType {
   id : string,
   name : string
+}
+
+
+
+export interface CreateReportType {
+  files: string[];
+  patient_id: number | null;
+}
+export interface NearestLabType {
+  latitude: number;
+  longitude: number;
+  radiusInKm?: number;
 }

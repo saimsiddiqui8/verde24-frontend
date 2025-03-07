@@ -19,7 +19,7 @@ export default function Eld({
   const togglePasswordVisibility = () => setShowPassword(!showPassword);
 
   return (
-    <div className={`relative my-6 ${className}`}>
+    <div className={`relative ${className ?? "my-6"}`}>
       <input
         id={name}
         type={type === "password" ? (showPassword ? "text" : "password") : type}

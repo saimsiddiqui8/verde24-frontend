@@ -1,9 +1,9 @@
 export const PATIENT_TOKEN_QUERY = `
-query PatientToken($email: String!, $password: String!) {
-  getPatientToken(email: $email, password: $password){
-    id,
-    token,
-    email,
+query GetPatientToken($email: String!, $password: String!, $latitude: Float!, $longitude: Float!) {
+  getPatientToken(email: $email, password: $password, latitude: $latitude, longitude: $longitude) {
+    id
+    token
+    email
     error
   }
 }

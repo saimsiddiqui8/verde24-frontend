@@ -4,7 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 import { notifyFailure, notifySuccess } from "../../../utils/Utils";
 import { z } from "zod";
-import { useForm } from "react-hook-form";
+import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useDispatch } from "react-redux";
 import { loadingEnd, loadingStart } from "../../../redux/slices/loadingSlice";
@@ -39,7 +39,7 @@ export default function PharmacySignIn() {
     handleSubmit,
     setError,
     formState: { errors },
-  } = useForm({ resolver: zodResolver(FormSchema) });
+  } = useForm<Inputs>({ resolver: zodResolver(FormSchema) });
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -63,7 +63,7 @@ export default function PharmacySignIn() {
     }
   };
 
-  const onSubmit = async (data: any) => {
+  const onSubmit:SubmitHandler<Inputs> = async (data: Inputs) => {
     handleLogin(data);
   };
 
@@ -88,8 +88,8 @@ export default function PharmacySignIn() {
                 name={input.name}
                 type={input.type}
                 placeholder={input.placeholder}
-                properties={{ ...register(input.name) }}
-                error={errors[input.name]}
+                properties={{ ...register(input.name as keyof Inputs) }}
+                error={errors[input.name as keyof Inputs]}
               />
             ))}
             <div className="flex items-start justify-around my-2">

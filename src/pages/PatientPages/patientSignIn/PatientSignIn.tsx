@@ -1,8 +1,8 @@
 import image from "../../../assets/sign-in.png";
-import { FacebookButton, GoogleButton, InputField } from "../../../components";
+import { GoogleButton, InputField } from "../../../components";
 import { Link, useNavigate } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
-import { googleSignIn, facebookSignIn } from "../../../firebase/utils";
+import { googleSignIn } from "../../../firebase/utils";
 import { useDispatch } from "react-redux";
 import { setUser } from "../../../redux/slices/userSlice";
 import { USER_ROLES } from "../../../api/roles";
@@ -10,7 +10,7 @@ import { notifyFailure, notifySuccess } from "../../../utils/Utils";
 import { users } from "../../CommonPages/forgotPassword/queriesAndUtils";
 import { loadingEnd, loadingStart } from "../../../redux/slices/loadingSlice";
 import { z } from "zod";
-import { useForm } from "react-hook-form";
+import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { getPatientToken } from "../../../api/apiCalls/patientsApi";
 import { PATIENT_TOKEN_QUERY } from "./queries";
@@ -40,17 +40,18 @@ export default function PatientSignIn() {
     register,
     handleSubmit,
     setError,
+    setValue,
+    getValues,
     formState: { errors },
-  } = useForm({ resolver: zodResolver(FormSchema) });
+  } = useForm<Inputs>({ resolver: zodResolver(FormSchema) });
   const navigate = useNavigate();
   const dispatch = useDispatch();
-
   const handleLogin = async (data: Inputs) => {
     dispatch(loadingStart());
     const tokenRes = await getPatientToken(PATIENT_TOKEN_QUERY, data);
     dispatch(loadingEnd());
     if (tokenRes?.token) {
-      const userData = { ...tokenRes, role: USER_ROLES.patient };
+      const userData = { ...tokenRes, role: USER_ROLES.patient , latitude:getValues("latitude") , longitude:getValues("longitude")};
       dispatch(setUser(userData));
       notifySuccess("Login Success! Redirecting...");
       setTimeout(() => {
@@ -64,14 +65,50 @@ export default function PatientSignIn() {
       });
     }
   };
+  
+  const getLocation = () => {
+    if (!navigator.geolocation) {
+      alert("Geolocation is not supported by your browser");
+      return;
+    }
+  
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        setValue("latitude", parseFloat(position.coords.latitude.toString()));
+        setValue("longitude", parseFloat(position.coords.longitude.toString()));
+      },
+      (error) => {
+        notifyFailure("Location access denied. Please enable it in browser settings." + error.message);
+      }
+    );
+  };
+  
+  
 
-  const onSubmit = async (data: any) => {
-    handleLogin(data);
+  const onSubmit:SubmitHandler<Inputs> = async (data: Inputs) => {
+    const lat = getValues("latitude");
+    const lng = getValues("longitude");
+    if (!lat || !lng) {
+      getLocation();
+      return;
+    }
+    const formData = {
+      email: data?.email,
+      password: data?.password,
+      latitude: lat,
+      longitude: lng,
+    };
+    handleLogin(formData);
   };
 
   const handleUser = (userData: any) => {
     if (userData?.accessToken) {
-      const user = { email: userData?.email, password: userData?.uid };
+      const user = {
+        email: userData?.email || "",
+        password: userData?.uid || "",
+        accessToken: userData?.accessToken,
+        uid: userData?.uid,
+      };
       handleLogin(user);
     } else {
       notifyFailure("Login Failed!");
@@ -84,15 +121,6 @@ export default function PatientSignIn() {
       handleUser(userData);
     } catch (err) {
       notifyFailure("Google Sign in Error!");
-    }
-  };
-
-  const handleFacebookSignIn = async () => {
-    try {
-      const userData = await facebookSignIn();
-      handleUser(userData);
-    } catch (err) {
-      notifyFailure("Facebook Sign in Error!");
     }
   };
 
@@ -117,8 +145,8 @@ export default function PatientSignIn() {
                 name={input.name}
                 type={input.type}
                 placeholder={input.placeholder}
-                properties={{ ...register(input.name) }}
-                error={errors[input.name]}
+                properties={{ ...register(input.name as keyof Inputs) }}
+                error={errors[input.name as keyof Inputs]}
               />
             ))}
             <div className="flex items-start justify-around my-2">
@@ -155,10 +183,6 @@ export default function PatientSignIn() {
             label="Sign in with Google"
             onClick={handleGoogleSignIn}
           />
-          <FacebookButton
-            label="Sign in with Facebook"
-            onClick={handleFacebookSignIn}
-          />
           <small className="block my-1 text-primary text-center">
             Do not have an account?{" "}
             <Link to="/patient/sign-up" className="font-bold">
@@ -178,4 +202,6 @@ export default function PatientSignIn() {
 interface Inputs {
   email: string;
   password: string;
+  latitude?:number;
+  longitude?:number;
 }

@@ -2,6 +2,9 @@ export const FIND_PHARMACY_QUERY = `
   query FindPharmacyById($findPharmacyByIdId: Int!) {
     findPharmacyById(id: $findPharmacyByIdId) {
       email
+      latitude
+      longitude
+      place_name
       logo
       name
       pharmacy_name
@@ -29,3 +32,13 @@ export const UPDATED_PHARMACY_QUERY = `
     }
   }
 `;
+
+
+export const UPDATED_PHARMACY_CORDINATES = `
+mutation UpdatePharmacyCoordinates($updatePharmacyCoordinatesId: Int!, $latitude: Float!, $longitude: Float!, $placeName: String!) {
+  updatePharmacyCoordinates(id: $updatePharmacyCoordinatesId, latitude: $latitude, longitude: $longitude, place_name: $placeName) {
+    latitude
+    longitude
+    place_name
+  }
+}`

@@ -29,6 +29,7 @@ import {
   loadingStart,
 } from "../../../../../redux/slices/loadingSlice";
 import { TimeSlot } from "../../../../../api/apiCalls/types";
+import { Toaster } from "react-hot-toast";
 
 const FormSchema = z.object({
   slot_time: z.string().min(1, { message: "Slot Time is required" }),
@@ -131,7 +132,7 @@ export default function AddSlots() {
     });
 
     if (hasConflict) {
-      alert(
+      notifyFailure(
         "This time slot conflicts with an existing slot for the selected day.",
       );
       return;
@@ -381,6 +382,7 @@ export default function AddSlots() {
             )}
           </div>
         </div>
+        <Toaster/>
       </DashboardSection>
     </>
   );

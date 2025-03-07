@@ -3,10 +3,11 @@ mutation CreatePharmacy($data: PharmacyInput!) {
   createPharmacy(data: $data) {
     id
     name
+    latitude
+    longitude
+    place_name
     email
     phone_number
-    is_verified
-    createdAt
   }
 }
 `;

@@ -2,7 +2,6 @@ import image from "../../../assets/sign-up.png";
 import { useState, useEffect } from "react";
 import {
   Button,
-  FacebookButton,
   GoogleButton,
   InputField,
   Modal,
@@ -12,7 +11,7 @@ import {
 import { Link, useNavigate } from "react-router-dom";
 import { useMutation, useQuery } from "react-query";
 import { Toaster } from "react-hot-toast";
-import { facebookSignIn, googleSignIn } from "../../../firebase/utils";
+import { googleSignIn } from "../../../firebase/utils";
 import {
   isPhoneValid,
   notifyFailure,
@@ -148,6 +147,23 @@ export default function () {
   const [timeLeft, setTimeLeft] = useState<number>(initialTime);
   const [isDisabled, setIsDisabled] = useState<boolean>(false);
 
+  const getLocation = () => {
+    if (!navigator.geolocation) {
+      alert("Geolocation is not supported by your browser");
+      return;
+    }
+  
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        setValue("latitude", parseFloat(position.coords.latitude.toString()));
+        setValue("longitude", parseFloat(position.coords.longitude.toString()));
+      },
+      (error) => {
+        notifyFailure("Location access denied. Please enable it in browser settings." + error.message);
+      }
+    );
+  };
+
   useEffect(() => {
     let timer: NodeJS.Timeout;
     const seconds: number = 1000;
@@ -217,12 +233,13 @@ export default function () {
     const formData = getValues() as CreatePatientType;
     mutate(formData);
   };
+   
+  
 
   const sendOtp = async () => {
     dispatch(loadingStart());
     const otp = await patientOTPData.refetch();
     if (otp?.data?.id) {
-      notifySuccess("OTP is sent to your email. Please Verify!");
       setShowOTPModal(true);
     }
     dispatch(loadingEnd());
@@ -242,6 +259,12 @@ export default function () {
   };
 
   const onSubmit = async () => {
+    const lat = getValues("latitude");
+    const lng = getValues("longitude");
+    if (!lat || !lng) {
+      getLocation();
+      return;
+    }
     handleValidation();
   };
 
@@ -283,15 +306,6 @@ export default function () {
     }
   };
 
-  const handleFacebookSignIn = async () => {
-    try {
-      const userData = await facebookSignIn();
-      handleUser(userData);
-    } catch (err) {
-      notifyFailure("Facebook Sign up Error!");
-    }
-  };
-
   const handleModalSubmit = async () => {
     handleValidation();
   };
@@ -328,19 +342,23 @@ export default function () {
                 <div key={index} className="col-span-1">
                   {input.type === "radio" ? (
                     <RadioInput
+                    className={"my-0"}
                       label={input?.label}
                       name={input?.name}
                       options={input?.options}
                       properties={{ ...register(input?.name) }}
                       error={errors[input?.name]}
                     />
-                  ) : input.type === "number" ? (
+                  )
+                   : input.type === "number" ? (
                     <PhoneInputComp
+                    className={"my-4"}
                       properties={{ ...register(input?.name) }}
                       error={errors[input?.name]}
                     />
-                  ) : (
+                    ) : (
                     <InputField
+                    className={"my-4"}
                       label={input.label}
                       name={input.name}
                       type={input.type}
@@ -387,10 +405,6 @@ export default function () {
             <GoogleButton
               label="Sign Up with Google"
               onClick={handleGoogleSignIn}
-            />
-            <FacebookButton
-              label="Sign Up with Facebook"
-              onClick={handleFacebookSignIn}
             />
           </div>
           <small className="block my-1 text-primary text-center">

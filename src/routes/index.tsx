@@ -3,6 +3,7 @@ import {
   createRoutesFromElements,
   Route,
   Outlet,
+  Navigate,
 } from "react-router-dom";
 import PublicRoutes from "./PublicRoutes";
 import Navbar from "../components/Navbar";
@@ -81,6 +82,11 @@ import CollectionCenter from "../pages/LabPages/LabDashboard/labAccount/Collecti
 import AvailableTest from "../pages/LabPages/LabDashboard/labAccount/AvailableTest.tsx";
 import LabPatientProfile from "../pages/LabPages/LabDashboard/labAccount/LabPatientProfile.tsx";
 import Patientgoogleauth from "../pages/PatientPages/patientSignIn/Patientgoogleauth.tsx";
+import PharmacyLocation from "../pages/PharmacyPages/pharmacyDashboard/PharmacyLocation.tsx";
+import LabLocation from "../pages/LabPages/LabDashboard/LabLocation.tsx";
+import AddTest from "../pages/LabPages/LabDashboard/labAccount/AddTest.tsx";
+import ViewTest from "../pages/LabPages/LabDashboard/labAccount/ViewTest.tsx";
+import FileViewer from "../components/Icons/Sidemenu/FileViewer.tsx";
 
 interface RequireAuthProps {
   role: string;
@@ -94,7 +100,16 @@ const AppLayout = () => {
     </>
   );
 };
-const verified = true;
+
+const RequireVerification = () => {
+  const isVerified = useSelector((state: RootState) => state.user.currentUser?.isVerified);
+
+  if (isVerified === undefined) {
+    return <div className="flex items-center justify-center h-screen">Loading...</div>;
+  }
+
+  return isVerified ? <Outlet /> : <Navigate to="/doctor-dashboard-unverified" replace />;
+};
 
 const RequireAuth = ({ role }: RequireAuthProps) => {
   const user = useSelector((state: RootState) => state.user.currentUser);
@@ -125,22 +140,19 @@ export const router = createBrowserRouter(
         </Route>
         <Route element={<ProtectedRoutes />}>
           <Route element={<RequireAuth role={USER_ROLES.doctor} />}>
-            {verified ? (
-              <Route element={<DoctorLayout />} path="doctor-dashboard">
-                <Route index element={<ConsultationForm />} />
-              </Route>
-            ) : (
-              <Route
-                element={<DoctorDashboardAfterApproval />}
-                path="doctor-dashboard"
-              >
-                <Route index element={<VerifiedProfile />} />
-                <Route path="calendar" element={<Calendar />} />
-                <Route path="appointments" element={<Appointments />} />
-                <Route path="mypatients" element={<MyPatientsSection />} />
-                <Route path="schedule" element={<AddSlots />} />
-              </Route>
-            )}
+          <Route element={<RequireVerification />}>
+    <Route path="doctor-dashboard" element={<DoctorDashboardAfterApproval />}>
+      <Route index element={<VerifiedProfile />} />
+      <Route path="calendar" element={<Calendar />} />
+      <Route path="appointments" element={<Appointments />} />
+      <Route path="mypatients" element={<MyPatientsSection />} />
+      <Route path="schedule" element={<AddSlots />} />
+    </Route>
+  </Route>
+
+  <Route path="doctor-dashboard-unverified" element={<DoctorLayout />}>
+    <Route index element={<ConsultationForm />} />
+  </Route>
           </Route>
           <Route element={<RequireAuth role={USER_ROLES.patient} />}>
             <Route element={<PatientLayout />} path="patient-dashboard">
@@ -167,6 +179,7 @@ export const router = createBrowserRouter(
                 element={<CompletedProcedures />}
               />
               <Route path="files" element={<Files />} />
+              <Route path="/patient-dashboard/files/view-file" element={<FileViewer />} />
               <Route path="prescriptions" element={<Prescriptions />} />
               <Route
                 path="online-appointment"
@@ -177,13 +190,16 @@ export const router = createBrowserRouter(
                 element={<OnlineHospitalAppointment />}
               />
                </Route>
-              <Route path="book-lab-test" element={<BookLabTest />} />
+              <Route path="book-lab-test"  >
+              <Route index element={<BookLabTest />} />
+              </Route>
               <Route path="notification" element={<Notification />} />
             </Route>
           </Route>
           <Route element={<RequireAuth role={USER_ROLES.pharmacy} />}>
             <Route element={<PharmacyLayout />} path="pharmacy-dashboard">
               <Route index element={<AccountManagement />} />
+              <Route path="pharmacy-location" element={<PharmacyLocation/>} />
             </Route>
           </Route>
           <Route element={<RequireAuth role={USER_ROLES.lab} />}>
@@ -193,6 +209,9 @@ export const router = createBrowserRouter(
               <Route index element={<UpcomingLaboratoryTests/>} />
               <Route path="labpatientprofile/:id" element={<LabPatientProfile/>} />
               </Route>
+              <Route path="lab-location" element={<LabLocation/>} />
+              <Route path="add-test/:labid?" element={<AddTest/>} />
+              <Route path="view-test" element={<ViewTest/>} />
               <Route path="lab-booked-appointments" element={<LabBookedAppointments/>} />
               <Route path="declined-appointments" element={<DeclinedAppointments/>} />
               <Route path="payments-and-payouts" element={<PaymentsAndPayouts/>} />

@@ -3,6 +3,9 @@ export const FIND_LAB_QUERY = `
   findLabById(id: $findLabByIdId) {
     logo
     name
+    latitude
+    longitude
+    place_name
     lab_name
     city
     registration_number
@@ -29,3 +32,85 @@ mutation UpdateLab($updateLabId: Int!, $data: LabInputUpdate!) {
   }
 }
 `;
+
+
+export const UPDATED_LAB_CORDINATES = `
+mutation UpdateLabCoordinates($updateLabCoordinatesId: Int!, $latitude: Float!, $longitude: Float!, $placeName: String!) {
+  updateLabCoordinates(id: $updateLabCoordinatesId, latitude: $latitude, longitude: $longitude, place_name: $placeName) {
+    latitude
+    longitude
+    place_name
+  }
+}
+  `;
+
+
+export const ADD_LAB_TEST = `
+mutation CreateLabTest($data: LabTestInput!) {
+  createLabTest(data: $data) {
+    id
+    labId
+    title
+    price
+    description
+    pickupCharge
+    images
+    createdAt
+  }
+} `;
+
+
+export const FIND_ALL_LAB_TEST_BY_LAB_ID = `
+query FindAllLabTestsByLabId($findAllLabTestsByLabIdId: Int!) {
+  findAllLabTestsByLabId(id: $findAllLabTestsByLabIdId) {
+    id
+    labId
+    title
+    price
+    description
+    pickupCharge
+    images
+    createdAt
+  }
+}`;
+export const DELETE_LAB_TEST_BY_ID = `
+mutation DeleteLabTest($deleteLabTestId: Int!) {
+  deleteLabTest(id: $deleteLabTestId) {
+    id
+    labId
+    title
+    price
+    description
+    pickupCharge
+    images
+    createdAt
+  }
+}`;
+
+export const FIND_LAB_TEST_BY_ID = `
+query FindLabTestById($findLabTestByIdId: Int!) {
+  findLabTestById(id: $findLabTestByIdId) {
+    id
+    labId
+    title
+    price
+    description
+    pickupCharge
+    images
+    createdAt
+  }
+}`;
+
+export const UPDATE_LAB_TEST_BY_ID = `
+mutation UpdateLabTest($data: LabTestInputUpdate!, $updateLabTestId: Int!) {
+  updateLabTest(data: $data, id: $updateLabTestId) {
+    id
+    labId
+    title
+    price
+    description
+    pickupCharge
+    images
+    createdAt
+  }
+}`;
