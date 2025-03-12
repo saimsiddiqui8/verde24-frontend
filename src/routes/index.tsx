@@ -79,7 +79,6 @@ import LabBookedAppointments from "../pages/LabPages/LabDashboard/labAccount/Lab
 import DeclinedAppointments from "../pages/LabPages/LabDashboard/labAccount/DeclinedAppointments.tsx";
 import PaymentsAndPayouts from "../pages/LabPages/LabDashboard/labAccount/PaymentsAndPayouts.tsx";
 import CollectionCenter from "../pages/LabPages/LabDashboard/labAccount/CollectionCenter.tsx";
-import AvailableTest from "../pages/LabPages/LabDashboard/labAccount/AvailableTest.tsx";
 import LabPatientProfile from "../pages/LabPages/LabDashboard/labAccount/LabPatientProfile.tsx";
 import Patientgoogleauth from "../pages/PatientPages/patientSignIn/Patientgoogleauth.tsx";
 import PharmacyLocation from "../pages/PharmacyPages/pharmacyDashboard/PharmacyLocation.tsx";
@@ -87,6 +86,11 @@ import LabLocation from "../pages/LabPages/LabDashboard/LabLocation.tsx";
 import AddTest from "../pages/LabPages/LabDashboard/labAccount/AddTest.tsx";
 import ViewTest from "../pages/LabPages/LabDashboard/labAccount/ViewTest.tsx";
 import FileViewer from "../components/Icons/Sidemenu/FileViewer.tsx";
+import AllLabTest from "../pages/PatientPages/patientDashboard/booklabtest/AllLabTest.tsx";
+import LabDetails from "../pages/PatientPages/patientDashboard/booklabtest/LabDetails.tsx";
+import TestProfile from "../pages/PatientPages/patientDashboard/booklabtest/TestProfile.tsx";
+import Stepper from "../pages/PatientPages/patientDashboard/booklabtest/Stepper.tsx";
+import CheckoutLab from "../pages/PatientPages/patientDashboard/checkout/CheckoutLab.tsx";
 
 interface RequireAuthProps {
   role: string;
@@ -192,6 +196,11 @@ export const router = createBrowserRouter(
                </Route>
               <Route path="book-lab-test"  >
               <Route index element={<BookLabTest />} />
+              <Route path="lab-profile/:id" element={<AllLabTest />} />
+              <Route path="lab-details/:id" element={<LabDetails />} />
+              <Route path="test-profile/:id" element={<TestProfile />} />
+              <Route path="stepper/:id" element={<Stepper />} />
+              <Route path="checkout-lab" element={<CheckoutLab />} />
               </Route>
               <Route path="notification" element={<Notification />} />
             </Route>
@@ -207,16 +216,15 @@ export const router = createBrowserRouter(
               <Route index element={<LabAccount />} />
               <Route path="upcoming-lab-test" >
               <Route index element={<UpcomingLaboratoryTests/>} />
-              <Route path="labpatientprofile/:id" element={<LabPatientProfile/>} />
+              <Route path="labpatientprofile/:id?" element={<LabPatientProfile/>} />
               </Route>
               <Route path="lab-location" element={<LabLocation/>} />
               <Route path="add-test/:labid?" element={<AddTest/>} />
-              <Route path="view-test" element={<ViewTest/>} />
+              <Route path="available-test" element={<ViewTest/>} />
               <Route path="lab-booked-appointments" element={<LabBookedAppointments/>} />
               <Route path="declined-appointments" element={<DeclinedAppointments/>} />
               <Route path="payments-and-payouts" element={<PaymentsAndPayouts/>} />
               <Route path="collection-center" element={<CollectionCenter/>} />
-              <Route path="available-test" element={<AvailableTest/>} />
             </Route>
           </Route>
           <Route element={<RequireAuth role={USER_ROLES.admin} />}>

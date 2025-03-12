@@ -4,11 +4,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { DeleteLabTestById, FindAllLabTestByLabId } from "../../../../api/apiCalls/labApi";
 import { DELETE_LAB_TEST_BY_ID, FIND_ALL_LAB_TEST_BY_LAB_ID } from "./queries";
 import { useQuery, useQueryClient } from "react-query";
-import ImageUrl from "../../../../components/Icons/Sidemenu/ImageUrl";
 import { AddlabtestType } from "../../../../api/apiCalls/types";
 import { loadingEnd, loadingStart } from "../../../../redux/slices/loadingSlice";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { notifySuccess } from "../../../../utils/Utils";
+import { Toaster } from "react-hot-toast";
 
 const ViewTest = () => {
   const id = useSelector((state: RootState) => state.user.currentUser?.id);
@@ -41,6 +42,7 @@ const ViewTest = () => {
     try {
       dispatch(loadingStart());
       await DeleteLabTestById(DELETE_LAB_TEST_BY_ID, { deleteLabTestId: Testid });
+      notifySuccess("Delete Succesfully")
       queryClient.invalidateQueries(["labtest"]);
     } catch (error) {
       console.error("Failed to delete lab test:", error);
@@ -76,25 +78,33 @@ const ViewTest = () => {
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredData?.map((test: AddlabtestType, index: number) => (
-            <div key={index} className="border p-4 rounded-lg shadow-md flex flex-col items-center text-center">
-              {test?.images?.[0] && <ImageUrl fileKey={test?.images[0]} />}
-              <h2 className="text-lg font-semibold mt-2">{test?.title ?? "No Title Available"}</h2>
-              <p className="text-gray-500">{test?.description ?? "No Description Available"}</p>
-              <p className="font-bold">Price: ${test?.price ?? "N/A"}</p>
-              <p className="text-sm">Pickup Charge: ${test?.pickupCharge ?? "N/A"}</p>
-              <div className="flex gap-4 mt-3">
-                <Button onClick={() => navigate(`/lab-dashboard/add-test/${test?.id}`)}  title="Update" className="w-28 py-2" />
-                <Button
-  onClick={() => test?.id && handledeletelabtest(test.id)}
-  title="Delete"
-  className="w-28 py-2 bg-red-500 text-white"
-/>
-              </div>
+        {filteredData?.map((test: AddlabtestType, index: number) => (
+          <div
+            key={index}
+            className="border border-primary py-4 px-6 rounded-3xl shadow-md flex flex-col items-center text-center"
+          >
+            <h2 className="text-xl font-semibold">{test?.title ?? "No Title Available"}</h2>
+            <p className="text-gray-500">{test?.description ?? "No Description Available"}</p>
+            <p className="text-sm font-medium">Price: ${test?.price ?? "N/A"}</p>
+      
+            <div className="flex flex-col gap-4 mt-3 w-full">
+              <Button
+                onClick={() => navigate(`/lab-dashboard/add-test/${test?.id}`)}
+                title="Update"
+                className="w-full"
+              />
+              <Button
+                onClick={() => test?.id && handledeletelabtest(test.id)}
+                title="Delete"
+                className="w-full text-white bg-red-500"
+              />
             </div>
-          ))}
-        </div>
+          </div>
+        ))}
+      </div>
+      
       )}
+      <Toaster/>
     </DashboardSection>
   );
 };

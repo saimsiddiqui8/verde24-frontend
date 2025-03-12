@@ -14,9 +14,10 @@ const GET_IMG_URL = `
 type ImageComponentProp = {
   fileKey: string;
   istrue?:boolean;
+  className?:string;
 };
 
-const ImageUrl: React.FC<ImageComponentProp> = ({ fileKey , istrue }) => {
+const ImageUrl: React.FC<ImageComponentProp> = ({ fileKey , istrue ,className}) => {
   const { data, isLoading, error } = useQuery({
     queryKey: ["getFileUrl", fileKey],
     queryFn: () => getUrl(GET_IMG_URL, { fileKey }),
@@ -42,7 +43,7 @@ const ImageUrl: React.FC<ImageComponentProp> = ({ fileKey , istrue }) => {
   return (
     <div className="my-2 text-center mx-auto">
       {isImage && !istrue ? (
-        <img src={data} alt="image" className="w-36 h-36 rounded-full block mx-auto"/>
+        <img src={data} alt="image" className={`${className ?? "w-36 h-36"} rounded-full block mx-auto`}/>
 
       ) : isPDF ? (
         <>

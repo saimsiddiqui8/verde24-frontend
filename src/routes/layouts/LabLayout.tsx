@@ -11,13 +11,12 @@ const links = [
   { title: "Account Management", href: "/" },
   { title: "Lab Location", href: "/lab-location" },
   { title: "Add Test", href: "/add-test" },
-  { title: "View Test", href: "/view-test" },
+  { title: "Available Test", href: "/available-test" },
   { title: "Upcoming Lab Test", href: "/upcoming-lab-test" },
   { title: "Lab Booked Appointments", href: "/lab-booked-appointments" },
   { title: "Declined Appointments", href: "/declined-appointments" },
   { title: "Payments And Payouts", href: "/payments-and-payouts" },
   { title: "Collection Center", href: "/collection-center" },
-  { title: "Available Test", href: "/available-test" },
 ];
 
 const BASE_URL = "/lab-dashboard";

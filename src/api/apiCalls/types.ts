@@ -220,9 +220,7 @@ export interface AddlabtestType {
   id?:number;
   title: string;
   price: number;
-  pickupCharge: number;
-  labId?: number | null;
-  images?: string[];
+  lab_id?: number | null;
   description: string;
 }
 
@@ -273,4 +271,25 @@ export interface NearestLabType {
   latitude: number;
   longitude: number;
   radiusInKm?: number;
+}
+
+
+
+
+export interface labAppointmenttype {
+  appointment_date: string | null;
+  appointment_time: string | null;
+  appointment_weekday:string | null
+  labTest_id: number | null;
+  lab_id: number | null;
+  patient_age: number | null;
+  patient_email: string | null;
+  patient_gender: string | null;
+  patient_id: number | null;
+  patient_name: string | null;
+  patient_phone_number: string | null;
+  payment_id?: number | string | null;
+  status?: string | null;
+  amount?: number | null;
+  currency?: string | null;
 }

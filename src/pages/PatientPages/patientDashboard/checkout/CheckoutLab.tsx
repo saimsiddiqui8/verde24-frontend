@@ -1,7 +1,6 @@
 import { CardElement, useElements, useStripe } from "@stripe/react-stripe-js";
 import { Button, DashboardSection, Modal } from "../../../../components";
 import { useNavigate } from "react-router-dom";
-import { CreateAppointmentType, Doctor } from "../../../../api/apiCalls/types";
 import { useEffect, useState } from "react";
 import { RootState } from "../../../../redux/store";
 import { useDispatch, useSelector } from "react-redux";
@@ -10,7 +9,6 @@ import {
   loadingStart,
 } from "../../../../redux/slices/loadingSlice";
 import {
-  getDoctorById,
   stripePayment,
 } from "../../../../api/apiCalls/doctorsApi";
 import {
@@ -19,54 +17,40 @@ import {
   CREATE_APPOINTMENT,
 } from "../../../DoctorPages/doctorDashboard/doctorInputInfo/consultationForm/queries";
 import { notifyFailure } from "../../../../utils/Utils";
-import { deleteBooking } from "../../../../redux/slices/bookingSlice";
 import clock from "../../../../assets/clock.png";
 import calender from "../../../../assets/calendar.png";
 import bar from "../../../../assets/bar.png";
 import { Toaster } from "react-hot-toast";
-import { createAppointmentDoctor } from "../../../../api/apiCalls/patientsApi";
+import { deleteLabBooking } from "../../../../redux/slices/LabBooking";
+import { LabAppointmentBooking } from "../../../../api/apiCalls/patientsApi";
+import { LAB_APPOINTMENT_BOOKING } from "../patientProfile/queries";
+import { labAppointmenttype } from "../../../../api/apiCalls/types";
 
-const Checkout = () => {
-  const [doctor, setDoctor] = useState<Doctor | null>(null);
+const CheckoutLab = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [paymentId, setPaymentId] = useState("");
   const patientId = useSelector(
     (state: RootState) => state.user.currentUser?.id,
   );
-  const booking = useSelector((state: RootState) => state.booking);
-  const { id, amount, currency, selectedDate, selectedDay, selectedTime } =
-    booking;
+  const Labbooking = useSelector((state: RootState) => state.Labbooking);
+  const { amount, currency , appointment_date,appointment_time,appointment_weekday,labTest_id,lab_id,patient_email,patient_age,patient_gender,patient_id,patient_name,patient_phone_number} =
+  Labbooking;
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!selectedDate || !selectedDay || !selectedTime) {
-      navigate(-1);
-      return;
-    }
+    // if (!selectedDate || !selectedDay || !selectedTime) {
+    //   navigate(-1);
+    //   return;
+    // }
 
-    if (!id) {
-      dispatch(loadingStart());
-      return;
-    }
-
-    const fetchDoctor = async () => {
-      dispatch(loadingStart());
-      try {
-        const doctorData = await getDoctorById(GET_DOCTOR_QUERY, {
-          findDoctorByIdId: id,
-        });
-        setDoctor(doctorData);
-        dispatch(loadingEnd());
-      } catch (err: any) {
-        notifyFailure(err.toString());
-      }
-    };
-
-    fetchDoctor();
-  }, [id, dispatch, selectedDate, selectedDay, selectedTime]);
+    // if (!id) {
+    //   dispatch(loadingStart());
+    //   return;
+    // }
+  }, [ dispatch]);
 
   const stripe = useStripe();
   const elements = useElements();
@@ -91,36 +75,45 @@ const Checkout = () => {
   };
 
   const handleCreateAppointment = async (payId?: string) => {
-    const appointmentData: CreateAppointmentType = {
-      appointment_date: selectedDate?.fullDate,
-      appointment_time: selectedTime,
-      patient_id: patientId,
-      doctor_id: id,
-      duration: 60,
-    };
+    const appointmentData:labAppointmenttype = {
+          appointment_date: appointment_date,
+          appointment_time: appointment_time,
+          appointment_weekday: appointment_weekday,
+          labTest_id:labTest_id,
+          lab_id:lab_id,
+          patient_email:patient_email,
+          patient_age:patient_age,
+          patient_gender:patient_gender,
+          patient_id: patient_id,
+          patient_name:patient_name,
+          patient_phone_number:patient_phone_number,
+          status:"Pending",
+        };
+    
+        if (payId) {
+          appointmentData.payment_id = parseInt(payId);
+        }
+    
+        try {
+          await LabAppointmentBooking(LAB_APPOINTMENT_BOOKING, {
+           data: appointmentData,
+          });
+    
+          setShowModal(true);
+        } catch (error) {
+          console.error("Error creating lab appointment:", error);
+          throw error;
+        } finally {
+          setIsLoading(false);
+        }
 
-    if (payId) {
-      appointmentData.payment_id = parseInt(payId);
-    }
-
-    try {
-      await createAppointmentDoctor(CREATE_APPOINTMENT, {
-        data: appointmentData,
-      });
-
-      setShowModal(true);
-    } catch (error) {
-      console.error("Error creating appointment:", error);
-      throw error;
-    } finally {
-      setIsLoading(false);
-    }
   };
 
+  
   const handleCreatePayment = async (paymentMethodId: string) => {
     const paymentData = {
-      amount: amount,
-      currency: currency,
+      amount: amount ?? null,
+      currency: currency ?? null,
       payment_method: paymentMethodId,
       patient_id: patientId,
     };
@@ -130,6 +123,8 @@ const Checkout = () => {
       const response = await stripePayment(CREATE_PAYMENT, {
         data: paymentData,
       });
+      console.log("ressss", response);
+      
       if (response?.message == "Amount has been deducted from wallet!") {
         setPaymentId(response?.message);
         await handleCreateAppointment();
@@ -171,7 +166,7 @@ const Checkout = () => {
 
   const handleModalClose = () => {
     setShowModal(false);
-    dispatch(deleteBooking());
+    dispatch(deleteLabBooking());
     navigate("/patient-dashboard/treatment-plans");
   };
 
@@ -179,85 +174,6 @@ const Checkout = () => {
     <DashboardSection>
       <div className="checkout-container flex flex-col justify-center items-center">
         {/* Doctor Details Section */}
-        {doctor && (
-          <div className="w-full bg-white border-primary border p-5 rounded-lg my-3 shadow-md">
-            <h3 className="text-3xl font-bold mb-4">Appointment Details</h3>
-
-            {/* Doctor's Name */}
-            <div className="doctor-info text-center md:text-left mb-4 py-3 bg-[#E7EDF9]">
-              <h2 className="text-lg font-bold text-primary-800 ms-4">
-                Doctor: {doctor.first_name} {doctor.last_name}
-              </h2>
-            </div>
-
-            {/* Date Slot */}
-            <div className="flex items-center justify-between mb-4 py-3 bg-[#E7EDF9]">
-              <div className="flex items-center space-x-4 ms-3">
-                <img src={calender} alt="Calendar icon" />
-                <h4 className="text-lg">Date</h4>
-              </div>
-              <p className="text-primary text-lg text-center flex-1">
-                {selectedDate?.fullDate ?? "No Data"}
-              </p>
-            </div>
-
-            {/* Day Slot */}
-            <div className="flex items-center justify-between mb-4 py-3 bg-[#E7EDF9]">
-              <div className="flex items-center space-x-4 ms-3">
-                <img src={bar} alt="Bar icon" />
-                <h4 className="text-lg">Day</h4>
-              </div>
-              <p className="text-primary text-lg text-center flex-1">
-                {selectedDay ?? "No Data"}
-              </p>
-            </div>
-
-            {/* Time Slot */}
-            <div className="flex items-center justify-between mb-4 py-3 bg-[#E7EDF9]">
-              <div className="flex items-center space-x-4 ms-3">
-                <img src={clock} alt="Clock icon" />
-                <h4 className="text-lg">Time</h4>
-              </div>
-              <p className="text-primary text-lg text-center flex-1">
-                {selectedTime ?? "No Data"}
-              </p>
-            </div>
-
-            {/* Amount Slot */}
-            <div className="flex items-center justify-between mb-4 py-3 bg-[#E7EDF9]">
-              <div className="flex items-center space-x-4 ms-3">
-                <img src={bar} alt="Money icon" />{" "}
-                {/* Replace with your amount icon */}
-                <h4 className="text-lg">Amount</h4>
-              </div>
-              <p className="text-primary text-lg text-center flex-1">
-                {amount ?? "No Data"}
-              </p>
-            </div>
-
-            {/* Currency Slot */}
-            <div className="flex items-center justify-between mb-4 py-3 bg-[#E7EDF9]">
-              <div className="flex items-center space-x-4 ms-3">
-                <img src={bar} alt="Currency icon" />{" "}
-                {/* Replace with your currency icon */}
-                <h4 className="text-lg">Currency</h4>
-              </div>
-              <p className="text-primary text-lg text-center flex-1">
-                {currency ?? "No Data"}
-              </p>
-            </div>
-
-            <div className="text-center">
-              <button
-                onClick={() => navigate(-1)}
-                className="font-bold text-xs bg-[#EBF9F1] border border-[#41BC63] text-[#41BC63] px-8 py-2 rounded-[15px]"
-              >
-                Go Back
-              </button>
-            </div>
-          </div>
-        )}
-
         <div className="checkout-box w-full max-w-md bg-white p-6 shadow-md rounded-lg mt-3">
           <h2 className="text-2xl font-semibold text-center text-gray-800 mb-4">
             Checkout
@@ -338,4 +254,4 @@ const Checkout = () => {
   );
 };
 
-export default Checkout;
+export default CheckoutLab;

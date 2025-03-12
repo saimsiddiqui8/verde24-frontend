@@ -49,12 +49,10 @@ export const ADD_LAB_TEST = `
 mutation CreateLabTest($data: LabTestInput!) {
   createLabTest(data: $data) {
     id
-    labId
+    lab_id
     title
     price
     description
-    pickupCharge
-    images
     createdAt
   }
 } `;
@@ -64,12 +62,10 @@ export const FIND_ALL_LAB_TEST_BY_LAB_ID = `
 query FindAllLabTestsByLabId($findAllLabTestsByLabIdId: Int!) {
   findAllLabTestsByLabId(id: $findAllLabTestsByLabIdId) {
     id
-    labId
+    lab_id
     title
     price
     description
-    pickupCharge
-    images
     createdAt
   }
 }`;
@@ -77,12 +73,10 @@ export const DELETE_LAB_TEST_BY_ID = `
 mutation DeleteLabTest($deleteLabTestId: Int!) {
   deleteLabTest(id: $deleteLabTestId) {
     id
-    labId
+    lab_id
     title
     price
     description
-    pickupCharge
-    images
     createdAt
   }
 }`;
@@ -91,26 +85,22 @@ export const FIND_LAB_TEST_BY_ID = `
 query FindLabTestById($findLabTestByIdId: Int!) {
   findLabTestById(id: $findLabTestByIdId) {
     id
-    labId
+    lab_id
     title
     price
     description
-    pickupCharge
-    images
     createdAt
   }
 }`;
 
 export const UPDATE_LAB_TEST_BY_ID = `
-mutation UpdateLabTest($data: LabTestInputUpdate!, $updateLabTestId: Int!) {
-  updateLabTest(data: $data, id: $updateLabTestId) {
+mutation UpdateLabTest($updateLabTestId: Int!, $data: LabTestInputUpdate!) {
+  updateLabTest(id: $updateLabTestId, data: $data) {
     id
-    labId
+    lab_id
     title
     price
     description
-    pickupCharge
-    images
     createdAt
   }
 }`;

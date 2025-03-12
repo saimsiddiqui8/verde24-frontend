@@ -64,6 +64,7 @@ query FindNearestLabs($data: LabLocationData!) {
     id
     latitude
     longitude
+    place_name
     distance
     duration
     logo
@@ -75,5 +76,26 @@ query FindNearestLabs($data: LabLocationData!) {
     phone_number
     is_verified
     createdAt
+  }
+}`;
+
+
+export const LAB_APPOINTMENT_BOOKING = `
+mutation CreateLabAppointment($data: LabAppointmentInput!) {
+  createLabAppointment(data: $data) {
+    id
+    lab_id
+    appointment_date
+    appointment_time
+    appointment_weekday
+    patient_name
+    patient_age
+    patient_phone_number
+    patient_email
+    patient_gender
+    status
+    patient_id
+    labTest_id
+    payment_id
   }
 }`;

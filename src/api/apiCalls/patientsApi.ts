@@ -1,6 +1,6 @@
 import { VERIFIED_DOCTOR_QUERY } from "../../pages/PatientPages/patientDashboard/findDoctor/queries";
 import { publicRequest } from "../requestMethods";
-import { CreateAppointmentData, CreatePatientType, CreateReportType, NearestLabType, UserData } from "./types";
+import { CreateAppointmentData, CreatePatientType, CreateReportType, labAppointmenttype, NearestLabType, UserData } from "./types";
 
 export const getPatientById = async (
   query: string,
@@ -60,7 +60,7 @@ export const createPatient = async (
   }
 };
 
-export const createAppointment = async (
+export const createAppointmentDoctor = async (
   query: string,
   variables: CreateAppointmentData,
 ) => {
@@ -201,6 +201,22 @@ export const findNearestLabs = async (query: string, data: NearestLabType) => {
     return response?.data?.data?.findNearestLabs;
   } catch (error) {
     console.error("Error finding labs:", error);
+    throw error;
+  }
+};
+
+export const LabAppointmentBooking = async (
+  query: string,
+   variables: {data:labAppointmenttype}
+  ) => {
+  try {
+    const response = await publicRequest.post("/graphql", {
+      query,
+      variables,
+    });
+    return response?.data?.data?.createLabAppointment;
+  } catch (error) {
+    console.error("Error creating Lab Appointment:", error);
     throw error;
   }
 };

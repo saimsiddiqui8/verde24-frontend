@@ -237,6 +237,7 @@ export default function PatientProfile() {
                       placeholder={input?.placeholder}
                       properties={{ ...register(input?.name as keyof UserData) }}
                       error={errors[input?.name as keyof UserData]?.message}
+                      disabled={!edit}
                     />
                   )
                   : (
