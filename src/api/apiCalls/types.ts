@@ -49,6 +49,7 @@ export interface ApiResponse<T> {
 export interface UserData {
   first_name: string;
   last_name: string;
+  image?:string;
   gender: string;
   phone_number: string;
   insurance_id: string;
@@ -292,4 +293,18 @@ export interface labAppointmenttype {
   status?: string | null;
   amount?: number | null;
   currency?: string | null;
+}
+
+
+
+interface LabTest {
+  title: string;
+}
+
+export interface PatientAppointmentlab {
+  id: number;
+  appointment_date: string;  
+  appointment_weekday: string; 
+  patient_name: string;
+  labTest: LabTest;
 }

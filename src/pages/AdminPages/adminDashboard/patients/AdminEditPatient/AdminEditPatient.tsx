@@ -107,11 +107,11 @@ export default function AdminEditPatient() {
   };
 
   const createPatient = async (data: any) => {
-    const { id, ...other } = data;
+    const { id, wallet, ...other } = data;
     return publicRequest
       .post("/graphql", {
         query: UPDATE_PATIENT_QUERY,
-        variables: { id: Number(id), data: other },
+        variables: { updatePatientId: Number(id), data: other },
       })
       .then((response) => response?.data?.data?.updatePatient);
   };

@@ -5,7 +5,7 @@ import lablogo from "../../../../assets/lab-logo.png";
 import ImageUrl from "../../../../components/Icons/Sidemenu/ImageUrl";
 import { FIND_ALL_LAB_TEST_BY_LAB_ID, FIND_LAB_QUERY } from "../../../LabPages/LabDashboard/labAccount/queries";
 import { FindAllLabTestByLabId, getLabById } from "../../../../api/apiCalls/labApi";
-import { useQuery } from "react-query";
+import { useMutation, useQuery, useQueryClient } from "react-query";
 import { useDispatch, useSelector } from "react-redux";
 import { loadingEnd, loadingStart } from "../../../../redux/slices/loadingSlice";
 import { AddlabtestType } from "../../../../api/apiCalls/types";
@@ -13,12 +13,17 @@ import { useEffect, useState } from "react";
 import testimg from '../../../../assets/test-img.png'
 import { RootState } from "../../../../redux/store";
 import { addLabdetail, deleteLabDetail } from "../../../../redux/slices/LabBooking";
+import { ADD_TO_CARD } from "../patientProfile/queries";
+import { AddToCard } from "../../../../api/apiCalls/patientsApi";
+import { notifyFailure, notifySuccess } from "../../../../utils/Utils";
+import { Toaster } from "react-hot-toast";
 
 const AllLabTest = () => {
     const [search, setsearch] = useState("")
     const { id } = useParams();
     const dispatch = useDispatch();
     const Patienid = useSelector((state: RootState) => state.user.currentUser?.id);
+    const queryClient = useQueryClient();
        const navigate = useNavigate();
               useEffect(() => {
                 if (!id) {
@@ -45,21 +50,40 @@ const AllLabTest = () => {
           return FindAllLabTestByLabId(FIND_ALL_LAB_TEST_BY_LAB_ID, { findAllLabTestsByLabIdId: Number(id) });
         };
       
-        const { data, isLoading } = useQuery({
+        const { data } = useQuery({
           queryKey: ["labtest", id],
-          queryFn: getAllLabTestById,
+          queryFn: async () => {
+            dispatch(loadingStart()); 
+            return getAllLabTestById();
+          },
           onSuccess: () => dispatch(loadingEnd()),
           onError: () => dispatch(loadingEnd()),
         });
-       
+         
+        const handleaddtocard = async (labTest_id:number) => {
+          if (!Patienid) return;
+          return await AddToCard(ADD_TO_CARD, { data:{patient_id:Patienid,labTest_id} });
+        };
+        
+        const { mutate} = useMutation(handleaddtocard, {
+          onMutate: () => {
+            dispatch(loadingStart()); 
+          },
+          onSuccess: () => {
+            dispatch(loadingEnd()); 
+            notifySuccess("Item added to cart!");
+            queryClient.invalidateQueries(["patientcard", Patienid]);
+          },
+          onError: () => {
+            dispatch(loadingEnd()); 
+            notifyFailure("Failed to add item!");
+          },
+        });
+        
 
         const filteredData = data?.filter((item : AddlabtestType) =>
             item.title.toLowerCase().includes(search.toLowerCase())
           );
-      
-        if (isLoading) {
-          dispatch(loadingStart());
-        }
     
         const handleviewprofile = (testid:number , amount : number )=>{
           dispatch(addLabdetail({
@@ -162,12 +186,12 @@ const AllLabTest = () => {
               <p className="text-sm">Price ${test?.price ?? "N/A"}</p>
               <div className="flex flex-col gap-3 mt-1">
           <Button onClick={()=> test?.id && handleviewprofile(test?.id , test?.price)} className="w-32" title="View Profile" secondary />
-          <Button className="w-32" title="Add to Card" secondary />
+          <Button onClick={()=> test?.id &&  mutate(test?.id)} className="w-32" title="Add to Cart" secondary />
               </div>
             </div>
           ))}
         </div>
-
+       <Toaster/>
     </DashboardSection>
   )
 }

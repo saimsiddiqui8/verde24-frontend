@@ -1,23 +1,27 @@
 import {
   Button,
   DashboardSection,
+  InputField,
 } from "../../../../components";
 import lablogo from "../../../../assets/lab-logo.png";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../redux/store";
-import { GET_NEAREST_LABS } from "../patientProfile/queries";
-import { findNearestLabs } from "../../../../api/apiCalls/patientsApi";
-import { useMutation } from "react-query";
+import { GET_NEAREST_LABS, SEARCH_LABS_NAME, SEARCH_LABS_TEST } from "../patientProfile/queries";
+import { findNearestLabs, SearchLabname, SearchLabtest } from "../../../../api/apiCalls/patientsApi";
+import { useMutation, useQuery } from "react-query";
 import { RiMapPinLine, RiTimerLine } from "react-icons/ri";
-import { useState, useCallback, useMemo } from "react";
+import { useState, useCallback, useMemo, useEffect, useRef } from "react";
 import ImageUrl from "../../../../components/Icons/Sidemenu/ImageUrl";
+
 
 export default function BookLabTest() {
   const [radius, setRadius] = useState("");
   const [error, setError] = useState("");
   const [searched, setSearched] = useState(false);
   const [labs, setLabs] = useState<any[]>([]);
+  const [labSearch, setLabSearch] = useState("");
+  const [testSearch, setTestSearch] = useState("");
 
   const latitude = useSelector(
     (state: RootState) => state.user.currentUser?.latitude
@@ -25,6 +29,29 @@ export default function BookLabTest() {
   const longitude = useSelector(
     (state: RootState) => state.user.currentUser?.longitude
   );
+  const labWrapperRef = useRef<HTMLDivElement>(null);
+  const testWrapperRef = useRef<HTMLDivElement>(null);
+  const [isLabDropdownOpen, setIsLabDropdownOpen] = useState(false);
+  const [isTestDropdownOpen, setIsTestDropdownOpen] = useState(false);
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (labWrapperRef.current && !labWrapperRef.current.contains(e.target as Node)) {
+        setIsLabDropdownOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (testWrapperRef.current && !testWrapperRef.current.contains(e.target as Node)) {
+        setIsTestDropdownOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   const dropdownOptions = useMemo(
     () => [
@@ -73,51 +100,139 @@ export default function BookLabTest() {
       </p>
     ) : null;
 
+
+    const { data: labResults, refetch } = useQuery(
+      ["searchLabs", labSearch],
+      () => SearchLabname(SEARCH_LABS_NAME, { labName: labSearch }),
+      {
+        enabled: false, 
+        keepPreviousData: true,
+      }
+    );
+
+    const { data: labtestResults, refetch:testrefetch } = useQuery(
+      ["searchLabsTest", testSearch],
+      () => SearchLabtest(SEARCH_LABS_TEST, { labTestName: testSearch }),
+      {
+        enabled: false, 
+        keepPreviousData: true,
+      }
+    );
+    
+    useEffect(() => {
+      const debounce = setTimeout(() => {
+        if (labSearch.trim() !== "") {
+          refetch();
+        }
+        if (testSearch.trim() !== "") {
+          testrefetch();
+        }
+      }, 500);
+    
+      return () => clearTimeout(debounce);
+    }, [labSearch, testSearch]);
+    
+
   return (
     <DashboardSection>
       <div className="flex flex-col sm:flex-row justify-between my-4">
         <h2 className="text-2xl sm:text-3xl font-semibold">Select Lab</h2>
       </div>
 
-      <div className="flex flex-col sm:flex-row items-center gap-2">
-      <div className="relative w-full sm:w-1/3">
-  <select
-    name="radius"
-    className="block px-2.5 pb-2.5 pt-4 w-full text-sm text-primary placeholder:text-blue-600 bg-transparent rounded-lg border border-primary appearance-none focus:outline-none peer"
-    value={radius}
-    onChange={(e) => {
-      setRadius(e.target.value);
-      setSearched(false);
-    }}
-  >
-    <option value="" disabled>
-      Select Radius
-    </option>
-    {dropdownOptions.map((option, index) => (
-      <option key={index} value={option.value}>
-        {option.label}
+      <div className="flex flex-col sm:flex-row items-center gap-4">
+  <div className="relative w-full sm:w-2/6">
+    <select
+      name="radius"
+      className="block px-2.5 pb-2.5 pt-4 w-full text-sm text-primary placeholder:text-blue-600 bg-transparent rounded-lg border border-primary appearance-none focus:outline-none peer"
+      value={radius}
+      onChange={(e) => {
+        setRadius(e.target.value);
+        setSearched(false);
+      }}
+    >
+      <option value="" disabled>
+        Select Radius
       </option>
-    ))}
-  </select>
-
-  <div className="absolute inset-y-0 right-2 flex items-center pointer-events-none">
-    <svg className="w-4 h-4 fill-current text-gray-500" viewBox="0 0 20 20">
-      <path d="M5.23 7.21a.75.75 0 011.04.02L10 10.958l3.73-3.73a.75.75 0 111.06 1.06l-4.25 4.25a.75.75 0 01-1.06 0L5.23 8.29a.75.75 0 01.02-1.04z" />
-    </svg>
+      {dropdownOptions.map((option, index) => (
+        <option key={index} value={option.value}>
+          {option.label}
+        </option>
+      ))}
+    </select>
+    <div className="absolute inset-y-0 right-2 flex items-center pointer-events-none">
+      <svg className="w-4 h-4 fill-current text-gray-500" viewBox="0 0 20 20">
+        <path d="M5.23 7.21a.75.75 0 011.04.02L10 10.958l3.73-3.73a.75.75 0 111.06 1.06l-4.25 4.25a.75.75 0 01-1.06 0L5.23 8.29a.75.75 0 01.02-1.04z" />
+      </svg>
+    </div>
   </div>
+
+  <div className="relative w-full sm:w-2/5" ref={labWrapperRef}>
+    <InputField
+      label="Search Labs"
+      placeholder="Search lab by name"
+      value={labSearch}
+      onFocus={() => setIsLabDropdownOpen(true)}
+      onChange={(e) => setLabSearch((e.target as HTMLInputElement).value)}
+    />
+    {labSearch && isLabDropdownOpen && (
+      <div className="absolute w-full bg-white border top-20 rounded-md shadow-md z-10 max-h-40 overflow-y-auto">
+        {(labResults ?? []).length > 0 ? (
+          labResults.map((lab: SearchLabName) => (
+            <div
+              key={lab.id}
+              className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+            >
+              <Link to={`/patient-dashboard/book-lab-test/lab-profile/${lab?.id}`}>
+                <div className="font-medium">{lab.lab_name}</div>
+                <div className="text-sm text-gray-500">{lab.place_name}</div>
+              </Link>
+            </div>
+          ))
+        ) : (
+          <div className="px-4 py-2 text-sm text-gray-500">
+            No labs found for {labSearch}
+          </div>
+        )}
+      </div>
+    )}
+  </div>
+
+  <div className="relative w-full sm:w-2/5" ref={testWrapperRef}>
+    <InputField
+      label="Search Lab Tests"
+      placeholder="Search lab test by name"
+      value={testSearch}
+      onFocus={() => setIsTestDropdownOpen(true)}
+      onChange={(e) => setTestSearch((e.target as HTMLInputElement).value)}
+    />
+    {testSearch && isTestDropdownOpen && (
+      <div className="absolute w-full bg-white border top-20 rounded-md shadow-md z-10 max-h-40 overflow-y-auto">
+        {(labtestResults ?? [])?.length > 0 ? (
+          labtestResults?.map((labtest: LabTest) => (
+            <Link to={`/patient-dashboard/book-lab-test/lab-profile/${labtest?.lab_id}`} key={labtest?.lab_id}>
+              <div className="px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                {labtest?.title}
+              </div>
+            </Link>
+          ))
+        ) : (
+          <div className="px-4 py-2 text-sm text-gray-500">
+            No tests found for {testSearch}
+          </div>
+        )}
+      </div>
+    )}
+  </div>
+
+  <Button
+    onClick={handleSearch}
+    title={isLoading ? "Searching..." : "Search"}
+    className="w-full sm:w-auto"
+    secondary
+  />
 </div>
 
-
-
-        <Button
-          onClick={handleSearch}
-          title={isLoading ? "Searching..." : "Search"}
-          className="w-full sm:w-auto"
-          secondary
-        />
-      </div>
-
-      {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
+      {error && <p className="text-red-500 text-sm">{error}</p>}
       {!radius ? (
         <p className="text-center text-primary text-2xl mt-4">
           Please search radius
@@ -193,3 +308,14 @@ export default function BookLabTest() {
     </DashboardSection>
   );
 }
+
+type SearchLabName = {
+  id: number;
+  place_name: string;
+  lab_name: string;
+};
+
+type LabTest = {
+  lab_id: number;
+  title: string;
+};

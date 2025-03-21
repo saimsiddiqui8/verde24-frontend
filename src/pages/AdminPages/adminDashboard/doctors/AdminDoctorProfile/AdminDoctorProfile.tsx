@@ -1,55 +1,29 @@
 import { useNavigate, useParams } from "react-router-dom";
-import { CheckboxInput, DashboardSection } from "../../../../../components";
+import { DashboardSection } from "../../../../../components";
 import { publicRequest } from "../../../../../api/requestMethods";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { useState, useEffect } from "react";
 import {
   DOCTOR_QUERY,
-  HOSPITAL_QUERY,
   DOCTOR_UPDATE_QUERY,
-  DOCTOR_ADD_HOSPITAL_QUERY,
-  DOCTOR_REMOVE_HOSPITAL_QUERY,
 } from "./queries";
 import { notifyFailure, notifySuccess } from "../../../../../utils/Utils";
 import { Toaster } from "react-hot-toast";
-
-type Doctor = {
-  id: string;
-  first_name: string;
-  last_name: string;
-  email: string;
-  phone_number: string;
-  gender: string;
-  is_verified: boolean;
-  doctorHospitals: { hospital_id: string }[];
-};
+import ImageUrl from "../../../../../components/Icons/Sidemenu/ImageUrl";
 
 export default function AdminDoctorProfile() {
-  const [selectedHospitals, setSelectedHospitals] =
-    useState<CheckboxOption[]>();
   const [verified, setVerified] = useState(false);
   const { id } = useParams();
   const numericId = id ? parseInt(id, 10) : undefined;
   const queryClient = useQueryClient();
   const navigate = useNavigate();
 
-  const getHospitals = async () => {
-    try {
-      const response = await publicRequest.post("/graphql", {
-        query: HOSPITAL_QUERY,
-      });
-      return response.data.data.hospitals;
-    } catch (error) {
-      console.error("Error fetching hospitals:", error);
-      throw error;
-    }
-  };
 
   const getDoctor = async () => {
     try {
       const response = await publicRequest.post("/graphql", {
         query: DOCTOR_QUERY,
-        variables: { id: numericId },
+        variables: { findDoctorByIdId: numericId },
       });
 
       return response.data.data.findDoctorById;
@@ -59,124 +33,18 @@ export default function AdminDoctorProfile() {
     }
   };
 
-  const allHospitals = useQuery({
-    queryKey: ["hospitals"],
-    queryFn: getHospitals,
-  });
-
   const doctorData = useQuery({
     queryKey: ["adminDoctors", id],
     queryFn: getDoctor,
   });
 
-  function getAssignedHospitals(doctor: Doctor[]) {
-    return doctor?.map((item: any) => item?.hospital_id);
-  }
 
-  const assignedHospitals =
-    getAssignedHospitals(doctorData?.data?.doctorHospitals) || [];
-
-  const hospitals = (allHospitals?.data || []).map((hospital: Hospital) => ({
-    id: hospital?.id,
-    label: hospital?.name,
-    value: hospital?.name,
-    checked: assignedHospitals.includes(hospital?.id),
-  }));
 
   useEffect(() => {
-    setSelectedHospitals(hospitals);
     setVerified(doctorData?.data?.is_verified);
   }, [doctorData.data]);
 
-  const createDoctorHospital = async (data: {
-    doctor_id: number;
-    hospital_id: number;
-  }) => {
-    try {
-      const response = await publicRequest.post("/graphql", {
-        query: DOCTOR_ADD_HOSPITAL_QUERY,
-        variables: { data },
-      });
-      return response.data;
-    } catch (error) {
-      console.error("Error creating doctor hospital:");
-      throw error;
-    }
-  };
 
-  const deleteDoctorHospital = async (data: {
-    doctor_id: number;
-    hospital_id: number;
-  }) => {
-    try {
-      const response = await publicRequest.post("/graphql", {
-        query: DOCTOR_REMOVE_HOSPITAL_QUERY,
-        variables: { data },
-      });
-      return response.data;
-    } catch (error) {
-      console.error("Error deleting doctor hospital:");
-      throw error;
-    }
-  };
-
-  const addDoctorHospital = useMutation(createDoctorHospital);
-  const removeDoctorHospital = useMutation(deleteDoctorHospital);
-
-  const handleAssignment = (value: string) => {
-    const newArr = selectedHospitals?.map((item: CheckboxOption) => {
-      if (value === item.value) {
-        return { ...item, checked: !item.checked };
-      } else {
-        return item;
-      }
-    });
-    const currentItem = newArr?.find((item) => item.value === value);
-    if (currentItem && currentItem.checked) {
-      removeDoctorHospital.mutate(
-        {
-          doctor_id: parseInt(id!),
-          hospital_id: parseInt(currentItem.id),
-        },
-        {
-          onSuccess: () => {
-            notifySuccess(`${currentItem?.value} removed!`);
-            queryClient.invalidateQueries({
-              queryKey: ["adminHospitals"],
-            });
-            queryClient.invalidateQueries({
-              queryKey: ["adminDoctors"],
-            });
-          },
-          onError: () => {
-            notifyFailure(`Deletion failed!`);
-          },
-        },
-      );
-    } else if (currentItem) {
-      addDoctorHospital.mutate(
-        {
-          doctor_id: parseInt(id!),
-          hospital_id: parseInt(currentItem.id),
-        },
-        {
-          onSuccess: () => {
-            notifySuccess(`${currentItem?.value} assigned!`);
-            queryClient.invalidateQueries({
-              queryKey: ["adminHospitals"],
-            });
-            queryClient.invalidateQueries({
-              queryKey: ["adminDoctors"],
-            });
-          },
-          onError: () => {
-            notifyFailure(`Assignment failed!`);
-          },
-        },
-      );
-    }
-    setSelectedHospitals(newArr);
-  };
 
   const updateDoctor = async (data: { is_verified: boolean }) => {
     try {
@@ -241,60 +109,179 @@ export default function AdminDoctorProfile() {
         doctorData?.data?.last_name
       }
     >
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 my-2 items-start">
-        <div className="flex flex-col lg:flex-row items-start justify-start text-xs font-bold gap-2">
-          <span>Name:</span>
-          <span>
-            {doctorData?.data?.first_name + " " + doctorData?.data?.last_name}
-          </span>
-        </div>
-        <div className="flex flex-col lg:flex-row items-start justify-start text-xs font-bold gap-2">
-          <span>Email:</span>
-          <span>{doctorData?.data?.email}</span>
-        </div>
-        <div className="flex flex-col lg:flex-row items-start justify-start text-xs font-bold gap-2">
-          <span>Phone Number:</span>
-          <span>{doctorData?.data?.phone_number}</span>
-        </div>
-        <div className="flex flex-col lg:flex-row items-start justify-start text-xs font-bold gap-2">
-          <span>Gender:</span>
-          <span>{doctorData?.data?.gender}</span>
-        </div>
-        <div>
-          <span>Hospital Assignment:</span>
-          <CheckboxInput
-            options={selectedHospitals}
-            name="hospital_assignment"
-            onChange={(e) => handleAssignment(e.target.value)}
-          />
-        </div>
-        <div className="flex flex-col lg:flex-row items-start justify-start text-xs font-bold gap-2">
-          <span>Verified:</span>
-          <label className="relative inline-flex flex-col lg:flex-row items-start justify-start text-xs font-bold cursor-pointer">
-            <input
-              type="checkbox"
-              checked={verified}
-              onChange={() => handleVerify()}
-              className="sr-only peer"
-            />
-            <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
-          </label>
-        </div>
-      </div>
+     <div className="grid grid-cols-1 md:grid-cols-2 gap-6 my-2 items-start">
+  <div className="flex flex-col lg:flex-row items-start justify-start text-xs font-bold gap-2">
+  <span>Image:</span>
+    <span>
+      {doctorData?.data?.image ? <ImageUrl fileKey={doctorData?.data?.image} className="w-24 h-24"/>:"Not updated"}
+    </span>
+  </div>
+  <div className="flex flex-col lg:flex-row items-start justify-start text-xs font-bold gap-2">
+  <span>Form:</span>
+  <span>{doctorData?.data?.form_submitted ? "Doctor sumbit the form" : "Not submitted"}</span>
+  </div>
+  <div className="flex flex-col lg:flex-row items-start justify-start text-xs font-bold gap-2">
+    <span>Name:</span>
+    <span>
+      {doctorData?.data?.first_name && doctorData?.data?.last_name
+        ? doctorData?.data?.first_name + " " + doctorData?.data?.last_name
+        : "Not updated"}
+    </span>
+  </div>
+
+  <div className="flex flex-col lg:flex-row items-start justify-start text-xs font-bold gap-2">
+    <span>Email:</span>
+    <span>{doctorData?.data?.email || "Not updated"}</span>
+  </div>
+
+  <div className="flex flex-col lg:flex-row items-start justify-start text-xs font-bold gap-2">
+    <span>Phone Number:</span>
+    <span>{doctorData?.data?.phone_number || "Not updated"}</span>
+  </div>
+
+  <div className="flex flex-col lg:flex-row items-start justify-start text-xs font-bold gap-2">
+    <span>Gender:</span>
+    <span>{doctorData?.data?.gender || "Not updated"}</span>
+  </div>
+
+  <div className="flex flex-col lg:flex-row items-start justify-start text-xs font-bold gap-2">
+    <span>Verified:</span>
+    <label className="relative inline-flex flex-col lg:flex-row items-start justify-start text-xs font-bold cursor-pointer">
+      <input
+        type="checkbox"
+        checked={verified}
+        onChange={() => handleVerify()}
+        className="sr-only peer"
+      />
+      <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
+    </label>
+  </div>
+
+  <div className="flex flex-col lg:flex-row items-start justify-start text-xs font-bold gap-2">
+    <span>Verified:</span>
+    <span>{doctorData?.data?.is_verified ? "Doctor is verified" : "Doctor is not verified"}</span>
+  </div>
+  <div className="flex flex-col lg:flex-row items-start justify-start text-xs font-bold gap-2">
+    <span>City:</span>
+    <span>{doctorData?.data?.city || "Not updated"}</span>
+  </div>
+
+  <div className="flex flex-col lg:flex-row items-start justify-start text-xs font-bold gap-2">
+    <span>Country:</span>
+    <span>{doctorData?.data?.country || "Not updated"}</span>
+  </div>
+
+  <div className="flex flex-col lg:flex-row items-start justify-start text-xs font-bold gap-2">
+    <span>Department:</span>
+    <span>{doctorData?.data?.department || "Not updated"}</span>
+  </div>
+
+  <div className="flex flex-col lg:flex-row items-start justify-start text-xs font-bold gap-2">
+    <span>Experience:</span>
+    <span>{doctorData?.data?.experience || "Not updated"}</span>
+  </div>
+
+  <div className="flex flex-col lg:flex-row items-start justify-start text-xs font-bold gap-2">
+    <span>Registration No.:</span>
+    <span>{doctorData?.data?.registration_no || "Not updated"}</span>
+  </div>
+
+  <div className="flex flex-col lg:flex-row items-start justify-start text-xs font-bold gap-2">
+    <span>Qualification:</span>
+    <span>{doctorData?.data?.qualification || "Not updated"}</span>
+  </div>
+
+  <div className="flex flex-col lg:flex-row items-start justify-start text-xs font-bold gap-2">
+    <span>Consultation Mode:</span>
+    <span>{doctorData?.data?.consultation_mode || "Not updated"}</span>
+  </div>
+
+  <div className="flex flex-col lg:flex-row items-start justify-start text-xs font-bold gap-2">
+    <span>Consultation Fee (Regular):</span>
+    <span>{doctorData?.data?.consultation_fee_regular || "Not updated"}</span>
+  </div>
+
+  <div className="flex flex-col lg:flex-row items-start justify-start text-xs font-bold gap-2">
+    <span>Consultation Fee (Discounted):</span>
+    <span>{doctorData?.data?.consultation_fee_discounted || "Not updated"}</span>
+  </div>
+
+  <div className="flex flex-col lg:flex-row items-start justify-start text-xs font-bold gap-2">
+    <span>Payout Method:</span>
+    <span>{doctorData?.data?.payout_method_id || "Not updated"}</span>
+  </div>
+
+  <div className="flex flex-col lg:flex-row items-start justify-start text-xs font-bold gap-2">
+    <span>Address:</span>
+    <span>{doctorData?.data?.address || "Not updated"}</span>
+  </div>
+
+  <div className="flex flex-col lg:flex-row items-start justify-start text-xs font-bold gap-2">
+    <span>Postal Code:</span>
+    <span>{doctorData?.data?.postal_code || "Not updated"}</span>
+  </div>
+
+  <div className="flex flex-col lg:flex-row items-start justify-start text-xs font-bold gap-2">
+    <span>Bibliography:</span>
+    <span>{doctorData?.data?.bibliography || "Not updated"}</span>
+  </div>
+
+  <div className="flex flex-col lg:flex-row items-start justify-start text-xs font-bold gap-2">
+    <span>Work:</span>
+    <span>{doctorData?.data?.work || "Not updated"}</span>
+  </div>
+
+  <div className="flex flex-col lg:flex-row items-start justify-start text-xs font-bold gap-2">
+    <span>Degree:</span>
+    <span>{doctorData?.data?.degree || "Not updated"}</span>
+  </div>
+
+  <div className="flex flex-col lg:flex-row items-start justify-start text-xs font-bold gap-2">
+    <span>Designation:</span>
+    <span>{doctorData?.data?.designation || "Not updated"}</span>
+  </div>
+
+  <div className="flex flex-col lg:flex-row items-start justify-start text-xs font-bold gap-2">
+    <span>Enter Symptom:</span>
+    <span>{doctorData?.data?.enterSymptom || "Not updated"}</span>
+  </div>
+
+  <div className="flex flex-col lg:flex-row items-start justify-start text-xs font-bold gap-2">
+    <span>Institute:</span>
+    <span>{doctorData?.data?.institute || "Not updated"}</span>
+  </div>
+
+  <div className="flex flex-col lg:flex-row items-start justify-start text-xs font-bold gap-2">
+    <span>Account No.:</span>
+    <span>{doctorData?.data?.ac_no || "Not updated"}</span>
+  </div>
+
+  <div className="flex flex-col lg:flex-row items-start justify-start text-xs font-bold gap-2">
+    <span>UPI ID:</span>
+    <span>{doctorData?.data?.upi_id || "Not updated"}</span>
+  </div>
+
+  <div className="flex flex-col lg:flex-row items-start justify-start text-xs font-bold gap-2">
+    <span>Services:</span>
+    <span>
+      {doctorData?.data?.services && doctorData?.data?.services.length > 0
+        ? doctorData?.data?.services.join(", ")
+        : "Not updated"}
+    </span>
+  </div>
+
+  <div className="flex flex-col lg:flex-row items-start justify-start text-xs font-bold gap-2">
+    <span>Specialization:</span>
+    <span>
+      {doctorData?.data?.specialization && doctorData?.data?.specialization.length > 0
+        ? doctorData?.data?.specialization.join(", ")
+        : "Not updated"}
+    </span>
+  </div>
+</div>
+
       <Toaster />
     </DashboardSection>
   );
 }
 
-type Hospital = {
-  id: number;
-  name: string;
-  checked?: boolean;
-};
-
-type CheckboxOption = {
-  id: string;
-  label: string;
-  value: string;
-  checked?: boolean;
-};

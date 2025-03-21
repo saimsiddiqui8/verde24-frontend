@@ -104,7 +104,6 @@ const PatientDetails: React.FC<StepProps> = ({ nextStep , data}) => {
      const navigate = useNavigate();
      const dispatch = useDispatch();
      const onSubmit:SubmitHandler<PatientDataLab> = async (data:PatientDataLab) => {
-       console.log("Patient details" , data);
         dispatch(addPatientdetail({
           patient_name:data?.name,
           patient_email:data?.email,

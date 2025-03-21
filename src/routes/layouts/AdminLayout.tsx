@@ -7,6 +7,8 @@ const links = [
   { title: "Doctors", href: "/doctors" },
   { title: "Patients", href: "/patients" },
   { title: "Hospitals", href: "/hospitals" },
+  { title: "Labs", href: "/labs" },
+  { title: "Pharmacies", href: "/pharmacies" },
 ];
 
 const BASE_URL = "/admin-dashboard";

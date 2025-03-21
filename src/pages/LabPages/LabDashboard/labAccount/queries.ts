@@ -104,3 +104,62 @@ mutation UpdateLabTest($updateLabTestId: Int!, $data: LabTestInputUpdate!) {
     createdAt
   }
 }`;
+
+
+export const FIND_APPOINTMENT_BY_STATUS = `
+query FindLabAppointmentStatusByLabId($status: LabAppointmentStatus!, $labId: Int!) {
+  findLabAppointmentStatusByLabId(status: $status, lab_id: $labId) {
+    id
+    appointment_date
+    appointment_weekday
+    patient_name
+    status
+    labTest {
+      title
+    }
+  }
+}`;
+
+
+export const UPDATE_LAB_APPOINTMENT_STATUS = `
+mutation Mutation($updateLabAppointmentStatusId: Int!, $status: LabAppointmentStatus!) {
+  updateLabAppointmentStatus(id: $updateLabAppointmentStatusId, status: $status) {
+    id
+    lab_id
+    appointment_date
+    appointment_time
+    appointment_weekday
+    patient_name
+    patient_age
+    patient_phone_number
+    patient_email
+    patient_gender
+    status
+    patient_id
+    labTest_id
+    payment_id
+  }
+}`;
+
+export const FIND_APPOINTMENT_BY_ID = `
+query FindLabAppointmentById($findLabAppointmentByIdId: Int!) {
+  findLabAppointmentById(id: $findLabAppointmentByIdId) {
+    id
+    appointment_date
+    appointment_time
+    appointment_weekday
+    patient_name
+    patient_age
+    patient_phone_number
+    patient_email
+    patient_gender
+    status
+    patient_id
+    labTest_id
+    labTest {
+      title
+      price
+      description
+    }
+  }
+}`;

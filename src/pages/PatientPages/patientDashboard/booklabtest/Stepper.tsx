@@ -28,9 +28,11 @@ const Stepper = () => {
               onSuccess: () => dispatch(loadingEnd()), 
             }
         );
-        if(isLoading){
-          dispatch(loadingStart())
-        }
+        useEffect(() => {
+          if (isLoading) {
+            dispatch(loadingStart());
+          }
+        }, [isLoading, dispatch]);
         
   const nextStep = () => setStep((prev) => Math.min(prev + 1, 3));
   const prevStep = () => setStep((prev) => Math.max(prev - 1, 1));

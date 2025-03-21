@@ -9,6 +9,11 @@ import { RootState } from "../redux/store.ts";
 import { USER_ROLES } from "../api/roles.ts";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { logoutQuery } from "../api/apiCalls/pharmacyApi.ts";
+import { ShoppingCart } from "lucide-react";
+import { CARD_BY_PATIENT_ID } from "../pages/PatientPages/patientDashboard/patientProfile/queries.ts";
+import { FindCardById } from "../api/apiCalls/patientsApi.ts";
+import { useQuery } from "react-query";
+import { loadingEnd, loadingStart } from "../redux/slices/loadingSlice.ts";
 
 export default function Navbar() {
   const [showDropdown, setShowDropdown] = useState(false);
@@ -36,6 +41,23 @@ export default function Navbar() {
     dispatch(flushUser());
     setShowDropdown(false);
   };
+
+   const getCard = async () => {
+          if (!user?.id || user?.role !== USER_ROLES.patient) return;
+          return FindCardById(CARD_BY_PATIENT_ID, { patientId: user?.id });
+        };
+  
+        
+          
+         const { data } = useQuery({
+                queryKey: ["patientcard", user?.id ],
+                queryFn: async () => {
+                  dispatch(loadingStart()); 
+                  return getCard();
+                },
+                onSuccess: () => dispatch(loadingEnd()), 
+              });
+
   return (
     <nav className="w-full py-4 px-8 bg-white flex justify-between items-center border-b-2">
       <div className="flex gap-4 items-center">
@@ -66,6 +88,12 @@ export default function Navbar() {
             </Link>
           </div>
         )}
+        {user?.role === USER_ROLES.patient && <div onClick={()=> navigate("/patient-dashboard/add-to-card")} className="relative cursor-pointer">
+      <ShoppingCart size={28} />
+        <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full">
+          {data?.length}
+        </span>
+    </div>}
         <button className="py-1.5 px-6 rounded-[30px] btn-back text-white flex items-center gap-2">
           <FiPhoneCall fill="transparent" stroke="white" />
           Help

@@ -110,6 +110,7 @@ const Checkout = () => {
 
       setShowModal(true);
     } catch (error) {
+       notifyFailure("Error creating lab appointment");
       console.error("Error creating appointment:", error);
       throw error;
     } finally {
@@ -140,6 +141,7 @@ const Checkout = () => {
         throw new Error("Payment processing failed");
       }
     } catch (error) {
+      notifyFailure("Payment processing failed")
       console.error("Error processing payment:", error);
     } finally {
       setIsLoading(false);
@@ -270,7 +272,6 @@ const Checkout = () => {
               <CardElement options={cardElementOptions} />
             </div>
 
-            {/* Pay Now Button with Spinner */}
             {isLoading ? (
               <div className="flex justify-center">
                 <svg
@@ -306,7 +307,6 @@ const Checkout = () => {
             )}
           </form>
 
-          {/* Success Modal */}
           {showModal && (
             <Modal
               title="PAYMENT"

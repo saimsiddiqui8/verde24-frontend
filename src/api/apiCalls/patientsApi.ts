@@ -220,3 +220,100 @@ export const LabAppointmentBooking = async (
     throw error;
   }
 };
+
+export const AddToCard = async (
+  query: string,
+   variables: {data:{patient_id:number , labTest_id:number}}
+  ) => {
+  try {
+    const response = await publicRequest.post("/graphql", {
+      query,
+      variables,
+    });
+    return response?.data?.data?.addLabTestToCart;
+  } catch (error) {
+    console.error("Error addLabTestToCart:", error);
+    throw error;
+  }
+};
+
+export const FindCardById = async (
+  query: string,
+   variables: {patientId:number}
+  ) => {
+  try {
+    const response = await publicRequest.post("/graphql", {
+      query,
+      variables,
+    });
+    return response?.data?.data?.findCartByPatientId;
+  } catch (error) {
+    console.error("Error findCartByPatientId:", error);
+    throw error;
+  }
+};
+
+export const DeleteCard = async (
+  query: string,
+   variables: {deleteItemFromCartId:number}
+  ) => {
+  try {
+    const response = await publicRequest.post("/graphql", {
+      query,
+      variables,
+    });
+    return response?.data?.data?.deleteItemFromCart;
+  } catch (error) {
+    console.error("Error deleteItemFromCart:", error);
+    throw error;
+  }
+};
+
+export const FindLabAppointmentByPatientId = async (
+  query: string,
+   variables: {findLabAppointmentByPatientIdId:number}
+  ) => {
+  try {
+    const response = await publicRequest.post("/graphql", {
+      query,
+      variables,
+    });
+    return response?.data?.data?.findLabAppointmentByPatientId;
+  } catch (error) {
+    console.error("Error findLabAppointmentByPatientId:", error);
+    throw error;
+  }
+};
+
+
+export const SearchLabname = async (
+  query: string,
+   variables: {labName:string}
+  ) => {
+  try {
+    const response = await publicRequest.post("/graphql", {
+      query,
+      variables,
+    });
+    return response?.data?.data?.searchLabs;
+  } catch (error) {
+    console.error("Error searchLabs:", error);
+    throw error;
+  }
+};
+
+export const SearchLabtest = async (
+  query: string,
+   variables: {labTestName:string}
+  ) => {
+  try {
+    const response = await publicRequest.post("/graphql", {
+      query,
+      variables,
+    });
+    return response?.data?.data?.searchLabTests;
+  } catch (error) {
+    console.error("Error searchLabTests:", error);
+    throw error;
+  }
+};

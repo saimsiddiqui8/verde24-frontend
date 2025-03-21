@@ -5,27 +5,20 @@ import { useEffect, useState } from "react";
 import { RootState } from "../../../../redux/store";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  loadingEnd,
-  loadingStart,
-} from "../../../../redux/slices/loadingSlice";
-import {
   stripePayment,
 } from "../../../../api/apiCalls/doctorsApi";
 import {
-  GET_DOCTOR_QUERY,
   CREATE_PAYMENT,
-  CREATE_APPOINTMENT,
 } from "../../../DoctorPages/doctorDashboard/doctorInputInfo/consultationForm/queries";
 import { notifyFailure } from "../../../../utils/Utils";
-import clock from "../../../../assets/clock.png";
-import calender from "../../../../assets/calendar.png";
-import bar from "../../../../assets/bar.png";
 import { Toaster } from "react-hot-toast";
 import { deleteLabBooking } from "../../../../redux/slices/LabBooking";
 import { LabAppointmentBooking } from "../../../../api/apiCalls/patientsApi";
 import { LAB_APPOINTMENT_BOOKING } from "../patientProfile/queries";
 import { labAppointmenttype } from "../../../../api/apiCalls/types";
-
+import clock from "../../../../assets/clock.png";
+import calender from "../../../../assets/calendar.png";
+import bar from "../../../../assets/bar.png";
 const CheckoutLab = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [showModal, setShowModal] = useState(false);
@@ -41,16 +34,13 @@ const CheckoutLab = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // if (!selectedDate || !selectedDay || !selectedTime) {
-    //   navigate(-1);
-    //   return;
-    // }
+    if (!amount || !currency || !appointment_date || !appointment_time || !appointment_weekday || !labTest_id || !lab_id || !patient_email || !patient_age || !patient_id || !patient_name || !patient_phone_number) {
+      dispatch(deleteLabBooking());
+      navigate("/patient-dashboard/book-lab-test");
+      return;
+    }
 
-    // if (!id) {
-    //   dispatch(loadingStart());
-    //   return;
-    // }
-  }, [ dispatch]);
+  }, [ dispatch ,amount,currency , appointment_date,appointment_time,appointment_weekday,labTest_id,lab_id , patient_email ,patient_age ,patient_id ,patient_name,patient_phone_number]);
 
   const stripe = useStripe();
   const elements = useElements();
@@ -101,6 +91,7 @@ const CheckoutLab = () => {
     
           setShowModal(true);
         } catch (error) {
+          notifyFailure("Error creating lab appointment");
           console.error("Error creating lab appointment:", error);
           throw error;
         } finally {
@@ -123,8 +114,6 @@ const CheckoutLab = () => {
       const response = await stripePayment(CREATE_PAYMENT, {
         data: paymentData,
       });
-      console.log("ressss", response);
-      
       if (response?.message == "Amount has been deducted from wallet!") {
         setPaymentId(response?.message);
         await handleCreateAppointment();
@@ -135,6 +124,7 @@ const CheckoutLab = () => {
         throw new Error("Payment processing failed");
       }
     } catch (error) {
+      notifyFailure("Payment processing failed")
       console.error("Error processing payment:", error);
     } finally {
       setIsLoading(false);
@@ -155,7 +145,7 @@ const CheckoutLab = () => {
     });
 
     if (error) {
-      console.log(error.message);
+      notifyFailure(`${error.message}`);
       return;
     }
 
@@ -170,10 +160,82 @@ const CheckoutLab = () => {
     navigate("/patient-dashboard/treatment-plans");
   };
 
+
+  const handlecancel = ()=>{
+                     dispatch(deleteLabBooking());
+                     navigate("/patient-dashboard/book-lab-test")
+                   }
   return (
     <DashboardSection>
       <div className="checkout-container flex flex-col justify-center items-center">
-        {/* Doctor Details Section */}
+       <div className="w-full bg-white border-primary border p-5 rounded-lg my-3 shadow-md">
+            <h3 className="text-3xl font-bold mb-4">Appointment Details</h3>
+            {/* Date Slot */}
+            <div className="flex items-center justify-between mb-4 py-3 bg-[#E7EDF9]">
+              <div className="flex items-center space-x-4 ms-3">
+                <img src={calender} alt="Calendar icon" />
+                <h4 className="text-lg">Date</h4>
+              </div>
+              <p className="text-primary text-lg text-center flex-1">
+                {appointment_date ?? "No Data"}
+              </p>
+            </div>
+
+            {/* Day Slot */}
+            <div className="flex items-center justify-between mb-4 py-3 bg-[#E7EDF9]">
+              <div className="flex items-center space-x-4 ms-3">
+                <img src={bar} alt="Bar icon" />
+                <h4 className="text-lg">Day</h4>
+              </div>
+              <p className="text-primary text-lg text-center flex-1">
+                {appointment_weekday ?? "No Data"}
+              </p>
+            </div>
+
+            {/* Time Slot */}
+            <div className="flex items-center justify-between mb-4 py-3 bg-[#E7EDF9]">
+              <div className="flex items-center space-x-4 ms-3">
+                <img src={clock} alt="Clock icon" />
+                <h4 className="text-lg">Time</h4>
+              </div>
+              <p className="text-primary text-lg text-center flex-1">
+                {appointment_time ?? "No Data"}
+              </p>
+            </div>
+
+            {/* Amount Slot */}
+            <div className="flex items-center justify-between mb-4 py-3 bg-[#E7EDF9]">
+              <div className="flex items-center space-x-4 ms-3">
+                <img src={bar} alt="Money icon" />{" "}
+                {/* Replace with your amount icon */}
+                <h4 className="text-lg">Amount</h4>
+              </div>
+              <p className="text-primary text-lg text-center flex-1">
+                {amount ?? "No Data"}
+              </p>
+            </div>
+
+            {/* Currency Slot */}
+            <div className="flex items-center justify-between mb-4 py-3 bg-[#E7EDF9]">
+              <div className="flex items-center space-x-4 ms-3">
+                <img src={bar} alt="Currency icon" />{" "}
+                {/* Replace with your currency icon */}
+                <h4 className="text-lg">Currency</h4>
+              </div>
+              <p className="text-primary text-lg text-center flex-1">
+                {currency ?? "No Data"}
+              </p>
+            </div>
+
+            <div className="text-center">
+              <button
+                onClick={handlecancel}
+                className="font-bold text-xs bg-[#EBF9F1] border border-[#41BC63] text-[#41BC63] px-8 py-2 rounded-[15px]"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
         <div className="checkout-box w-full max-w-md bg-white p-6 shadow-md rounded-lg mt-3">
           <h2 className="text-2xl font-semibold text-center text-gray-800 mb-4">
             Checkout
@@ -186,7 +248,6 @@ const CheckoutLab = () => {
               <CardElement options={cardElementOptions} />
             </div>
 
-            {/* Pay Now Button with Spinner */}
             {isLoading ? (
               <div className="flex justify-center">
                 <svg
@@ -222,7 +283,6 @@ const CheckoutLab = () => {
             )}
           </form>
 
-          {/* Success Modal */}
           {showModal && (
             <Modal
               title="PAYMENT"

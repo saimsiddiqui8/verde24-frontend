@@ -243,4 +243,25 @@ mutation CreateMeeting($data: CreateGoogleMeet!) {
 export  const FILE_UPLOAD = `
 mutation Mutation($file: Upload!) {
  uploadFile(file: $file)
+}`;
+
+
+export  const FIND_LAB_APPOINTMENT_BY_PATIENT_ID = `
+query FindLabAppointmentByPatientId($findLabAppointmentByPatientIdId: Int!) {
+  findLabAppointmentByPatientId(id: $findLabAppointmentByPatientIdId) {
+    id
+    lab_id
+    appointment_date
+    appointment_time
+    appointment_weekday
+    patient_name
+    patient_age
+    patient_phone_number
+    patient_email
+    patient_gender
+    status
+    patient_id
+    labTest_id
+    payment_id
+  }
 }`

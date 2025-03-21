@@ -23,16 +23,15 @@ const ViewTest = () => {
     return FindAllLabTestByLabId(FIND_ALL_LAB_TEST_BY_LAB_ID, { findAllLabTestsByLabIdId: id });
   };
 
-  const { data, isLoading } = useQuery({
+  const { data } = useQuery({
     queryKey: ["labtest", id],
-    queryFn: getAllLabTestById,
+    queryFn: async () => {
+        dispatch(loadingStart()); 
+        return getAllLabTestById();
+      },
     onSuccess: () => dispatch(loadingEnd()),
     onError: () => dispatch(loadingEnd()),
   });
-
-  if (isLoading) {
-    dispatch(loadingStart());
-  }
 
   const filteredData = data?.filter((test: AddlabtestType) =>
     test?.title?.toLowerCase().includes(searchTerm.toLowerCase())

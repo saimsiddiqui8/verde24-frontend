@@ -194,3 +194,56 @@ export const UpdateLabTestById = async (
     throw error;
   }
 };
+
+
+export const FindAppointmentByStatus = async (
+  query: string,
+  variables: {labId:number , status:string },
+) => {
+  try {
+    const response = await publicRequest.post("/graphql",
+       { query,
+         variables,
+       }
+      );
+    return response?.data?.data?.findLabAppointmentStatusByLabId;
+  } catch (error) {
+    console.error("Error find Appointment By Status:", error);
+    throw error;
+  }
+};
+
+export const UpdateLabAppointmentStatus = async (
+  query: string,
+  variables: {updateLabAppointmentStatusId:number , status:string },
+) => {
+  try {
+    const response = await publicRequest.post("/graphql",
+       { query,
+         variables,
+       }
+      );
+    return response?.data?.data?.updateLabAppointmentStatus;
+  } catch (error) {
+    console.error("Error updateLabAppointment Status:", error);
+    throw error;
+  }
+};
+
+
+export const FindAppointmentById = async (
+  query: string,
+  variables: {findLabAppointmentByIdId:number },
+) => {
+  try {
+    const response = await publicRequest.post("/graphql",
+       { query,
+         variables,
+       }
+      );
+    return response?.data?.data?.findLabAppointmentById;
+  } catch (error) {
+    console.error("Error findLabAppointmentById Status:", error);
+    throw error;
+  }
+};

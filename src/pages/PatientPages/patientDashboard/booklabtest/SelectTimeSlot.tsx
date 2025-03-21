@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, DropdownField, TimePicker } from "../../../../components";
+import { Button, TimePicker } from "../../../../components";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useNavigate } from "react-router-dom";
@@ -7,6 +7,8 @@ import { z } from "zod";
 import DatePicker from "../../../../components/DatePicker";
 import { useDispatch } from "react-redux";
 import { addPatientaddress, deletePatientDetail } from "../../../../redux/slices/LabBooking";
+import { notifyFailure } from "../../../../utils/Utils";
+import { Toaster } from "react-hot-toast";
 
 type LabTestType = {
   id: number;
@@ -23,20 +25,6 @@ interface StepProps {
   prevStep: () => void;
   data?:LabTestType
 }
-const input = {
-  label: "Select a Day",
-  name: "weekday",
-  placeholder: "Select a Day",
-  options: [
-    { label: "Monday", value: "monday" },
-    { label: "Tuesday", value: "tuesday" },
-    { label: "Wednesday", value: "wednesday" },
-    { label: "Thursday", value: "thursday" },
-    { label: "Friday", value: "friday" },
-    { label: "Saturday", value: "saturday" },
-    { label: "Sunday", value: "sunday" },
-  ],
-};
 
 interface PatientSlotLab {
   slot_time: string;
@@ -48,7 +36,6 @@ interface PatientSlotLab {
 
     const UserSchema = z.object({
       slot_time: z.string().min(1, { message: "Slot Time is required" }),
-      weekday: z.string().min(1, { message: "Week day is required" }),
       date: z.string().min(1, { message: "date is required" }),
     });
 const SelectTimeSlot: React.FC<StepProps> = ({ prevStep ,data}) => {
@@ -60,15 +47,43 @@ const SelectTimeSlot: React.FC<StepProps> = ({ prevStep ,data}) => {
            } = useForm<PatientSlotLab>({ resolver: zodResolver(UserSchema) });
           const navigate = useNavigate();
              const dispatch = useDispatch();
-          const onSubmit:SubmitHandler<PatientSlotLab> = async (data:PatientSlotLab) => {
-             dispatch(addPatientaddress({
-              appointment_date:data?.date,
-              appointment_time:data?.slot_time,
-              appointment_weekday:data?.weekday,
-                             }));
-            reset();
-            navigate("/patient-dashboard/book-lab-test/checkout-lab")
-           };
+             const onSubmit: SubmitHandler<PatientSlotLab> = async (data: PatientSlotLab) => {
+              const selectedDate = new Date(data.date);
+              const today = new Date();
+          
+              today.setHours(0, 0, 0, 0);
+              selectedDate.setHours(0, 0, 0, 0);
+          
+              if (selectedDate <= today) {
+                  notifyFailure("Please select a future date.");
+                  return;
+              }
+          
+              const day = selectedDate.getDate();
+              const monthNames = [
+                  "January", "February", "March", "April", "May", "June",
+                  "July", "August", "September", "October", "November", "December"
+              ];
+              const month = monthNames[selectedDate.getMonth()];
+              const year = selectedDate.getFullYear();
+              const formattedDate = `${day} ${month} ${year}`;
+              let [hours, minutes] = data.slot_time.split(":").map(Number);
+              const period = hours >= 12 ? "PM" : "AM";
+              hours = hours % 12 || 12; 
+              const formattedTime = `${hours}:${minutes.toString().padStart(2, "0")} ${period}`;
+          
+              const weekday = selectedDate.toLocaleDateString("en-US", { weekday: "long" });
+          
+              dispatch(addPatientaddress({
+                  appointment_date: formattedDate,
+                  appointment_time: formattedTime,
+                  appointment_weekday: weekday.charAt(0).toUpperCase() + weekday.slice(1).toLowerCase(),
+              }));
+          
+              reset();
+              navigate("/patient-dashboard/book-lab-test/checkout-lab");
+          };
+          
 
              const handleback = ()=>{
                      dispatch(deletePatientDetail());
@@ -91,14 +106,6 @@ const SelectTimeSlot: React.FC<StepProps> = ({ prevStep ,data}) => {
                 label="Select Date"
                 properties={{ ...register("date") }}
                 error={errors["date"]}
-                />
-                              <DropdownField
-                  label={input.label}
-                  name={input.name}
-                  options={input.options}
-                  placeholder={input.placeholder}
-                  properties={{ ...register(input.name  as keyof PatientSlotLab) }}
-                  error={errors[input.name  as keyof PatientSlotLab]}
                 />
        </div>
    </div>
@@ -126,6 +133,7 @@ const SelectTimeSlot: React.FC<StepProps> = ({ prevStep ,data}) => {
        <Button type="button" onClick={handleback} title="Go Back" secondary={true} className="rounded-xl w-40 sm:w-44 text-lg sm:text-xl p-3 lg:ms-4" />
        <Button title="continue" secondary={true} className="rounded-xl w-40 sm:w-44 text-lg sm:text-xl p-3 lg:mr-24" />
      </div>
+     <Toaster/>
      </form>
        </>
   );

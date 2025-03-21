@@ -70,6 +70,7 @@ const FormSchema = z
       .min(1, { message: "Registration Number is required" }),
       email: z.string().email({ message: "Invalid email address" }),
     phone_number: z.string().min(1, { message: "Phone Number is required" }),
+    logo: z.string().min(1, { message: "Image is required" }),
   })
   .refine((data) => isPhoneValid(data.phone_number), {
     message: "Invalid Phone Number",
@@ -106,7 +107,7 @@ const LabAccountManagement = () => {
         ,
         file
       );
-      setValue("logo", uploadedFileUrl)
+      setValue("logo", uploadedFileUrl , { shouldValidate: true })
       dispatch(loadingEnd());
     } catch (error) {
       dispatch(loadingEnd());
@@ -280,6 +281,11 @@ const LabAccountManagement = () => {
                       </button>
                     </>
                   )}
+                   {errors["logo"] && (
+              <small className="text-red-500 font-medium uppercase">
+                <>{errors["logo"]?.message}</>
+              </small>
+            )}
                 </div>
               </div>
             </div>

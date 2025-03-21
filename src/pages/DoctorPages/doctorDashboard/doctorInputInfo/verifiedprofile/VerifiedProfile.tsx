@@ -203,7 +203,7 @@ const ACCEPTED_IMAGE_TYPES = ["image/jpeg", "image/jpg"];
 
 const FormSchema = z
   .object({
-    doctor_image: z.any(),
+    image: z.any(),
     complete_name: z.string().min(1, { message: "Name is required" }),
     email: z.string().min(1, { message: "Email is required" }).email(),
     phone_number: z.string().min(1, { message: "Phone Number is required" }),
@@ -277,23 +277,23 @@ const FormSchema = z
       path: ["upi_id"],
     },
   )
-  .refine((data) => !!data.doctor_image, {
+  .refine((data) => !!data.image, {
     message: "Image is required.",
-    path: ["doctor_image"],
+    path: ["image"],
   })
   .refine((data) => {
-    if (typeof data.doctor_image === "string") return true; 
-    return ACCEPTED_IMAGE_TYPES.includes(data.doctor_image?.type?.toLowerCase());
+    if (typeof data.image === "string") return true; 
+    return ACCEPTED_IMAGE_TYPES.includes(data.image?.type?.toLowerCase());
   }, {
     message: ".JPG, .JPEG files are accepted.".toUpperCase(),
-    path: ["doctor_image"],
+    path: ["image"],
   })
   .refine((data) => {
-    if (typeof data.doctor_image === "string") return true; 
-    return data.doctor_image?.size && data.doctor_image.size <= MAX_FILE_SIZE;
+    if (typeof data.image === "string") return true; 
+    return data.image?.size && data.image.size <= MAX_FILE_SIZE;
   }, {
     message: `Max file size is 2MB.`,
-    path: ["doctor_image"],
+    path: ["image"],
   });
 
 const disabledFields = ["complete_name", "email", "gender", "phone_number"];
@@ -327,7 +327,7 @@ const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
       ,
       file
     );
-    setValue("doctor_image", uploadedFileUrl)
+    setValue("image", uploadedFileUrl , { shouldValidate: true })
     dispatch(loadingEnd());
   } catch (error) {
     dispatch(loadingEnd());
@@ -433,13 +433,6 @@ const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
       });
       return response;
     };
-    console.log("dddddddd" , defaultDoctorData);
-  
-    useEffect(() => {
-      if (defaultDoctorData?.image) {
-        setValue("doctor_image", defaultDoctorData.image);
-      }
-    }, [defaultDoctorData?.image, setValue]);
   
     const { data, mutate } = useMutation(updateDoctorId);
 
@@ -486,7 +479,7 @@ const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
         email,
         city,
         country,
-        image: getValues("doctor_image"),
+        image: getValues("image"),
         department,
         experience,
         registration_no,
@@ -540,13 +533,13 @@ const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
         </div>
         <div className="grid grid-cols-12 mt-6">
           <div className="col-span-4">
-            <input
+           {edit &&  <input
               type="file"
               className="bg-[#D9D9D9] w-40 h-40 rounded-full mx-auto"
               hidden
               id="upload-file"
               onChange={handleFileChange}
-            />
+            />}
                <label
               htmlFor="upload-file"
               className="bg-[#D9D9D9] w-36 h-36 rounded-full mx-auto block relative overflow-clip mt-16"
@@ -564,9 +557,9 @@ const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
                 ""
               )}
             </label>
-            {errors["doctor_image"] && (
+            {errors["image"] && (
               <small className="text-red-500 font-medium uppercase">
-                <>{errors["doctor_image"]?.message}</>
+                <>{errors["image"]?.message}</>
               </small>
             )}
             <h5 className="text-base text-primary font-semibold text-center my-2">
