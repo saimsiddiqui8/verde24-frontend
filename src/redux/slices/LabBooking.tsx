@@ -1,5 +1,5 @@
-import { createSlice } from "@reduxjs/toolkit";
-import { labAppointmenttype } from "../../api/apiCalls/types";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { labAppointmenttype, labTests } from "../../api/apiCalls/types";
 
 
 
@@ -7,7 +7,6 @@ const initialState:labAppointmenttype = {
     appointment_date: null,
     appointment_time: null,
     appointment_weekday: null,
-    labTest_id: null,
     lab_id: null,
     patient_age: null,
     patient_email: null,
@@ -15,8 +14,8 @@ const initialState:labAppointmenttype = {
     patient_id: null,
     patient_name: null,
     patient_phone_number: null,
-    amount:null,
     currency:null,
+    labTests:[],
 }
 
 const LabBookinyslice = createSlice({
@@ -24,10 +23,8 @@ const LabBookinyslice = createSlice({
     initialState,
     reducers:{
         addLabdetail: (state, action) => {
-            state.labTest_id = action.payload.labTest_id;
             state.lab_id = action.payload.lab_id;
             state.patient_id = action.payload.patient_id;
-            state.amount = action.payload.amount;
             state.currency = action.payload.currency;
           },
           addPatientdetail: (state, action) => {
@@ -43,10 +40,8 @@ const LabBookinyslice = createSlice({
             state.appointment_weekday = action.payload.appointment_weekday;
           },  
           deleteLabDetail: (state) => {
-            state.labTest_id = null;
             state.lab_id = null;
             state.patient_id = null;
-            state.amount = null;
             state.currency = null;
           },
           deletePatientDetail: (state) => {
@@ -62,12 +57,22 @@ const LabBookinyslice = createSlice({
             state.appointment_weekday = null;
           },
           deleteLabBooking: () => initialState,
-    }
+          addLabTestLocal: (state, action: PayloadAction<labTests>) => {
+            state.labTests.push(action.payload);
+          },
+          deleteLabTestLocal: (state, action: PayloadAction<string | null>) => {
+            state.labTests = state.labTests.filter(
+              (test) => test.id !== action.payload
+            );
+          },
+          clearAlllabTests: (state) => {
+            state.labTests = [];
+          },
+        },
+      });
 
-});
 
-
-export const { addLabdetail, addPatientdetail, addPatientaddress, deleteLabBooking , deleteLabDetail , deletePatientDetail , deletePatientAddress} =
+export const { addLabdetail, addPatientdetail, addPatientaddress, deleteLabBooking , deleteLabDetail , deletePatientDetail , deletePatientAddress,addLabTestLocal,deleteLabTestLocal , clearAlllabTests} =
   LabBookinyslice.actions;
 
 export default LabBookinyslice.reducer;

@@ -30,7 +30,6 @@ interface LabAppointment {
     patient_gender:string;
     status: string;
     patient_id: number;
-    labTest_id: number;
     payment_id: number;
   }
   

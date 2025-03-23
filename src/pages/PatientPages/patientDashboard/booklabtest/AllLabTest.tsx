@@ -1,6 +1,5 @@
 import { useNavigate, useParams } from "react-router-dom"
 import { Button, DashboardSection, InputField } from "../../../../components"
-import { RiMapPinLine, RiTimerLine } from "react-icons/ri"
 import lablogo from "../../../../assets/lab-logo.png";
 import ImageUrl from "../../../../components/Icons/Sidemenu/ImageUrl";
 import { FIND_ALL_LAB_TEST_BY_LAB_ID, FIND_LAB_QUERY } from "../../../LabPages/LabDashboard/labAccount/queries";
@@ -12,7 +11,7 @@ import { AddlabtestType } from "../../../../api/apiCalls/types";
 import { useEffect, useState } from "react";
 import testimg from '../../../../assets/test-img.png'
 import { RootState } from "../../../../redux/store";
-import { addLabdetail, deleteLabDetail } from "../../../../redux/slices/LabBooking";
+import { addLabdetail, addLabTestLocal, clearAlllabTests, deleteLabDetail } from "../../../../redux/slices/LabBooking";
 import { ADD_TO_CARD } from "../patientProfile/queries";
 import { AddToCard } from "../../../../api/apiCalls/patientsApi";
 import { notifyFailure, notifySuccess } from "../../../../utils/Utils";
@@ -47,7 +46,7 @@ const AllLabTest = () => {
 
         const getAllLabTestById = () => {
           if (!id) return;
-          return FindAllLabTestByLabId(FIND_ALL_LAB_TEST_BY_LAB_ID, { findAllLabTestsByLabIdId: Number(id) });
+          return FindAllLabTestByLabId(FIND_ALL_LAB_TEST_BY_LAB_ID, { findAllLabTestsByLabIdId : Number(id) });
         };
       
         const { data } = useQuery({
@@ -60,6 +59,7 @@ const AllLabTest = () => {
           onError: () => dispatch(loadingEnd()),
         });
          
+        
         const handleaddtocard = async (labTest_id:number) => {
           if (!Patienid) return;
           return await AddToCard(ADD_TO_CARD, { data:{patient_id:Patienid,labTest_id} });
@@ -85,18 +85,26 @@ const AllLabTest = () => {
             item.title.toLowerCase().includes(search.toLowerCase())
           );
     
-        const handleviewprofile = (testid:number , amount : number )=>{
+        const handleviewprofile = (testid:number , amount : number,title:string,description:string )=>{
           dispatch(addLabdetail({
-            labTest_id:testid,
             lab_id:Number(id),
             patient_id:Patienid,
-            amount:amount,
             currency:"usd",
           }));
-          navigate(`/patient-dashboard/book-lab-test/test-profile/${testid}`)
+          dispatch(addLabTestLocal({
+            title:title,
+            price:amount,
+            description:description,
+            id:testid,
+            lab_id:Number(id),
+            createdAt: new Date().toISOString(),
+          }));
+
+          navigate(`/patient-dashboard/book-lab-test/stepper`)
         }
         const handleback = ()=>{
           dispatch(deleteLabDetail());
+          dispatch(clearAlllabTests());
           navigate(-1);
         }
            
@@ -135,7 +143,7 @@ const AllLabTest = () => {
         <h2 className="text-xl sm:text-3xl font-medium">
           {singleLabData.data.lab_name} | {singleLabData.data.name}
         </h2>
-        <div className="flex justify-center sm:justify-between gap-10 mt-2">
+        <div className="flex justify-center sm:justify-start gap-10 mt-2">
           <div>
             <p className="text-sm sm:text-base">Reviews</p>
             <p className="font-medium">195</p>
@@ -143,24 +151,6 @@ const AllLabTest = () => {
           <div>
             <p className="text-sm sm:text-base">Satisfaction</p>
             <p className="font-medium">100%</p>
-          </div>
-          <div className="flex flex-col items-center">
-            <p className="text-sm sm:text-base">Distance</p>
-            <div className="flex items-center gap-1">
-              <RiMapPinLine size={20} className="text-primary" />
-              <p className="font-medium text-sm">
-                {singleLabData.data.distance} km
-              </p>
-            </div>
-          </div>
-          <div className="flex flex-col items-center">
-            <p className="text-sm sm:text-base">Duration</p>
-            <div className="flex items-center gap-1">
-              <RiTimerLine size={20} className="text-primary" />
-              <p className="font-medium text-sm">
-                {singleLabData.data.duration}
-              </p>
-            </div>
           </div>
         </div>
       </div>
@@ -185,7 +175,7 @@ const AllLabTest = () => {
               <h2 className="text-xl font-semibold">{test?.title ?? "No Title Available"}</h2>
               <p className="text-sm">Price ${test?.price ?? "N/A"}</p>
               <div className="flex flex-col gap-3 mt-1">
-          <Button onClick={()=> test?.id && handleviewprofile(test?.id , test?.price)} className="w-32" title="View Profile" secondary />
+          <Button onClick={()=> test?.id && handleviewprofile(test?.id , test?.price , test?.title , test?.description)} className="w-32" title="View Profile" secondary />
           <Button onClick={()=> test?.id &&  mutate(test?.id)} className="w-32" title="Add to Cart" secondary />
               </div>
             </div>

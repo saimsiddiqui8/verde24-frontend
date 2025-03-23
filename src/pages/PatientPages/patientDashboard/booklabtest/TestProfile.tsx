@@ -7,7 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 import testimg from '../../../../assets/test-img.png'
 import { loadingEnd, loadingStart } from "../../../../redux/slices/loadingSlice";
 import { useEffect } from "react";
-import { deleteLabDetail } from "../../../../redux/slices/LabBooking";
+import { clearAlllabTests, deleteLabDetail } from "../../../../redux/slices/LabBooking";
 import { RootState } from "../../../../redux/store";
 import { notifyFailure, notifySuccess } from "../../../../utils/Utils";
 import { ADD_TO_CARD } from "../patientProfile/queries";
@@ -66,6 +66,7 @@ const TestProfile = () => {
 
       const handleback = ()=>{
         dispatch(deleteLabDetail());
+          dispatch(clearAlllabTests());
         navigate(-1);
       }
   return (
@@ -108,7 +109,7 @@ const TestProfile = () => {
   </div>
   <div className="flex flex-wrap justify-center lg:justify-start gap-4 sm:gap-8 mt-5 lg:ms-12">
     <Button onClick={()=> mutate(data?.id)} title="Add to Cart" secondary={true} className="rounded-xl w-40 sm:w-44 text-lg sm:text-xl p-3" />
-    <Button onClick={()=> navigate(`/patient-dashboard/book-lab-test/stepper/${data?.id}`)} title="Book Now" secondary={true} className="rounded-xl w-40 sm:w-44 text-lg sm:text-xl p-3" />
+    <Button onClick={()=> navigate(`/patient-dashboard/book-lab-test/stepper`)} title="Book Now" secondary={true} className="rounded-xl w-40 sm:w-44 text-lg sm:text-xl p-3" />
   </div>
  </>}
  <Toaster/>

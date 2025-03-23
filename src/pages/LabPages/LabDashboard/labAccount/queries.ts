@@ -27,7 +27,6 @@ mutation UpdateLab($updateLabId: Int!, $data: LabInputUpdate!) {
     registration_number
     email
     phone_number
-    is_verified
     createdAt
   }
 }
@@ -69,6 +68,7 @@ query FindAllLabTestsByLabId($findAllLabTestsByLabIdId: Int!) {
     createdAt
   }
 }`;
+
 export const DELETE_LAB_TEST_BY_ID = `
 mutation DeleteLabTest($deleteLabTestId: Int!) {
   deleteLabTest(id: $deleteLabTestId) {
@@ -107,23 +107,20 @@ mutation UpdateLabTest($updateLabTestId: Int!, $data: LabTestInputUpdate!) {
 
 
 export const FIND_APPOINTMENT_BY_STATUS = `
-query FindLabAppointmentStatusByLabId($status: LabAppointmentStatus!, $labId: Int!) {
-  findLabAppointmentStatusByLabId(status: $status, lab_id: $labId) {
-    id
+query FindLabAppointmentStatusByLabId($labId: Int!, $status: LabAppointmentStatus!) {
+  findLabAppointmentStatusByLabId(lab_id: $labId, status: $status) {
+  id
     appointment_date
     appointment_weekday
     patient_name
     status
-    labTest {
-      title
-    }
   }
 }`;
 
 
 export const UPDATE_LAB_APPOINTMENT_STATUS = `
-mutation Mutation($updateLabAppointmentStatusId: Int!, $status: LabAppointmentStatus!) {
-  updateLabAppointmentStatus(id: $updateLabAppointmentStatusId, status: $status) {
+mutation Mutation($updateLabAppointmentStatusId: Int!, $status: LabAppointmentStatus!, $message: String) {
+  updateLabAppointmentStatus(id: $updateLabAppointmentStatusId, status: $status, message: $message) {
     id
     lab_id
     appointment_date
@@ -136,7 +133,6 @@ mutation Mutation($updateLabAppointmentStatusId: Int!, $status: LabAppointmentSt
     patient_gender
     status
     patient_id
-    labTest_id
     payment_id
   }
 }`;
@@ -145,6 +141,7 @@ export const FIND_APPOINTMENT_BY_ID = `
 query FindLabAppointmentById($findLabAppointmentByIdId: Int!) {
   findLabAppointmentById(id: $findLabAppointmentByIdId) {
     id
+    lab_id
     appointment_date
     appointment_time
     appointment_weekday
@@ -155,8 +152,8 @@ query FindLabAppointmentById($findLabAppointmentByIdId: Int!) {
     patient_gender
     status
     patient_id
-    labTest_id
-    labTest {
+    payment_id
+    labTests {
       title
       price
       description

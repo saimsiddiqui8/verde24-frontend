@@ -261,7 +261,6 @@ query FindLabAppointmentByPatientId($findLabAppointmentByPatientIdId: Int!) {
     patient_gender
     status
     patient_id
-    labTest_id
     payment_id
   }
 }`

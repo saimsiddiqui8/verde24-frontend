@@ -182,7 +182,6 @@ export default function AccountManagement() {
       email: data.email,
       phone_number: data.phone_number,
       logo: getValues("logo") ?? "",
-      is_verified: true,
     };
     mutate(updatedData);
   };

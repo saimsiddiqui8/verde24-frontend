@@ -27,20 +27,22 @@ const CheckoutLab = () => {
     (state: RootState) => state.user.currentUser?.id,
   );
   const Labbooking = useSelector((state: RootState) => state.Labbooking);
-  const { amount, currency , appointment_date,appointment_time,appointment_weekday,labTest_id,lab_id,patient_email,patient_age,patient_gender,patient_id,patient_name,patient_phone_number} =
+  const {labTests, currency , appointment_date,appointment_time,appointment_weekday,lab_id,patient_email,patient_age,patient_gender,patient_id,patient_name,patient_phone_number} =
   Labbooking;
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!amount || !currency || !appointment_date || !appointment_time || !appointment_weekday || !labTest_id || !lab_id || !patient_email || !patient_age || !patient_id || !patient_name || !patient_phone_number) {
+    if (!currency || !appointment_date || !appointment_time || !appointment_weekday || !lab_id || !patient_email || !patient_age || !patient_id || !patient_name || !patient_phone_number) {
       dispatch(deleteLabBooking());
       navigate("/patient-dashboard/book-lab-test");
       return;
     }
 
-  }, [ dispatch ,amount,currency , appointment_date,appointment_time,appointment_weekday,labTest_id,lab_id , patient_email ,patient_age ,patient_id ,patient_name,patient_phone_number]);
+  }, [ dispatch ,currency , appointment_date,appointment_time,appointment_weekday,lab_id , patient_email ,patient_age ,patient_id ,patient_name,patient_phone_number]);
+
+  const amount = labTests?.reduce((acc, test) => acc + (test?.price || 0), 0);
 
   const stripe = useStripe();
   const elements = useElements();
@@ -69,7 +71,6 @@ const CheckoutLab = () => {
           appointment_date: appointment_date,
           appointment_time: appointment_time,
           appointment_weekday: appointment_weekday,
-          labTest_id:labTest_id,
           lab_id:lab_id,
           patient_email:patient_email,
           patient_age:patient_age,
@@ -77,6 +78,7 @@ const CheckoutLab = () => {
           patient_id: patient_id,
           patient_name:patient_name,
           patient_phone_number:patient_phone_number,
+          labTests:labTests,
           status:"Pending",
         };
     
@@ -114,6 +116,8 @@ const CheckoutLab = () => {
       const response = await stripePayment(CREATE_PAYMENT, {
         data: paymentData,
       });
+      console.log("idddddd", response?.payment?.id);
+      
       if (response?.message == "Amount has been deducted from wallet!") {
         setPaymentId(response?.message);
         await handleCreateAppointment();
@@ -157,7 +161,7 @@ const CheckoutLab = () => {
   const handleModalClose = () => {
     setShowModal(false);
     dispatch(deleteLabBooking());
-    navigate("/patient-dashboard/treatment-plans");
+    navigate("/patient-dashboard/treatment-labs");
   };
 
 

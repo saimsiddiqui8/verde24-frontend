@@ -128,7 +128,7 @@ export const AddLabTest = async (
 
 export const FindAllLabTestByLabId = async (
   query: string,
-  variables: { findAllLabTestsByLabIdId: number  },
+  variables: { findAllLabTestsByLabIdId : number  },
 ) => {
   try {
     const response = await publicRequest.post("/graphql",

@@ -2,37 +2,21 @@ import { useEffect, useState } from "react";
 import PatientDetails from "./PatientDetails";
 import SelectTimeSlot from "./SelectTimeSlot";
 import { DashboardSection } from "../../../../components";
-import { useNavigate, useParams } from "react-router-dom";
-import { useQuery } from "react-query";
-import { FindLabTestById } from "../../../../api/apiCalls/labApi";
-import { FIND_LAB_TEST_BY_ID } from "../../../LabPages/LabDashboard/labAccount/queries";
-import { useDispatch } from "react-redux";
-import { loadingEnd, loadingStart } from "../../../../redux/slices/loadingSlice";
+import { useNavigate } from "react-router-dom";
+import { RootState } from "../../../../redux/store";
+import { useSelector } from "react-redux";
 
 const Stepper = () => {
-       const { id } = useParams();
-       const dispatch = useDispatch();
         const navigate = useNavigate();
-        useEffect(() => {
-        if (!id) {
-          navigate(-1);
-        }
-        }, [id , navigate])
   const [step, setStep] = useState(1);
-
-    const {data , isLoading} = useQuery(
-          ["labTest", id], 
-          () => FindLabTestById(FIND_LAB_TEST_BY_ID, { findLabTestByIdId:  Number(id) }), 
-          {
-              enabled: !!id,
-              onSuccess: () => dispatch(loadingEnd()), 
-            }
-        );
-        useEffect(() => {
-          if (isLoading) {
-            dispatch(loadingStart());
-          }
-        }, [isLoading, dispatch]);
+    const Labbooking = useSelector((state: RootState) => state.Labbooking);
+    const {labTests , lab_id} =
+    Labbooking;
+    useEffect(() => {
+      if (labTests?.length === 0) {
+        navigate(-1);
+      }
+      }, [labTests , navigate])
         
   const nextStep = () => setStep((prev) => Math.min(prev + 1, 3));
   const prevStep = () => setStep((prev) => Math.max(prev - 1, 1));
@@ -70,8 +54,8 @@ const Stepper = () => {
       </div>
 
       <div className="rounded-lg">
-        {step === 1 && <PatientDetails nextStep={nextStep}  data={data}/>}
-        {step === 2 && <SelectTimeSlot prevStep={prevStep} data={data}/>}
+        {step === 1 && <PatientDetails nextStep={nextStep} id={lab_id}  data={labTests}/>}
+        {step === 2 && <SelectTimeSlot prevStep={prevStep} data={labTests}/>}
       </div>
     </div>
    </DashboardSection>

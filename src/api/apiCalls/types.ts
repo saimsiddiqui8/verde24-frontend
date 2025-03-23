@@ -85,8 +85,8 @@ export interface UpdateDoctorData {
   payout_method_id?: string;
   address?: string;
   postal_code?: string;
-  services?: string[];
-  specialization?: string[];
+  services?: string;
+  specialization?: string;
   bibliography?: string;
   work?: string;
   degree?: string;
@@ -185,7 +185,6 @@ export interface UpdatedPharmacyData {
   registration_number: string;
   email: string;
   phone_number: string;
-  is_verified: boolean;
   createdAt?: string;
 }
 
@@ -203,7 +202,6 @@ export interface UpdateLabResponse {
   registration_number: string;
   email: string;
   phone_number: string;
-  is_verified: boolean;
   createdAt?: string;
 }
 
@@ -274,6 +272,14 @@ export interface NearestLabType {
   radiusInKm?: number;
 }
 
+ export type labTests = {
+  title: string | null;
+  price: number | null;
+  description: string | null;
+  id: number | null;
+  lab_id: number | null;
+  createdAt: string | null;
+};
 
 
 
@@ -281,7 +287,6 @@ export interface labAppointmenttype {
   appointment_date: string | null;
   appointment_time: string | null;
   appointment_weekday:string | null
-  labTest_id: number | null;
   lab_id: number | null;
   patient_age: number | null;
   patient_email: string | null;
@@ -291,8 +296,8 @@ export interface labAppointmenttype {
   patient_phone_number: string | null;
   payment_id?: number | string | null;
   status?: string | null;
-  amount?: number | null;
   currency?: string | null;
+  labTests : labTests[];
 }
 
 

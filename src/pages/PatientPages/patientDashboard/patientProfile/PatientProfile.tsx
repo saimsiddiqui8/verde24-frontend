@@ -131,7 +131,7 @@ export default function PatientProfile() {
   const queryClient = useQueryClient();
   const dispatch = useDispatch();
   const fileInputRef = useRef<HTMLInputElement>(null);
-
+  
    const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
       const file = e.target.files?.[0];
       if (!file) return;
@@ -150,7 +150,6 @@ export default function PatientProfile() {
         console.error("File upload failed:", error);
       }
     };
-
 
   const getPatient = async () => {
     if (!id) return;

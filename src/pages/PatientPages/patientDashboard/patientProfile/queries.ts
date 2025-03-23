@@ -90,8 +90,8 @@ query SearchLabs($labName: String!) {
 }`;
 
 export const SEARCH_LABS_TEST = `
-query SearchLabTests($labTestName: String!) {
-  searchLabTests(labTest_name: $labTestName) {
+query SearchlabTests($labTestName: String!) {
+  searchlabTests(labTest_name: $labTestName) {
     lab_id
     title
   }
@@ -99,7 +99,7 @@ query SearchLabTests($labTestName: String!) {
 
 
 export const LAB_APPOINTMENT_BOOKING = `
-mutation CreateLabAppointment($data: LabAppointmentInput!) {
+mutation Mutation($data: LabAppointmentInput!) {
   createLabAppointment(data: $data) {
     id
     lab_id
@@ -113,8 +113,13 @@ mutation CreateLabAppointment($data: LabAppointmentInput!) {
     patient_gender
     status
     patient_id
-    labTest_id
     payment_id
+    labTests {
+      title
+      price
+      description
+      id
+    }
   }
 }`;
 

@@ -27,7 +27,6 @@ export const UPDATED_PHARMACY_QUERY = `
       registration_number
       email
       phone_number
-      is_verified
       createdAt
     }
   }

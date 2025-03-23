@@ -20,7 +20,7 @@ const ViewTest = () => {
 
   const getAllLabTestById = () => {
     if (!id) return;
-    return FindAllLabTestByLabId(FIND_ALL_LAB_TEST_BY_LAB_ID, { findAllLabTestsByLabIdId: id });
+    return FindAllLabTestByLabId(FIND_ALL_LAB_TEST_BY_LAB_ID, { findAlllabTestsByLabIdId: id });
   };
 
   const { data } = useQuery({

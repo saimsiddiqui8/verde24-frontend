@@ -170,7 +170,7 @@ export const getVerifiedDoctors = async () => {
   try {
     const response = await publicRequest.post("/graphql", {
       query: VERIFIED_DOCTOR_QUERY,
-      variables: {isVerified: true,},
+      variables: {is_verified: true,},
     });
     return response.data.data.findDoctorsByVerificationStatus;
   } catch (error) {
@@ -311,9 +311,9 @@ export const SearchLabtest = async (
       query,
       variables,
     });
-    return response?.data?.data?.searchLabTests;
+    return response?.data?.data?.searchlabTests;
   } catch (error) {
-    console.error("Error searchLabTests:", error);
+    console.error("Error searchlabTests:", error);
     throw error;
   }
 };

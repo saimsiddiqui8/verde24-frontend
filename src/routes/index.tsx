@@ -97,6 +97,7 @@ import AdminLabs from "../pages/AdminPages/adminDashboard/labs/AdminLabs/AdminLa
 import AdminLabsProfile from "../pages/AdminPages/adminDashboard/labs/AdminLabsProfile/AdminLabsProfile.tsx";
 import AdminPharmacies from "../pages/AdminPages/adminDashboard/pharmacies/AdminPharmacies/AdminPharmacies.tsx";
 import AdminPharmaciesProfile from "../pages/AdminPages/adminDashboard/pharmacies/AdminPharmaciesProfile/AdminPharmaciesProfile.tsx";
+import BannedAccountNotice from "../components/BannedAccountNotice.tsx";
 
 interface RequireAuthProps {
   role: string;
@@ -112,13 +113,43 @@ const AppLayout = () => {
 };
 
 const RequireVerification = () => {
-  const isVerified = useSelector((state: RootState) => state.user.currentUser?.isVerified);
+  const is_verified = useSelector((state: RootState) => state.user.currentUser?.is_verified);
 
-  if (isVerified === undefined) {
+  if (is_verified === undefined) {
     return <div className="flex items-center justify-center h-screen">Loading...</div>;
   }
 
-  return isVerified ? <Outlet /> : <Navigate to="/doctor-dashboard-unverified" replace />;
+  return is_verified ? <Outlet /> : <Navigate to="/doctor-dashboard-unverified" replace />;
+};
+
+const RequireBannedPatient = () => {
+  const is_banned = useSelector((state: RootState) => state.user.currentUser?.is_verified);
+
+  if (is_banned === undefined) {
+    return <div className="flex items-center justify-center h-screen">Loading...</div>;
+  }
+
+  return is_banned ? <Navigate to="/patient-banned-account" replace /> : <Outlet />;
+};
+
+const RequireBannedPharmacy = () => {
+  const is_banned = useSelector((state: RootState) => state.user.currentUser?.is_verified);
+
+  if (is_banned === undefined) {
+    return <div className="flex items-center justify-center h-screen">Loading...</div>;
+  }
+
+  return is_banned ? <Navigate to="/pharmacy-banned-account" replace /> : <Outlet />;
+};
+
+const RequireBannedLab = () => {
+  const is_banned = useSelector((state: RootState) => state.user.currentUser?.is_verified);
+
+  if (is_banned === undefined) {
+    return <div className="flex items-center justify-center h-screen">Loading...</div>;
+  }
+
+  return is_banned ? <Navigate to="/lab-banned-account" replace /> : <Outlet />;
 };
 
 const RequireAuth = ({ role }: RequireAuthProps) => {
@@ -165,6 +196,7 @@ export const router = createBrowserRouter(
   </Route>
           </Route>
           <Route element={<RequireAuth role={USER_ROLES.patient} />}>
+          <Route element={<RequireBannedPatient />}>
             <Route element={<PatientLayout />} path="patient-dashboard">
               <Route index element={<PatientProfile />} />
               <Route path="find-doctor">
@@ -206,20 +238,26 @@ export const router = createBrowserRouter(
               <Route path="lab-profile/:id" element={<AllLabTest />} />
               <Route path="lab-details/:id" element={<LabDetails />} />
               <Route path="test-profile/:id" element={<TestProfile />} />
-              <Route path="stepper/:id" element={<Stepper />} />
+              <Route path="stepper" element={<Stepper />} />
               <Route path="checkout-lab" element={<CheckoutLab />} />
               </Route>
               <Route path="notification" element={<Notification />} />
               <Route path="add-to-card" element={<Card />} />
             </Route>
+            </Route>
+              <Route path="patient-banned-account" element={<BannedAccountNotice />} />
           </Route>
           <Route element={<RequireAuth role={USER_ROLES.pharmacy} />}>
+          <Route element={<RequireBannedPharmacy />}>
             <Route element={<PharmacyLayout />} path="pharmacy-dashboard">
               <Route index element={<AccountManagement />} />
               <Route path="pharmacy-location" element={<PharmacyLocation/>} />
             </Route>
+            </Route>
+            <Route path="pharmacy-banned-account" element={<BannedAccountNotice />} />
           </Route>
           <Route element={<RequireAuth role={USER_ROLES.lab} />}>
+          <Route element={<RequireBannedLab />}>
             <Route element={<LabLayout />} path="lab-dashboard">
               <Route index element={<LabAccount />} />
               <Route path="lab-location" element={<LabLocation/>} />
@@ -234,6 +272,8 @@ export const router = createBrowserRouter(
               <Route path="payments-and-payouts" element={<PaymentsAndPayouts/>} />
               <Route path="collection-center" element={<CollectionCenter/>} />
             </Route>
+            </Route>
+            <Route path="lab-banned-account" element={<BannedAccountNotice />} />
           </Route>
           <Route element={<RequireAuth role={USER_ROLES.admin} />}>
             <Route element={<AdminLayout />} path="admin-dashboard">

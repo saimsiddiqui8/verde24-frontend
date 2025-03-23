@@ -4,6 +4,7 @@ query GetPatientToken($email: String!, $password: String!, $latitude: Float!, $l
     id
     token
     email
+    is_verified
     error
   }
 }

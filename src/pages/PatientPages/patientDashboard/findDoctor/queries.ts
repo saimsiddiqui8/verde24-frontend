@@ -1,6 +1,6 @@
 export const VERIFIED_DOCTOR_QUERY = `
-query FindDoctorsByVerificationStatus($isVerified: Boolean!) {
-  findDoctorsByVerificationStatus(isVerified: $isVerified) {
+query FindDoctorsByVerificationStatus($is_verified: Boolean!) {
+  findDoctorsByVerificationStatus(is_verified: $is_verified) {
       id
     online
     first_name
