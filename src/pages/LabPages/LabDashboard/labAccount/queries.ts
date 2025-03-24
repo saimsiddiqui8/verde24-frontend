@@ -45,7 +45,7 @@ mutation UpdateLabCoordinates($updateLabCoordinatesId: Int!, $latitude: Float!, 
 
 
 export const ADD_LAB_TEST = `
-mutation CreateLabTest($data: LabTestInput!) {
+mutation Mutation($data: LabTestsInput!) {
   createLabTest(data: $data) {
     id
     lab_id

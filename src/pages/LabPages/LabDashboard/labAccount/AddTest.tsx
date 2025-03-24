@@ -186,7 +186,6 @@ const AddTest = () => {
       reset();
     } else {
       const UpdateLabTest = {
-        id: Number(labid),
         title: data.title,
         price: data.price,
         description: data.description,
