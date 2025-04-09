@@ -51,7 +51,12 @@ export default function PatientSignIn() {
     const tokenRes = await getPatientToken(PATIENT_TOKEN_QUERY, data);
     dispatch(loadingEnd());
     if (tokenRes?.token) {
-      const userData = { ...tokenRes, role: USER_ROLES.patient , latitude:getValues("latitude") , longitude:getValues("longitude")};
+      const userData = {
+        ...tokenRes,
+        role: USER_ROLES.patient,
+        latitude: getValues("latitude"),
+        longitude: getValues("longitude"),
+      };
       dispatch(setUser(userData));
       notifySuccess("Login Success! Redirecting...");
       setTimeout(() => {
@@ -65,27 +70,28 @@ export default function PatientSignIn() {
       });
     }
   };
-  
+
   const getLocation = () => {
     if (!navigator.geolocation) {
       alert("Geolocation is not supported by your browser");
       return;
     }
-  
+
     navigator.geolocation.getCurrentPosition(
       (position) => {
         setValue("latitude", parseFloat(position.coords.latitude.toString()));
         setValue("longitude", parseFloat(position.coords.longitude.toString()));
       },
       (error) => {
-        notifyFailure("Location access denied. Please enable it in browser settings." + error.message);
-      }
+        notifyFailure(
+          "Location access denied. Please enable it in browser settings." +
+            error.message,
+        );
+      },
     );
   };
-  
-  
 
-  const onSubmit:SubmitHandler<Inputs> = async (data: Inputs) => {
+  const onSubmit: SubmitHandler<Inputs> = async (data: Inputs) => {
     const lat = getValues("latitude");
     const lng = getValues("longitude");
     if (!lat || !lng) {
@@ -202,6 +208,6 @@ export default function PatientSignIn() {
 interface Inputs {
   email: string;
   password: string;
-  latitude?:number;
-  longitude?:number;
+  latitude?: number;
+  longitude?: number;
 }

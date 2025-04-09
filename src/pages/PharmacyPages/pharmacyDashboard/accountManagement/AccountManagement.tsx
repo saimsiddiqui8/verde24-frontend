@@ -8,7 +8,11 @@ import { useEffect, useMemo, useState, useRef } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { isPhoneValid, notifySuccess } from "../../../../utils/Utils";
+import {
+  isPhoneValid,
+  notifyFailure,
+  notifySuccess,
+} from "../../../../utils/Utils";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../../redux/store";
 import { useMutation, useQuery, useQueryClient } from "react-query";
@@ -18,7 +22,10 @@ import {
   getPharmacyById,
   updatePharmacyById,
 } from "../../../../api/apiCalls/pharmacyApi";
-import { loadingEnd, loadingStart } from "../../../../redux/slices/loadingSlice";
+import {
+  loadingEnd,
+  loadingStart,
+} from "../../../../redux/slices/loadingSlice";
 import { uploadFileDoctor } from "../../../../api/apiCalls/doctorsApi";
 import { FILE_UPLOAD } from "../../../DoctorPages/doctorDashboard/doctorInputInfo/consultationForm/queries";
 import { UpdatedPharmacyData } from "../../../../api/apiCalls/types";
@@ -71,7 +78,7 @@ const FormSchema = z
     registration_number: z
       .string()
       .min(1, { message: "Registration Number is required" }),
-      email: z.string().email({ message: "Invalid email address" }),
+    email: z.string().email({ message: "Invalid email address" }),
     phone_number: z.string().min(1, { message: "Phone Number is required" }),
     logo: z.string().min(1, { message: "Image is required" }),
   })
@@ -105,12 +112,8 @@ export default function AccountManagement() {
     setImage(URL.createObjectURL(file));
     try {
       dispatch(loadingStart());
-      const uploadedFileUrl = await uploadFileDoctor(
-        FILE_UPLOAD
-        ,
-        file
-      );
-      setValue("logo", uploadedFileUrl)
+      const uploadedFileUrl = await uploadFileDoctor(FILE_UPLOAD, file);
+      setValue("logo", uploadedFileUrl);
       dispatch(loadingEnd());
     } catch (error) {
       dispatch(loadingEnd());
@@ -160,19 +163,40 @@ export default function AccountManagement() {
       reset(defaultPharmacyData);
     }
   }, [pharmacyData?.data, reset]);
- 
 
   const updatePharmacy = async (data: UpdatedPharmacyData) => {
     if (!id) return;
-    return updatePharmacyById(UPDATED_PHARMACY_QUERY, {
+
+    const response = await updatePharmacyById(UPDATED_PHARMACY_QUERY, {
       updatePharmacyId: id,
       data,
     });
+
+    if (!response) {
+      throw new Error("Failed to update Pharmacy!");
+    }
+
+    return response;
   };
 
-  const { data, mutate } = useMutation(updatePharmacy);
+  const { mutate } = useMutation(updatePharmacy, {
+    onMutate: () => {
+      dispatch(loadingStart());
+    },
+    onSuccess: () => {
+      dispatch(loadingEnd());
+      notifySuccess("Profile Updated!");
+      queryClient.invalidateQueries(["pharmacy"]);
+    },
+    onError: (error: Error) => {
+      dispatch(loadingEnd());
+      notifyFailure(error.message || "Something went wrong!");
+    },
+  });
 
-  const onSubmit: SubmitHandler<UpdatedPharmacyData> = (data: UpdatedPharmacyData) => {
+  const onSubmit: SubmitHandler<UpdatedPharmacyData> = (
+    data: UpdatedPharmacyData,
+  ) => {
     setEdit(false);
     const updatedData = {
       name: data.name,
@@ -185,16 +209,6 @@ export default function AccountManagement() {
     };
     mutate(updatedData);
   };
-
-  useEffect(() => {
-    if (data?.email) {
-      notifySuccess("Profile Updated!");
-      queryClient.invalidateQueries({
-        queryKey: ["pharmacy"],
-      });
-    }
-  }, [data, queryClient]);
-
 
   const handleUploadClick = () => {
     if (fileInputRef.current) {
@@ -248,7 +262,9 @@ export default function AccountManagement() {
                         placeholder={input.placeholder}
                         type={input.type}
                         disabled={!edit}
-                        properties={{ ...register(input.name as keyof UpdatedPharmacyData) }}
+                        properties={{
+                          ...register(input.name as keyof UpdatedPharmacyData),
+                        }}
                         error={errors[input.name as keyof UpdatedPharmacyData]}
                       />
                     )}
@@ -258,26 +274,24 @@ export default function AccountManagement() {
               <div className="w-full md:w-2/5 flex flex-col items-center">
                 <div className="mt-4 flex flex-col items-center">
                   <span className="inline-block h-32 w-32 rounded-full overflow-hidden bg-gray-100 border-2 border-green-500">
-                  {image ? (
-  <img
-    src={image}
-    alt="Selected logo"
-    className="h-full w-full object-cover"
-  />
-) : defaultPharmacyData?.logo ? (
-  <ImageUrl fileKey={defaultPharmacyData.logo} />
-) : (
-  <svg
-    className="h-full w-full text-gray-400"
-    fill="currentColor"
-    viewBox="0 0 24 24"
-  >
-    <path d="M24 24H0V0h24v24z" fill="none" />
-    <path d="M12 0c-1.65 0-3.22.67-4.38 1.76L0 12h5v7h7v5l6.24-6.24c1.09-1.16 1.76-2.73 1.76-4.38 0-3.31-2.69-6-6-6zm2 13.5v-2h-4v-2h4V7l3 3-3 3.5z" />
-  </svg>
-)}
-
-                    
+                    {image ? (
+                      <img
+                        src={image}
+                        alt="Selected logo"
+                        className="h-full w-full object-cover"
+                      />
+                    ) : defaultPharmacyData?.logo ? (
+                      <ImageUrl fileKey={defaultPharmacyData.logo} />
+                    ) : (
+                      <svg
+                        className="h-full w-full text-gray-400"
+                        fill="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path d="M24 24H0V0h24v24z" fill="none" />
+                        <path d="M12 0c-1.65 0-3.22.67-4.38 1.76L0 12h5v7h7v5l6.24-6.24c1.09-1.16 1.76-2.73 1.76-4.38 0-3.31-2.69-6-6-6zm2 13.5v-2h-4v-2h4V7l3 3-3 3.5z" />
+                      </svg>
+                    )}
                   </span>
                   {edit && (
                     <>
@@ -298,11 +312,11 @@ export default function AccountManagement() {
                       </button>
                     </>
                   )}
-                   {errors["logo"] && (
-              <small className="text-red-500 font-medium uppercase">
-                <>{errors["logo"]?.message}</>
-              </small>
-            )}
+                  {errors["logo"] && (
+                    <small className="text-red-500 font-medium uppercase">
+                      <>{errors["logo"]?.message}</>
+                    </small>
+                  )}
                 </div>
               </div>
             </div>

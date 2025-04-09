@@ -63,7 +63,7 @@ export default function LabSignIn() {
     }
   };
 
-  const onSubmit:SubmitHandler<Inputs> = async (data: Inputs) => {
+  const onSubmit: SubmitHandler<Inputs> = async (data: Inputs) => {
     handleLogin(data);
   };
 

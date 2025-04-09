@@ -19,6 +19,7 @@ import {
 import { notifyFailure } from "../../../../utils/Utils";
 import { addBooking } from "../../../../redux/slices/bookingSlice";
 import { RootState } from "../../../../redux/store";
+import { Toaster } from "react-hot-toast";
 
 const daysOfWeek = [
   "Monday",
@@ -172,7 +173,7 @@ export default function SelectSlot() {
   const currentDate = new Date();
   const handleDateSelect = (date: DateInfo) => {
     if (date.date < currentDate.getDate()) {
-      alert("Please select a future date.");
+      notifyFailure("Please select a future date.");
       return;
     }
     setSelectedDate(date);
@@ -180,7 +181,7 @@ export default function SelectSlot() {
   };
   const handleTimeSelect = () => {
     if (!selectedDate || !selectedTime) {
-      alert("Please select both a date and a time slot.");
+      notifyFailure("Please select both a date and a time slot.");
       return;
     }
     const cash = 100;
@@ -370,6 +371,7 @@ export default function SelectSlot() {
           />
         </div>
       </div>
+      <Toaster />
     </DashboardSection>
   );
 }

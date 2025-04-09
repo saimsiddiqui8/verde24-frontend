@@ -18,7 +18,10 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
-import { loadingEnd, loadingStart } from "../../../../../redux/slices/loadingSlice";
+import {
+  loadingEnd,
+  loadingStart,
+} from "../../../../../redux/slices/loadingSlice";
 
 const inputs = [
   {
@@ -98,11 +101,11 @@ const UserSchema = z
   });
 
 export default function AdminNewDoctor() {
-   const {
-      register,
-      handleSubmit,
-      formState: { errors },
-    } = useForm<Inputs>({ resolver: zodResolver(UserSchema) });
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<Inputs>({ resolver: zodResolver(UserSchema) });
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const dispatch = useDispatch();
@@ -120,62 +123,61 @@ export default function AdminNewDoctor() {
     }
   };
 
-  const {  mutate } = useMutation(createDoctor,{
-     onMutate: () => {
-          dispatch(loadingStart()); 
-        },
-        onSuccess: () => {
-          dispatch(loadingEnd())
-          notifySuccess("New Doctor Created! Redirecting...");
-    queryClient.invalidateQueries({ queryKey: ["adminDoctors"] });
-    setTimeout(() => {
-      navigate("/admin-dashboard/doctors");
-    }, 1000);
-        },
-        onError: (error) => {
-          dispatch(loadingEnd());
-          notifyFailure("Failed to create doctor!");
-          console.error("Error creating doctor:", error);
-        },
-  })
+  const { mutate } = useMutation(createDoctor, {
+    onMutate: () => {
+      dispatch(loadingStart());
+    },
+    onSuccess: () => {
+      dispatch(loadingEnd());
+      notifySuccess("New Doctor Created! Redirecting...");
+      queryClient.invalidateQueries({ queryKey: ["adminDoctors"] });
+      setTimeout(() => {
+        navigate("/admin-dashboard/doctors");
+      }, 1000);
+    },
+    onError: (error) => {
+      dispatch(loadingEnd());
+      notifyFailure("Failed to create doctor!");
+      console.error("Error creating doctor:", error);
+    },
+  });
 
-  const onSubmit:SubmitHandler<Inputs> = (data:Inputs)=>{
+  const onSubmit: SubmitHandler<Inputs> = (data: Inputs) => {
     mutate(data);
-  }
-
+  };
 
   return (
     <DashboardSection title="Add New Doctor">
-      <form onSubmit={handleSubmit(onSubmit)}className="pt-2">
+      <form onSubmit={handleSubmit(onSubmit)} className="pt-2">
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-4">
           {inputs?.map((input, index) => (
             <div key={index} className="col-span-1">
-             {input.type === "radio" ? (
-                                 <RadioInput
-                                   className={"my-0"}
-                                   label={input?.label}
-                                   name={input?.name}
-                                   options={input?.options}
-                                   properties={{ ...register(input?.name as keyof Inputs) }}
-                                   error={errors[input?.name as keyof Inputs]}
-                                 />
-                               ) : input.type === "number" ? (
-                                 <PhoneInputComp
-                                   className={"my-4"}
-                                   properties={{ ...register(input?.name  as keyof Inputs) }}
-                                   error={errors[input?.name  as keyof Inputs]}
-                                 />
-                               ) : (
-                                 <InputField
-                                   className={"my-4"}
-                                   label={input.label}
-                                   name={input.name}
-                                   type={input.type}
-                                   placeholder={input.placeholder}
-                                   properties={{ ...register(input?.name  as keyof Inputs) }}
-                                   error={errors[input?.name  as keyof Inputs]}
-                                 />
-                               )}
+              {input.type === "radio" ? (
+                <RadioInput
+                  className={"my-0"}
+                  label={input?.label}
+                  name={input?.name}
+                  options={input?.options}
+                  properties={{ ...register(input?.name as keyof Inputs) }}
+                  error={errors[input?.name as keyof Inputs]}
+                />
+              ) : input.type === "number" ? (
+                <PhoneInputComp
+                  className={"my-4"}
+                  properties={{ ...register(input?.name as keyof Inputs) }}
+                  error={errors[input?.name as keyof Inputs]}
+                />
+              ) : (
+                <InputField
+                  className={"my-4"}
+                  label={input.label}
+                  name={input.name}
+                  type={input.type}
+                  placeholder={input.placeholder}
+                  properties={{ ...register(input?.name as keyof Inputs) }}
+                  error={errors[input?.name as keyof Inputs]}
+                />
+              )}
             </div>
           ))}
         </div>

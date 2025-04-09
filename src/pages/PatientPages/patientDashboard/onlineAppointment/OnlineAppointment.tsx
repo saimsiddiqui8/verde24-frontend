@@ -64,69 +64,73 @@ export default function OnlineAppointment() {
           <Button title="Search" secondary={true} />
         </div>
       </div>
-      {hospitals?.length > 0 ? (hospitals.map((hospital: hospitalsType) => (
-        <div key={hospital?.id} className="flex flex-col gap-4">
-          <Link
-            to={`/patient-dashboard/online-appointment/online-hospital-profile/${hospital?.id}`}
-          >
-            <div className="border-primary border rounded-lg p-3 cursor-pointer">
-              <div className="flex flex-col md:flex-row justify-between gap-2 my-2">
-                <div className="w-full md:w-1/5 mb-4 md:mb-0">
-                  <img
-                    src={doctorImg}
-                    alt="Doctor"
-                    className="w-full h-auto p-2 rounded-full block mx-auto"
-                  />
-                </div>
-                <div className="w-full md:w-3/5">
-                  <h2 className="text-xl md:text-3xl font-medium">
-                    {hospital?.name}
-                  </h2>
-                  <p>BDS (Gold Medalist) FCPS Res. (Orthodontics), RDS</p>
-                  <p>Dentist</p>
-                  <div className="flex flex-col gap-2 lg:flex-row justify-between">
-                    <div>
-                      <p>Reviews</p>
-                      <p>195</p>
-                    </div>
-                    <div>
-                      <p>Experience</p>
-                      <p>10 years</p>
-                    </div>
-                    <div>
-                      <p>Satisfaction</p>
-                      <p>100%</p>
+      {hospitals?.length > 0 ? (
+        hospitals.map((hospital: hospitalsType) => (
+          <div key={hospital?.id} className="flex flex-col gap-4">
+            <Link
+              to={`/patient-dashboard/online-appointment/online-hospital-profile/${hospital?.id}`}
+            >
+              <div className="border-primary border rounded-lg p-3 cursor-pointer">
+                <div className="flex flex-col md:flex-row justify-between gap-2 my-2">
+                  <div className="w-full md:w-1/5 mb-4 md:mb-0">
+                    <img
+                      src={doctorImg}
+                      alt="Doctor"
+                      className="w-full h-auto p-2 rounded-full block mx-auto"
+                    />
+                  </div>
+                  <div className="w-full md:w-3/5">
+                    <h2 className="text-xl md:text-3xl font-medium">
+                      {hospital?.name}
+                    </h2>
+                    <p>BDS (Gold Medalist) FCPS Res. (Orthodontics), RDS</p>
+                    <p>Dentist</p>
+                    <div className="flex flex-col gap-2 lg:flex-row justify-between">
+                      <div>
+                        <p>Reviews</p>
+                        <p>195</p>
+                      </div>
+                      <div>
+                        <p>Experience</p>
+                        <p>10 years</p>
+                      </div>
+                      <div>
+                        <p>Satisfaction</p>
+                        <p>100%</p>
+                      </div>
                     </div>
                   </div>
+                  <div className="w-full md:w-1/5 flex flex-col gap-2">
+                    <Button title="Video Call" secondary={true} />
+                    <Link to="/patient-dashboard/find-doctor/profile/1">
+                      <Button title="View Profile" secondary={true} />
+                    </Link>
+                  </div>
                 </div>
-                <div className="w-full md:w-1/5 flex flex-col gap-2">
-                  <Button title="Video Call" secondary={true} />
-                  <Link to="/patient-dashboard/find-doctor/profile/1">
-                    <Button title="View Profile" secondary={true} />
-                  </Link>
+                <div className="flex flex-wrap sm:flex-nowrap justify-between gap-4 my-2">
+                  <div className="border-primary border w-full md:w-1/3 p-2 rounded-lg flex flex-col gap-2">
+                    <p className="text-sm">Video Consultation</p>
+                    <p className="text-sm">Available today</p>
+                    <p className="text-sm">Rs 2500</p>
+                  </div>
+                  <div className="border-primary border w-full md:w-2/3 p-2 rounded-lg">
+                    <h5 className="text-base">
+                      Smile Solutions | Dental Clinic | Orthodontic & Implant
+                      Centre, Model Town, Lahore
+                    </h5>
+                    <p className="text-sm">Available today</p>
+                    <p className="text-sm">Rs 1000</p>
+                  </div>
                 </div>
               </div>
-              <div className="flex flex-wrap sm:flex-nowrap justify-between gap-4 my-2">
-                <div className="border-primary border w-full md:w-1/3 p-2 rounded-lg flex flex-col gap-2">
-                  <p className="text-sm">Video Consultation</p>
-                  <p className="text-sm">Available today</p>
-                  <p className="text-sm">Rs 2500</p>
-                </div>
-                <div className="border-primary border w-full md:w-2/3 p-2 rounded-lg">
-                  <h5 className="text-base">
-                    Smile Solutions | Dental Clinic | Orthodontic & Implant
-                    Centre, Model Town, Lahore
-                  </h5>
-                  <p className="text-sm">Available today</p>
-                  <p className="text-sm">Rs 1000</p>
-                </div>
-              </div>
-            </div>
-          </Link>
+            </Link>
+          </div>
+        ))
+      ) : (
+        <div className="text-center text-gray-500 p-4 text-2xl text-primary">
+          No hospitals found.
         </div>
-      ))):( <div className="text-center text-gray-500 p-4 text-2xl text-primary">
-        No hospitals found.
-      </div>)}
+      )}
     </DashboardSection>
   );
 }

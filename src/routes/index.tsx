@@ -113,40 +113,76 @@ const AppLayout = () => {
 };
 
 const RequireVerification = () => {
-  const is_verified = useSelector((state: RootState) => state.user.currentUser?.is_verified);
+  const is_verified = useSelector(
+    (state: RootState) => state.user.currentUser?.is_verified,
+  );
 
   if (is_verified === undefined) {
-    return <div className="flex items-center justify-center h-screen">Loading...</div>;
+    return (
+      <div className="flex items-center justify-center h-screen">
+        Loading...
+      </div>
+    );
   }
 
-  return is_verified ? <Outlet /> : <Navigate to="/doctor-dashboard-unverified" replace />;
+  return is_verified ? (
+    <Outlet />
+  ) : (
+    <Navigate to="/doctor-dashboard-unverified" replace />
+  );
 };
 
 const RequireBannedPatient = () => {
-  const is_banned = useSelector((state: RootState) => state.user.currentUser?.is_verified);
+  const is_banned = useSelector(
+    (state: RootState) => state.user.currentUser?.is_verified,
+  );
 
   if (is_banned === undefined) {
-    return <div className="flex items-center justify-center h-screen">Loading...</div>;
+    return (
+      <div className="flex items-center justify-center h-screen">
+        Loading...
+      </div>
+    );
   }
 
-  return is_banned ? <Navigate to="/patient-banned-account" replace /> : <Outlet />;
+  return is_banned ? (
+    <Navigate to="/patient-banned-account" replace />
+  ) : (
+    <Outlet />
+  );
 };
 
 const RequireBannedPharmacy = () => {
-  const is_banned = useSelector((state: RootState) => state.user.currentUser?.is_verified);
+  const is_banned = useSelector(
+    (state: RootState) => state.user.currentUser?.is_verified,
+  );
 
   if (is_banned === undefined) {
-    return <div className="flex items-center justify-center h-screen">Loading...</div>;
+    return (
+      <div className="flex items-center justify-center h-screen">
+        Loading...
+      </div>
+    );
   }
 
-  return is_banned ? <Navigate to="/pharmacy-banned-account" replace /> : <Outlet />;
+  return is_banned ? (
+    <Navigate to="/pharmacy-banned-account" replace />
+  ) : (
+    <Outlet />
+  );
 };
 
 const RequireBannedLab = () => {
-  const is_banned = useSelector((state: RootState) => state.user.currentUser?.is_verified);
+  const is_banned = useSelector(
+    (state: RootState) => state.user.currentUser?.is_verified,
+  );
 
   if (is_banned === undefined) {
-    return <div className="flex items-center justify-center h-screen">Loading...</div>;
+    return (
+      <div className="flex items-center justify-center h-screen">
+        Loading...
+      </div>
+    );
   }
 
   return is_banned ? <Navigate to="/lab-banned-account" replace /> : <Outlet />;
@@ -181,99 +217,133 @@ export const router = createBrowserRouter(
         </Route>
         <Route element={<ProtectedRoutes />}>
           <Route element={<RequireAuth role={USER_ROLES.doctor} />}>
-          <Route element={<RequireVerification />}>
-    <Route path="doctor-dashboard" element={<DoctorDashboardAfterApproval />}>
-      <Route index element={<VerifiedProfile />} />
-      <Route path="calendar" element={<Calendar />} />
-      <Route path="appointments" element={<Appointments />} />
-      <Route path="mypatients" element={<MyPatientsSection />} />
-      <Route path="schedule" element={<AddSlots />} />
-    </Route>
-  </Route>
+            <Route element={<RequireVerification />}>
+              <Route
+                path="doctor-dashboard"
+                element={<DoctorDashboardAfterApproval />}
+              >
+                <Route index element={<VerifiedProfile />} />
+                <Route path="calendar" element={<Calendar />} />
+                <Route path="appointments" element={<Appointments />} />
+                <Route path="mypatients" element={<MyPatientsSection />} />
+                <Route path="schedule" element={<AddSlots />} />
+              </Route>
+            </Route>
 
-  <Route path="doctor-dashboard-unverified" element={<DoctorLayout />}>
-    <Route index element={<ConsultationForm />} />
-  </Route>
+            <Route
+              path="doctor-dashboard-unverified"
+              element={<DoctorLayout />}
+            >
+              <Route index element={<ConsultationForm />} />
+            </Route>
           </Route>
           <Route element={<RequireAuth role={USER_ROLES.patient} />}>
-          <Route element={<RequireBannedPatient />}>
-            <Route element={<PatientLayout />} path="patient-dashboard">
-              <Route index element={<PatientProfile />} />
-              <Route path="find-doctor">
-                <Route index element={<FindDoctor />} />
+            <Route element={<RequireBannedPatient />}>
+              <Route element={<PatientLayout />} path="patient-dashboard">
+                <Route index element={<PatientProfile />} />
+                <Route path="find-doctor">
+                  <Route index element={<FindDoctor />} />
+                  <Route
+                    path="appointment/:id"
+                    element={<FindDoctorAppointment />}
+                  />
+                  <Route path="select-slot/:id" element={<SelectSlot />} />
+                  <Route path="book-slot/:id" element={<BookSlot />} />
+                  <Route path="checkout" element={<Checkout />} />
+                  <Route path="profile/:id" element={<FindDoctorProfile />} />
+                </Route>
+                <Route path="treatment-plans" element={<TreatmentPlans />} />
+                <Route path="treatment-labs" element={<TreatmentLabs />} />
+                <Route path="wallet" element={<Wallet />} />
                 <Route
-                  path="appointment/:id"
-                  element={<FindDoctorAppointment />}
+                  path="transaction-history"
+                  element={<TransactionHistory />}
                 />
-                <Route path="select-slot/:id" element={<SelectSlot />} />
-                <Route path="book-slot/:id" element={<BookSlot />} />
-                <Route path="checkout" element={<Checkout />} />
-                <Route path="profile/:id" element={<FindDoctorProfile />} />
+                <Route
+                  path="completed-procedures"
+                  element={<CompletedProcedures />}
+                />
+                <Route path="files" element={<Files />} />
+                <Route
+                  path="/patient-dashboard/files/view-file"
+                  element={<FileViewer />}
+                />
+                <Route path="prescriptions" element={<Prescriptions />} />
+                <Route path="online-appointment">
+                  <Route index element={<OnlineAppointment />} />
+                  <Route
+                    path="online-hospital-profile/:id"
+                    element={<OnlineHospitalAppointment />}
+                  />
+                </Route>
+                <Route path="book-lab-test">
+                  <Route index element={<BookLabTest />} />
+                  <Route path="lab-profile/:id" element={<AllLabTest />} />
+                  <Route path="lab-details/:id" element={<LabDetails />} />
+                  <Route path="test-profile/:id" element={<TestProfile />} />
+                  <Route path="stepper" element={<Stepper />} />
+                  <Route path="checkout-lab" element={<CheckoutLab />} />
+                </Route>
+                <Route path="notification" element={<Notification />} />
+                <Route path="add-to-card" element={<Card />} />
               </Route>
-              <Route path="treatment-plans" element={<TreatmentPlans />} />
-              <Route path="treatment-labs" element={<TreatmentLabs />} />
-              <Route path="wallet" element={<Wallet />} />
-              <Route
-                path="transaction-history"
-                element={<TransactionHistory />}
-              />
-              <Route
-                path="completed-procedures"
-                element={<CompletedProcedures />}
-              />
-              <Route path="files" element={<Files />} />
-              <Route path="/patient-dashboard/files/view-file" element={<FileViewer />} />
-              <Route path="prescriptions" element={<Prescriptions />} />
-              <Route
-                path="online-appointment"
-              >
-              <Route index element={<OnlineAppointment />} />
-              <Route
-                path="online-hospital-profile/:id"
-                element={<OnlineHospitalAppointment />}
-              />
-               </Route>
-              <Route path="book-lab-test"  >
-              <Route index element={<BookLabTest />} />
-              <Route path="lab-profile/:id" element={<AllLabTest />} />
-              <Route path="lab-details/:id" element={<LabDetails />} />
-              <Route path="test-profile/:id" element={<TestProfile />} />
-              <Route path="stepper" element={<Stepper />} />
-              <Route path="checkout-lab" element={<CheckoutLab />} />
-              </Route>
-              <Route path="notification" element={<Notification />} />
-              <Route path="add-to-card" element={<Card />} />
             </Route>
-            </Route>
-              <Route path="patient-banned-account" element={<BannedAccountNotice />} />
+            <Route
+              path="patient-banned-account"
+              element={<BannedAccountNotice />}
+            />
           </Route>
           <Route element={<RequireAuth role={USER_ROLES.pharmacy} />}>
-          <Route element={<RequireBannedPharmacy />}>
-            <Route element={<PharmacyLayout />} path="pharmacy-dashboard">
-              <Route index element={<AccountManagement />} />
-              <Route path="pharmacy-location" element={<PharmacyLocation/>} />
+            <Route element={<RequireBannedPharmacy />}>
+              <Route element={<PharmacyLayout />} path="pharmacy-dashboard">
+                <Route index element={<AccountManagement />} />
+                <Route
+                  path="pharmacy-location"
+                  element={<PharmacyLocation />}
+                />
+              </Route>
             </Route>
-            </Route>
-            <Route path="pharmacy-banned-account" element={<BannedAccountNotice />} />
+            <Route
+              path="pharmacy-banned-account"
+              element={<BannedAccountNotice />}
+            />
           </Route>
           <Route element={<RequireAuth role={USER_ROLES.lab} />}>
-          <Route element={<RequireBannedLab />}>
-            <Route element={<LabLayout />} path="lab-dashboard">
-              <Route index element={<LabAccount />} />
-              <Route path="lab-location" element={<LabLocation/>} />
-              <Route path="add-test/:labid?" element={<AddTest/>} />
-              <Route path="available-test" element={<ViewTest/>} />
-              <Route path="upcoming-lab-test" >
-              <Route index element={<UpcomingLaboratoryTests/>} />
-              <Route path="labpatientprofile/:id" element={<LabPatientProfile/>} />
+            <Route element={<RequireBannedLab />}>
+              <Route element={<LabLayout />} path="lab-dashboard">
+                <Route index element={<LabAccount />} />
+                <Route path="lab-location" element={<LabLocation />} />
+                <Route path="add-test/:labid?" element={<AddTest />} />
+                <Route path="available-test" element={<ViewTest />} />
+                <Route path="upcoming-lab-test">
+                  <Route index element={<UpcomingLaboratoryTests />} />
+                  <Route
+                    path="labpatientprofile/:id"
+                    element={<LabPatientProfile />}
+                  />
+                </Route>
+                <Route
+                  path="lab-booked-appointments"
+                  element={<LabBookedAppointments />}
+                />
+                <Route
+                  path="declined-appointments"
+                  element={<DeclinedAppointments />}
+                />
+                <Route
+                  path="payments-and-payouts"
+                  element={<PaymentsAndPayouts />}
+                />
+                <Route
+                  path="collection-center"
+                  element={<CollectionCenter />}
+                />
               </Route>
-              <Route path="lab-booked-appointments" element={<LabBookedAppointments/>} />
-              <Route path="declined-appointments" element={<DeclinedAppointments/>} />
-              <Route path="payments-and-payouts" element={<PaymentsAndPayouts/>} />
-              <Route path="collection-center" element={<CollectionCenter/>} />
             </Route>
-            </Route>
-            <Route path="lab-banned-account" element={<BannedAccountNotice />} />
+            <Route
+              path="lab-banned-account"
+              element={<BannedAccountNotice />}
+            />
           </Route>
           <Route element={<RequireAuth role={USER_ROLES.admin} />}>
             <Route element={<AdminLayout />} path="admin-dashboard">
@@ -294,7 +364,10 @@ export const router = createBrowserRouter(
               <Route path="labs" element={<AdminLabs />} />
               <Route path="labs/:id" element={<AdminLabsProfile />} />
               <Route path="pharmacies" element={<AdminPharmacies />} />
-              <Route path="pharmacies/:id" element={<AdminPharmaciesProfile />} />
+              <Route
+                path="pharmacies/:id"
+                element={<AdminPharmaciesProfile />}
+              />
             </Route>
           </Route>
         </Route>

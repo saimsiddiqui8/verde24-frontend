@@ -46,29 +46,29 @@ const PaymentsAndPayouts = () => {
           </thead>
           <tbody>
             {paymentDetails.length > 0 ? (
-              paymentDetails.map(({ id, description, payment_date, amount }) => (
-                <tr key={id} className="odd:bg-[#5C89D826]">
-                  <td className="p-2 sm:p-4">{id}</td>
-                  <td className="p-2 sm:p-4">{description}</td>
-                  <td className="p-2 sm:p-4">
-                    {new Date(payment_date).toLocaleString()}
-                  </td>
-                  <td className="p-2 sm:p-4">
-                    <Button
-                      className={`font-bold text-xs px-4 py-2 rounded-lg ${
-                        amount
-                          ? "bg-[#EBF9F1] border border-[#41BC63] text-[#41BC63]"
-                          : "bg-[#FFF0F0] border border-[#F56565] text-[#F56565]"
-                      }`}
-                    >
-                      {amount ? "Paid" : "Pending"}
-                    </Button>
-                  </td>
-                  <td className="p-2 sm:p-4">
-                  {amount}
-                  </td>
-                </tr>
-              ))
+              paymentDetails.map(
+                ({ id, description, payment_date, amount }) => (
+                  <tr key={id} className="odd:bg-[#5C89D826]">
+                    <td className="p-2 sm:p-4">{id}</td>
+                    <td className="p-2 sm:p-4">{description}</td>
+                    <td className="p-2 sm:p-4">
+                      {new Date(payment_date).toLocaleString()}
+                    </td>
+                    <td className="p-2 sm:p-4">
+                      <Button
+                        className={`font-bold text-xs px-4 py-2 rounded-lg ${
+                          amount
+                            ? "bg-[#EBF9F1] border border-[#41BC63] text-[#41BC63]"
+                            : "bg-[#FFF0F0] border border-[#F56565] text-[#F56565]"
+                        }`}
+                      >
+                        {amount ? "Paid" : "Pending"}
+                      </Button>
+                    </td>
+                    <td className="p-2 sm:p-4">{amount}</td>
+                  </tr>
+                ),
+              )
             ) : (
               <tr>
                 <td colSpan={5} className="text-center p-4">

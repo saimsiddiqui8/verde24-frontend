@@ -1,10 +1,13 @@
-import {  useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { DashboardSection } from "../../../../../components";
 import { publicRequest } from "../../../../../api/requestMethods";
 import { useQuery } from "react-query";
 import { HOSPITAL_QUERY } from "./queries";
 import { useDispatch } from "react-redux";
-import { loadingEnd, loadingStart } from "../../../../../redux/slices/loadingSlice";
+import {
+  loadingEnd,
+  loadingStart,
+} from "../../../../../redux/slices/loadingSlice";
 
 export default function AdminHospitalProfile() {
   const { id } = useParams();
@@ -27,13 +30,12 @@ export default function AdminHospitalProfile() {
 
   const hospitalData = useQuery({
     queryKey: ["adminHospitals", id],
-     queryFn: async () => {
-              dispatch(loadingStart());
-              return getHospital();
-            },
-            onSuccess: ()=> dispatch(loadingEnd()),
+    queryFn: async () => {
+      dispatch(loadingStart());
+      return getHospital();
+    },
+    onSuccess: () => dispatch(loadingEnd()),
   });
-
 
   if (!hospitalData?.data) {
     return (

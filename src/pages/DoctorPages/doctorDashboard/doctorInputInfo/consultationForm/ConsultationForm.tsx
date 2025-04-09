@@ -20,10 +20,14 @@ import {
 import { RootState } from "../../../../../redux/store";
 import { isPhoneValid, notifySuccess } from "../../../../../utils/Utils";
 import { FILE_UPLOAD, DOCTOR_UPDATE_QUERY, GET_DOCTOR_QUERY } from "./queries";
-import { loadingEnd, loadingStart } from "../../../../../redux/slices/loadingSlice";
+import {
+  loadingEnd,
+  loadingStart,
+} from "../../../../../redux/slices/loadingSlice";
 import { UpdateDoctorData } from "../../../../../api/apiCalls/types";
 import { Toaster } from "react-hot-toast";
 import ImageUrl from "../../../../../components/Icons/Sidemenu/ImageUrl";
+import CountrySelectComp from "../../../../../components/Countrydropdown";
 
 const inputs = [
   {
@@ -128,7 +132,6 @@ const Qualification = [
   },
 ];
 
-
 const servicesAndSpecializations = [
   {
     label: "Services",
@@ -143,7 +146,6 @@ const servicesAndSpecializations = [
     name: "specialization",
   },
 ];
-
 
 const Experience = [
   {
@@ -224,10 +226,14 @@ const FormSchema = z
     consultation_mode: z
       .string({ invalid_type_error: "Consultation Mode is required" })
       .min(1, { message: "Consultation Mode is required" }),
-    consultation_fee_regular: z
-    .preprocess((val) => Number(val), z.number().min(1, { message: "Discounted Consultation Fee is required" })),
-    consultation_fee_discounted: z
-    .preprocess((val) => Number(val), z.number().min(1, { message: "Discounted Consultation Fee is required" })),
+    consultation_fee_regular: z.preprocess(
+      (val) => Number(val),
+      z.number().min(1, { message: "Discounted Consultation Fee is required" }),
+    ),
+    consultation_fee_discounted: z.preprocess(
+      (val) => Number(val),
+      z.number().min(1, { message: "Discounted Consultation Fee is required" }),
+    ),
     address: z.string().min(1, {
       message: "Address is required",
     }),
@@ -276,22 +282,26 @@ const FormSchema = z
     message: "Image is required.",
     path: ["image"],
   })
-  .refine((data) => {
-    if (typeof data.image === "string") return true; 
-    return ACCEPTED_IMAGE_TYPES.includes(data.image?.type?.toLowerCase());
-  }, {
-    message: ".JPG, .JPEG files are accepted.".toUpperCase(),
-    path: ["image"],
-  })
-  .refine((data) => {
-    if (typeof data.image === "string") return true; 
-    return data.image?.size && data.image.size <= MAX_FILE_SIZE;
-  }, {
-    message: `Max file size is 2MB.`,
-    path: ["image"],
-  });
-  
-
+  .refine(
+    (data) => {
+      if (typeof data.image === "string") return true;
+      return ACCEPTED_IMAGE_TYPES.includes(data.image?.type?.toLowerCase());
+    },
+    {
+      message: ".JPG, .JPEG files are accepted.".toUpperCase(),
+      path: ["image"],
+    },
+  )
+  .refine(
+    (data) => {
+      if (typeof data.image === "string") return true;
+      return data.image?.size && data.image.size <= MAX_FILE_SIZE;
+    },
+    {
+      message: `Max file size is 2MB.`,
+      path: ["image"],
+    },
+  );
 
 const disabledFields = ["complete_name", "email", "gender", "phone_number"];
 
@@ -302,6 +312,7 @@ export default function ConsultationForm() {
     setValue,
     reset,
     getValues,
+    control,
     formState: { errors },
   } = useForm({ resolver: zodResolver(FormSchema) });
   const [image, setImage] = useState<string | null>();
@@ -310,26 +321,21 @@ export default function ConsultationForm() {
   const dispatch = useDispatch();
   const queryClient = useQueryClient();
 
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setImage(URL.createObjectURL(file));
+    try {
+      dispatch(loadingStart());
+      const uploadedFileUrl = await uploadFileDoctor(FILE_UPLOAD, file);
 
-const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-  const file = e.target.files?.[0];
-  if (!file) return;
-  setImage(URL.createObjectURL(file));
-  try {
-    dispatch(loadingStart());
-    const uploadedFileUrl = await uploadFileDoctor(
-      FILE_UPLOAD
-      ,
-      file
-    );
-    
-    setValue("image", uploadedFileUrl , { shouldValidate: true })
-    dispatch(loadingEnd());
-  } catch (error) {
-    dispatch(loadingEnd());
-    console.error("File upload failed:", error);
-  }
-};
+      setValue("image", uploadedFileUrl, { shouldValidate: true });
+      dispatch(loadingEnd());
+    } catch (error) {
+      dispatch(loadingEnd());
+      console.error("File upload failed:", error);
+    }
+  };
 
   const getDoctor = () => {
     if (!id) return;
@@ -429,37 +435,36 @@ const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     return response;
   };
 
-
   const { data, mutate } = useMutation(updateDoctorId);
 
   const onSubmit = async (data: UpdateDoctorData) => {
-    const { 
+    const {
       work,
       degree,
       designation,
       enterSymptom,
       institute,
-      complete_name, 
-      gender, 
-      phone_number, 
-      email, 
-      city, 
-      country, 
-      department, 
-      experience, 
-      registration_no, 
+      complete_name,
+      gender,
+      phone_number,
+      email,
+      city,
+      country,
+      department,
+      experience,
+      registration_no,
       ac_no,
       upi_id,
-      qualification, 
-      consultation_mode, 
-      consultation_fee_regular, 
-      consultation_fee_discounted, 
-      payout_method, 
-      address, 
-      postal_code, 
-      services, 
-      specialization, 
-      bibliography 
+      qualification,
+      consultation_mode,
+      consultation_fee_regular,
+      consultation_fee_discounted,
+      payout_method,
+      address,
+      postal_code,
+      services,
+      specialization,
+      bibliography,
     } = data;
     const doctorData = {
       first_name: complete_name?.split(" ")[0],
@@ -477,9 +482,15 @@ const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
       registration_no,
       qualification,
       consultation_mode,
-      consultation_fee_regular: consultation_fee_regular !== undefined ? parseFloat(consultation_fee_regular.toString()) : 0,
-      consultation_fee_discounted: consultation_fee_discounted !== undefined ? parseFloat(consultation_fee_discounted.toString()) : 0,
-      payout_method_id: payout_method ,
+      consultation_fee_regular:
+        consultation_fee_regular !== undefined
+          ? parseFloat(consultation_fee_regular.toString())
+          : 0,
+      consultation_fee_discounted:
+        consultation_fee_discounted !== undefined
+          ? parseFloat(consultation_fee_discounted.toString())
+          : 0,
+      payout_method_id: payout_method,
       address,
       postal_code,
       services,
@@ -526,8 +537,7 @@ const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
                   src={image}
                   alt=""
                 />
-              ) :
-                defaultDoctorData?.image ? (
+              ) : defaultDoctorData?.image ? (
                 <ImageUrl fileKey={defaultDoctorData.image} />
               ) : (
                 ""
@@ -565,6 +575,13 @@ const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
                       properties={{ ...register(input?.name) }}
                       error={errors[input?.name]}
                       disabled={disabledFields?.includes(input?.name)}
+                    />
+                  ) : input?.name === "country" ? (
+                    <CountrySelectComp
+                      name={input?.name}
+                      label={input?.label}
+                      control={control}
+                      setValue={setValue}
                     />
                   ) : (
                     <InputField
@@ -615,7 +632,7 @@ const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
       <DashboardSection title={"Consultation Fee"}>
         <>
           <div className="grid grid-cols-12 gap-x-4 gap-y-0">
-            {consultationFee?.map((input,index) => (
+            {consultationFee?.map((input, index) => (
               <div key={index} className="col-span-4">
                 <InputField
                   label={input?.label}
@@ -697,7 +714,7 @@ const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
       </DashboardSection>
       <DashboardSection title={"Contact Details"}>
         <div className="grid grid-cols-12 gap-x-4 gap-y-0">
-          {contactDetails?.map((input,index) => (
+          {contactDetails?.map((input, index) => (
             <div key={index} className="col-span-4">
               <InputField
                 label={input.label}
@@ -713,18 +730,17 @@ const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
       <DashboardSection title={"Services and Specialization"}>
         <>
           <div className="grid grid-cols-12 gap-x-4 gap-y-0">
-          {servicesAndSpecializations.map((input,index) => (
-      <div key={index} className="col-span-4">
-             <InputField
-                    label={input.label}
-                    name={input.name}
-                    placeholder={input.placeholder}
-                    properties={{ ...register(input.name) }}
-                    error={errors[input.name]}
-                  />
-    
-      </div>
-    ))}
+            {servicesAndSpecializations.map((input, index) => (
+              <div key={index} className="col-span-4">
+                <InputField
+                  label={input.label}
+                  name={input.name}
+                  placeholder={input.placeholder}
+                  properties={{ ...register(input.name) }}
+                  error={errors[input.name]}
+                />
+              </div>
+            ))}
           </div>
           <p>Type and press to add new Services and Specialization.</p>
         </>
@@ -762,7 +778,7 @@ const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
       </DashboardSection>
       <DashboardSection title={"Symptoms"}>
         <div className="flex items-center gap-2 text-base">
-          {Symptoms?.map((input,index) => (
+          {Symptoms?.map((input, index) => (
             <div key={index} className="col-span-4">
               <InputField
                 label={input.label}

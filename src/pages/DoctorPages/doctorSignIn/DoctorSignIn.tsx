@@ -9,7 +9,7 @@ import { notifyFailure, notifySuccess } from "../../../utils/Utils";
 import { users } from "../../CommonPages/forgotPassword/queriesAndUtils";
 import { loadingEnd, loadingStart } from "../../../redux/slices/loadingSlice";
 import { z } from "zod";
-import {  SubmitHandler, useForm } from "react-hook-form";
+import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { getDoctorToken } from "../../../api/apiCalls/doctorsApi";
 import { DOCTOR_TOKEN_QUERY } from "./queries";
@@ -64,11 +64,10 @@ export default function DoctorSignIn() {
     }
   };
 
-  const onSubmit:SubmitHandler<Inputs> = async (data: Inputs) => {
+  const onSubmit: SubmitHandler<Inputs> = async (data: Inputs) => {
     handleLogin(data);
   };
 
-  
   return (
     <main className="grid grid-cols-1 md:grid-cols-12 items-center my-12">
       <section className="col-span-1 md:col-start-3 md:col-span-5 order-2 md:order-1">
@@ -93,7 +92,7 @@ export default function DoctorSignIn() {
                 name={input.name}
                 type={input.type}
                 placeholder={input.placeholder}
-                properties={{ ...register(input.name  as keyof Inputs) }}
+                properties={{ ...register(input.name as keyof Inputs) }}
                 error={errors[input.name as keyof Inputs]}
               />
             ))}

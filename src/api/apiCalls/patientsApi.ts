@@ -1,6 +1,13 @@
 import { VERIFIED_DOCTOR_QUERY } from "../../pages/PatientPages/patientDashboard/findDoctor/queries";
 import { publicRequest } from "../requestMethods";
-import { CreateAppointmentData, CreatePatientType, CreateReportType, labAppointmenttype, NearestLabType, UserData } from "./types";
+import {
+  CreateAppointmentData,
+  CreatePatientType,
+  CreateReportType,
+  labAppointmenttypecheckout,
+  NearestLabType,
+  UserData,
+} from "./types";
 
 export const getPatientById = async (
   query: string,
@@ -69,6 +76,9 @@ export const createAppointmentDoctor = async (
       query,
       variables,
     });
+    if (response?.data?.errors && response.data.errors.length > 0) {
+      throw new Error(response.data.errors[0].message);
+    }
     return response?.data?.data?.createAppointment;
   } catch (error) {
     console.error("Error creating appointment:", error);
@@ -147,8 +157,6 @@ export const findPaymentByPatient = async (
   }
 };
 
-
-
 export const findPatientReportById = async (
   query: string,
   variables: { getPatientReportId: number | null },
@@ -165,12 +173,11 @@ export const findPatientReportById = async (
   }
 };
 
-
 export const getVerifiedDoctors = async () => {
   try {
     const response = await publicRequest.post("/graphql", {
       query: VERIFIED_DOCTOR_QUERY,
-      variables: {is_verified: true,},
+      variables: { is_verified: true },
     });
     return response.data.data.findDoctorsByVerificationStatus;
   } catch (error) {
@@ -179,8 +186,10 @@ export const getVerifiedDoctors = async () => {
   }
 };
 
-
-export const CreateReportByPatient = async (query: string, data: CreateReportType) => {
+export const CreateReportByPatient = async (
+  query: string,
+  data: CreateReportType,
+) => {
   try {
     const response = await publicRequest.post("/graphql", {
       query,
@@ -207,13 +216,18 @@ export const findNearestLabs = async (query: string, data: NearestLabType) => {
 
 export const LabAppointmentBooking = async (
   query: string,
-   variables: {data:labAppointmenttype}
-  ) => {
+  variables: { data: labAppointmenttypecheckout },
+) => {
   try {
     const response = await publicRequest.post("/graphql", {
       query,
       variables,
     });
+
+    if (response?.data?.errors && response.data.errors.length > 0) {
+      throw new Error(response.data.errors[0].message);
+    }
+
     return response?.data?.data?.createLabAppointment;
   } catch (error) {
     console.error("Error creating Lab Appointment:", error);
@@ -223,13 +237,16 @@ export const LabAppointmentBooking = async (
 
 export const AddToCard = async (
   query: string,
-   variables: {data:{patient_id:number , labTest_id:number}}
-  ) => {
+  variables: { data: { patient_id: number; labTest_id: number } },
+) => {
   try {
     const response = await publicRequest.post("/graphql", {
       query,
       variables,
     });
+    if (response?.data?.errors && response.data.errors.length > 0) {
+      throw new Error(response.data.errors[0].message);
+    }
     return response?.data?.data?.addLabTestToCart;
   } catch (error) {
     console.error("Error addLabTestToCart:", error);
@@ -239,8 +256,8 @@ export const AddToCard = async (
 
 export const FindCardById = async (
   query: string,
-   variables: {patientId:number}
-  ) => {
+  variables: { patientId: number },
+) => {
   try {
     const response = await publicRequest.post("/graphql", {
       query,
@@ -255,8 +272,8 @@ export const FindCardById = async (
 
 export const DeleteCard = async (
   query: string,
-   variables: {deleteItemFromCartId:number}
-  ) => {
+  variables: { deleteItemFromCartId: number },
+) => {
   try {
     const response = await publicRequest.post("/graphql", {
       query,
@@ -269,10 +286,26 @@ export const DeleteCard = async (
   }
 };
 
+export const DeleteAllCard = async (
+  query: string,
+  variables: { patientId: number | null },
+) => {
+  try {
+    const response = await publicRequest.post("/graphql", {
+      query,
+      variables,
+    });
+    return response?.data?.data?.deleteAllItemsFromCart;
+  } catch (error) {
+    console.error("Error deleteAllItemsFromCart:", error);
+    throw error;
+  }
+};
+
 export const FindLabAppointmentByPatientId = async (
   query: string,
-   variables: {findLabAppointmentByPatientIdId:number}
-  ) => {
+  variables: { findLabAppointmentByPatientIdId: number },
+) => {
   try {
     const response = await publicRequest.post("/graphql", {
       query,
@@ -285,11 +318,10 @@ export const FindLabAppointmentByPatientId = async (
   }
 };
 
-
 export const SearchLabname = async (
   query: string,
-   variables: {labName:string}
-  ) => {
+  variables: { labName: string },
+) => {
   try {
     const response = await publicRequest.post("/graphql", {
       query,
@@ -304,8 +336,8 @@ export const SearchLabname = async (
 
 export const SearchLabtest = async (
   query: string,
-   variables: {labTestName:string}
-  ) => {
+  variables: { labTestName: string },
+) => {
   try {
     const response = await publicRequest.post("/graphql", {
       query,

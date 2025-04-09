@@ -3,10 +3,13 @@ import { DashboardSection } from "../../../../../components";
 import { publicRequest } from "../../../../../api/requestMethods";
 import { useQuery } from "react-query";
 import { FaUserCircle } from "react-icons/fa";
-import {  MdLock, MdLockOpen  } from "react-icons/md";
+import { MdLock, MdLockOpen } from "react-icons/md";
 import { useDispatch } from "react-redux";
-import { loadingEnd, loadingStart } from "../../../../../redux/slices/loadingSlice";
-import {  GET_ALL_PHARMACY } from "./queries";
+import {
+  loadingEnd,
+  loadingStart,
+} from "../../../../../redux/slices/loadingSlice";
+import { GET_ALL_PHARMACY } from "./queries";
 export default function AdminPharmacies() {
   const dispatch = useDispatch();
   const getPharmacies = async () => {
@@ -23,11 +26,11 @@ export default function AdminPharmacies() {
 
   const { data } = useQuery({
     queryKey: ["adminPharmacies"],
-    queryFn: async ()=>{
+    queryFn: async () => {
       dispatch(loadingStart());
       return getPharmacies();
     },
-    onSuccess:()=> dispatch(loadingEnd())
+    onSuccess: () => dispatch(loadingEnd()),
   });
 
   return (
@@ -53,9 +56,11 @@ export default function AdminPharmacies() {
               <div className="absolute top-2 right-2">
                 <MdLock size={25} />
               </div>
-            ) :  <div className="absolute top-2 right-2">
-            <MdLockOpen size={25} />
-          </div>}
+            ) : (
+              <div className="absolute top-2 right-2">
+                <MdLockOpen size={25} />
+              </div>
+            )}
           </div>
         ))}
       </div>

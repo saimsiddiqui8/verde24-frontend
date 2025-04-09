@@ -58,26 +58,36 @@ const FILTERS = [
     links: [
       { title: "Groups", href: "/groups", icon: communication },
       { title: "Memberships", href: "/memberships", icon: communication },
-      { title: "All Female Patients", href: "/all-female-patients", icon: communication },
-      { title: "Female Patients Over 30", href: "/female-over-30", icon: communication },
-      { title: "Male Patients Over 30", href: "/male-over-30", icon: communication },
+      {
+        title: "All Female Patients",
+        href: "/all-female-patients",
+        icon: communication,
+      },
+      {
+        title: "Female Patients Over 30",
+        href: "/female-over-30",
+        icon: communication,
+      },
+      {
+        title: "Male Patients Over 30",
+        href: "/male-over-30",
+        icon: communication,
+      },
     ],
   },
 ];
 
-
 const patients = [
-  { name: 'John Doe', id: '123456' },
-  { name: 'Jane Smith', id: '654321' },
-  { name: 'Alice Johnson', id: '789012' },
-  { name: 'Bob Brown', id: '345678' },
-  { name: 'Charlie Black', id: '901234' },
-  { name: 'Diana White', id: '567890' },
-  { name: 'Bob Brown', id: '345678' },
-  { name: 'Charlie Black', id: '901234' },
-  { name: 'Diana White', id: '567890' },
+  { name: "John Doe", id: "123456" },
+  { name: "Jane Smith", id: "654321" },
+  { name: "Alice Johnson", id: "789012" },
+  { name: "Bob Brown", id: "345678" },
+  { name: "Charlie Black", id: "901234" },
+  { name: "Diana White", id: "567890" },
+  { name: "Bob Brown", id: "345678" },
+  { name: "Charlie Black", id: "901234" },
+  { name: "Diana White", id: "567890" },
 ];
-
 
 export default function MyPatientsSection() {
   return (
@@ -96,7 +106,11 @@ export default function MyPatientsSection() {
                     key={linkIndex}
                     href={link.href}
                     className="flex items-center justify-start gap-2 py-2 px-4 border-[#5C89D8] border-b-2 border-opacity-50"
-                    style={{ borderBottomWidth: '2px', borderBottomColor: '#5C89D8', width: '70%' }}
+                    style={{
+                      borderBottomWidth: "2px",
+                      borderBottomColor: "#5C89D8",
+                      width: "70%",
+                    }}
                   >
                     <img
                       src={link.icon}
@@ -110,7 +124,7 @@ export default function MyPatientsSection() {
                     <span
                       className="text-sm md:text-base truncate"
                       style={{ color: "#5C89D8" }}
- >
+                    >
                       {link.title}
                     </span>
                   </a>
@@ -132,7 +146,12 @@ export default function MyPatientsSection() {
                   <div
                     key={linkIndex}
                     className="flex items-center justify-start gap-2 py-2 px-4 border-b-2 border-[#5C89D8] border-opacity-50"
-                    style={{ borderBottomWidth: '2px', borderBottomColor: '#5C89D8', width: '70%', marginTop: '10px' }}
+                    style={{
+                      borderBottomWidth: "2px",
+                      borderBottomColor: "#5C89D8",
+                      width: "70%",
+                      marginTop: "10px",
+                    }}
                   >
                     <img
                       src={link.icon}
@@ -157,50 +176,38 @@ export default function MyPatientsSection() {
         </div>
         {/* 3rd side */}
         <div className="w-1/3">
-      {/* Buttons Section */}
-      <div className="flex justify-end mb-4 gap-2">
-         <Button
-                  title="Search Patient"
-                  className="text-xs w-30"
-                />
-                <Button
-                  title="Add New"
-                  className="text-xs w-30"
-                />
-                <Button
-                  title="Save Vitals"
-                  className="text-xs w-30"
-                />
-      </div>
-
-      {/* Patients Section */}
-      <div className="grid grid-cols-3 gap-">
-        {patients.map((patient, index) => (
-          <div
-            key={index}
-            className="flex flex-col items-center justify-start py-1 px-2"
-          >
-            <img
-              src={patientui}
-              alt="Patient Icon"
-              className="w-full object-contain" 
-            />
-            <span
-              className="text-xs truncate mt-1"
-              style={{ color: "#5C89D8" }}
-            >
-              {patient.name}
-            </span>
-            <span
-              className="text-xs"
-              style={{ color: "#5C89D8" }}
-            >
-              {patient.id}
-            </span>
+          {/* Buttons Section */}
+          <div className="flex justify-end mb-4 gap-2">
+            <Button title="Search Patient" className="text-xs w-30" />
+            <Button title="Add New" className="text-xs w-30" />
+            <Button title="Save Vitals" className="text-xs w-30" />
           </div>
-        ))}
-      </div>
-    </div>
+
+          {/* Patients Section */}
+          <div className="grid grid-cols-3 gap-">
+            {patients.map((patient, index) => (
+              <div
+                key={index}
+                className="flex flex-col items-center justify-start py-1 px-2"
+              >
+                <img
+                  src={patientui}
+                  alt="Patient Icon"
+                  className="w-full object-contain"
+                />
+                <span
+                  className="text-xs truncate mt-1"
+                  style={{ color: "#5C89D8" }}
+                >
+                  {patient.name}
+                </span>
+                <span className="text-xs" style={{ color: "#5C89D8" }}>
+                  {patient.id}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
     </DashboardSection>
   );

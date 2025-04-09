@@ -13,19 +13,25 @@ const GET_IMG_URL = `
 
 type ImageComponentProp = {
   fileKey: string;
-  istrue?:boolean;
-  className?:string;
+  istrue?: boolean;
+  className?: string;
 };
 
-const ImageUrl: React.FC<ImageComponentProp> = ({ fileKey , istrue ,className}) => {
+const ImageUrl: React.FC<ImageComponentProp> = ({
+  fileKey,
+  istrue,
+  className,
+}) => {
   const { data, isLoading, error } = useQuery({
     queryKey: ["getFileUrl", fileKey],
     queryFn: () => getUrl(GET_IMG_URL, { fileKey }),
-    enabled: !!fileKey, 
+    enabled: !!fileKey,
   });
   const navigate = useNavigate();
   const handleOpenFile = (fileType: string) => {
-    navigate("/patient-dashboard/files/view-file", { state: { fileUrl: data, fileType } });
+    navigate("/patient-dashboard/files/view-file", {
+      state: { fileUrl: data, fileType },
+    });
   };
 
   if (isLoading)
@@ -34,7 +40,7 @@ const ImageUrl: React.FC<ImageComponentProp> = ({ fileKey , istrue ,className}) 
         <div className="animate-spin rounded-full h-10 w-10 border-t-4 border-primary border-solid"></div>
       </div>
     );
-  
+
   if (error) return <p>Error loading image</p>;
 
   const isImage = /\.(jpg|jpeg|png|gif)$/i.test(fileKey);
@@ -43,20 +49,31 @@ const ImageUrl: React.FC<ImageComponentProp> = ({ fileKey , istrue ,className}) 
   return (
     <div className="my-2 text-center mx-auto">
       {isImage && !istrue ? (
-        <img src={data} alt="image" className={`${className ?? "w-36 h-36"} rounded-full block mx-auto`}/>
-
+        <img
+          src={data}
+          alt="image"
+          className={`${className ?? "w-36 h-36"} rounded-full block mx-auto`}
+        />
       ) : isPDF ? (
         <>
           <img src={pdfIcon} alt="pdficon" className="w-32" />
-          <button onClick={() => handleOpenFile("pdf")} className="text-blue-500 underline">
+          <button
+            onClick={() => handleOpenFile("pdf")}
+            className="text-blue-500 underline"
+          >
             View PDF
           </button>
         </>
-      ): isImage && istrue ? (<><img src={jpgIcon} alt="jpgIcon" className="w-32" />
-        <button onClick={() => handleOpenFile("image")} className="text-blue-500 underline">
+      ) : isImage && istrue ? (
+        <>
+          <img src={jpgIcon} alt="jpgIcon" className="w-32" />
+          <button
+            onClick={() => handleOpenFile("image")}
+            className="text-blue-500 underline"
+          >
             View JPG
           </button>
-      </>
+        </>
       ) : (
         <p className="text-gray-500">Unsupported file type</p>
       )}

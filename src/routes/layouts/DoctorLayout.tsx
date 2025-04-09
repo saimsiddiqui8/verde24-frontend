@@ -19,7 +19,7 @@ export default function DoctorLayout() {
     });
   };
 
-  const {data} = useQuery({
+  const { data } = useQuery({
     queryKey: ["Doctors", id],
     queryFn: getDoctor,
   });
@@ -42,13 +42,16 @@ export default function DoctorLayout() {
                 : "PLEASE SUBMIT THE FORM"}
             </div>
             <div className="py-1 px-4 my-5">
-              {data?.image ? 
-              <ImageUrl fileKey={data?.image}/>:  <img
-                src={doctorImg}
-                alt="Doctor"
-                className="w-36 h-36 rounded-full block mx-auto"
-              />}
-            
+              {data?.image ? (
+                <ImageUrl fileKey={data?.image} />
+              ) : (
+                <img
+                  src={doctorImg}
+                  alt="Doctor"
+                  className="w-36 h-36 rounded-full block mx-auto"
+                />
+              )}
+
               <p className="text-[#5C89D8] text-sm text-center font-semibold my-4">
                 {`${data?.first_name} ${data?.last_name}`}
               </p>

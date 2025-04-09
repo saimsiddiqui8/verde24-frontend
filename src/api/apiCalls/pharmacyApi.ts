@@ -53,14 +53,15 @@ export const updatePharmacyById = async (
 
 export const updatePharmacyCordinatesById = async (
   query: string,
-  variables: { updatePharmacyCoordinatesId: number; latitude: number; longitude: number ,  placeName:string},
+  variables: {
+    updatePharmacyCoordinatesId: number;
+    latitude: number;
+    longitude: number;
+    placeName: string;
+  },
 ) => {
   try {
-    const response = await publicRequest.post("/graphql",
-       { query,
-         variables,
-       }
-      );
+    const response = await publicRequest.post("/graphql", { query, variables });
     return response?.data?.data?.updatePharmacyCoordinates;
   } catch (error) {
     console.error("Error updating pharmacy cordinates:", error);

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Button, DashboardSection } from "../../../../components";
 import { Typography } from "@material-tailwind/react";
 import { RootState } from "../../../../redux/store";
@@ -10,6 +10,8 @@ import {
 import { findAppointmentByPatient } from "../../../../api/apiCalls/patientsApi";
 import { notifyFailure } from "../../../../utils/Utils";
 import { GET_APPOINTMENT_BY_PATIENT_ID } from "../patientProfile/queries";
+import { useQuery } from "react-query";
+import { Toaster } from "react-hot-toast";
 
 const TABLE_HEAD = [
   "Doctor Name",
@@ -31,10 +33,7 @@ type Appointment = {
   id: number;
   appointment_date: string;
   appointment_time: string;
-  patient_id: number;
-  doctor_id: number;
   duration: number;
-  payment_id: number;
   status: string;
   meeting: Meeting;
   doctor: {
@@ -44,39 +43,41 @@ type Appointment = {
 };
 
 export default function TreatmentPlans() {
-  const [patientAppointments, setPatientAppointments] = useState<Appointment[]>(
-    [],
-  );
   const id = useSelector((state: RootState) => state.user.currentUser?.id);
   const dispatch = useDispatch();
   const [searchQuery, setSearchQuery] = useState("");
 
-  const filteredAppointments = patientAppointments?.filter(({ doctor }) => {
-    const fullName = `${doctor?.first_name} ${doctor?.last_name}`.toLowerCase();
-    return fullName.includes(searchQuery?.toLowerCase());
-  });
-
   const getPatientAppointments = async () => {
-    dispatch(loadingStart());
-    try {
-      const response = await findAppointmentByPatient(
-        GET_APPOINTMENT_BY_PATIENT_ID,
-        {
-          findAppointmentByPatientId: id,
-        },
-      );
-
-      setPatientAppointments(response || []);
-      dispatch(loadingEnd());
-    } catch (err: any) {
-      dispatch(loadingEnd());
-      notifyFailure(err.toString());
+    const response = await findAppointmentByPatient(
+      GET_APPOINTMENT_BY_PATIENT_ID,
+      { findAppointmentByPatientId: id },
+    );
+    if (!response) {
+      throw new Error("Failed to fetch Patient Appointment!");
     }
+
+    return response;
   };
 
-  useEffect(() => {
-    getPatientAppointments();
-  }, []);
+  const { data } = useQuery({
+    queryKey: ["findpatientappointment", id],
+    queryFn: async () => {
+      dispatch(loadingStart());
+      return getPatientAppointments();
+    },
+    onSuccess: () => dispatch(loadingEnd()),
+    onError: (err: Error) => {
+      dispatch(loadingEnd());
+      notifyFailure(err.message);
+    },
+  });
+
+  const filteredAppointments = data?.filter((appointment: Appointment) => {
+    const fullName =
+      `${appointment.doctor?.first_name} ${appointment.doctor?.last_name}`.toLowerCase();
+    return fullName.includes(searchQuery.toLowerCase());
+  });
+
   return (
     <DashboardSection>
       <div className="flex flex-col sm:flex-row justify-between my-4">
@@ -110,17 +111,16 @@ export default function TreatmentPlans() {
             </tr>
           </thead>
           <tbody>
-            {filteredAppointments?.length > 0 ? (
+            {(filteredAppointments ?? [])?.length > 0 ? (
               filteredAppointments?.map(
                 ({
                   appointment_date,
                   appointment_time,
-                  payment_id,
                   status,
                   id,
                   meeting,
                   doctor,
-                }) => (
+                }: Appointment) => (
                   <tr key={id} className="odd:bg-[#5C89D826]">
                     <td className="p-2 sm:p-4">
                       <Typography variant="small" className="font-normal">
@@ -134,7 +134,7 @@ export default function TreatmentPlans() {
                     </td>
                     <td className="p-2 sm:p-4">
                       <Typography variant="small" className="font-normal">
-                        {payment_id}
+                        {id}
                       </Typography>
                     </td>
                     <td className="p-2 sm:p-4">
@@ -174,16 +174,16 @@ export default function TreatmentPlans() {
                   colSpan={TABLE_HEAD.length}
                   className="text-center p-4 text-gray-500 text-primary text-2xl"
                 >
-            {searchQuery 
-  ? `No appointments found for "${searchQuery}"` 
-  : "No appointments found"}
-                  
+                  {searchQuery
+                    ? `No appointments found for "${searchQuery}"`
+                    : "No appointments found"}
                 </td>
               </tr>
             )}
           </tbody>
         </table>
       </div>
+      <Toaster />
     </DashboardSection>
   );
 }

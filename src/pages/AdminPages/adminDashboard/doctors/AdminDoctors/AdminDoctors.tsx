@@ -6,7 +6,10 @@ import { FaUserCircle } from "react-icons/fa";
 import { MdVerified } from "react-icons/md";
 import { DOCTOR_QUERY } from "./queries";
 import { useDispatch } from "react-redux";
-import { loadingEnd, loadingStart } from "../../../../../redux/slices/loadingSlice";
+import {
+  loadingEnd,
+  loadingStart,
+} from "../../../../../redux/slices/loadingSlice";
 
 export default function AdminDoctors() {
   const dispatch = useDispatch();
@@ -24,11 +27,11 @@ export default function AdminDoctors() {
 
   const { data } = useQuery({
     queryKey: ["adminDoctors"],
-    queryFn: async ()=>{
+    queryFn: async () => {
       dispatch(loadingStart());
       return getDoctors();
     },
-    onSuccess:()=> dispatch(loadingEnd())
+    onSuccess: () => dispatch(loadingEnd()),
   });
 
   return (

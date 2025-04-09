@@ -15,7 +15,11 @@ const FileViewer = () => {
   }, [fileUrl, navigate]);
 
   if (!fileUrl) {
-    return <p className="text-red-500 text-center mt-10">Invalid Access: No file provided!</p>;
+    return (
+      <p className="text-red-500 text-center mt-10">
+        Invalid Access: No file provided!
+      </p>
+    );
   }
 
   return (

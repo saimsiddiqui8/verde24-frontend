@@ -152,15 +152,18 @@ export default function () {
       alert("Geolocation is not supported by your browser");
       return;
     }
-  
+
     navigator.geolocation.getCurrentPosition(
       (position) => {
         setValue("latitude", parseFloat(position.coords.latitude.toString()));
         setValue("longitude", parseFloat(position.coords.longitude.toString()));
       },
       (error) => {
-        notifyFailure("Location access denied. Please enable it in browser settings." + error.message);
-      }
+        notifyFailure(
+          "Location access denied. Please enable it in browser settings." +
+            error.message,
+        );
+      },
     );
   };
 
@@ -233,8 +236,6 @@ export default function () {
     const formData = getValues() as CreatePatientType;
     mutate(formData);
   };
-   
-  
 
   const sendOtp = async () => {
     dispatch(loadingStart());
@@ -342,23 +343,22 @@ export default function () {
                 <div key={index} className="col-span-1">
                   {input.type === "radio" ? (
                     <RadioInput
-                    className={"my-0"}
+                      className={"my-0"}
                       label={input?.label}
                       name={input?.name}
                       options={input?.options}
                       properties={{ ...register(input?.name) }}
                       error={errors[input?.name]}
                     />
-                  )
-                   : input.type === "number" ? (
+                  ) : input.type === "number" ? (
                     <PhoneInputComp
-                    className={"my-4"}
+                      className={"my-4"}
                       properties={{ ...register(input?.name) }}
                       error={errors[input?.name]}
                     />
-                    ) : (
+                  ) : (
                     <InputField
-                    className={"my-4"}
+                      className={"my-4"}
                       label={input.label}
                       name={input.name}
                       type={input.type}

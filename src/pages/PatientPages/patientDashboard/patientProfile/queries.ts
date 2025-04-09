@@ -97,9 +97,8 @@ query SearchlabTests($labTestName: String!) {
   }
 }`;
 
-
 export const LAB_APPOINTMENT_BOOKING = `
-mutation Mutation($data: LabAppointmentInput!) {
+mutation CreateLabAppointment($data: LabAppointmentInput!) {
   createLabAppointment(data: $data) {
     id
     lab_id
@@ -114,16 +113,12 @@ mutation Mutation($data: LabAppointmentInput!) {
     status
     patient_id
     payment_id
-    labTests {
-      title
-      price
-      description
-      id
-    }
   }
 }`;
-
-
+export const DELETE_ALL_CARD = `
+mutation DeleteAllItemsFromCart($patientId: Int!) {
+  deleteAllItemsFromCart(patient_id: $patientId)
+}`;
 
 export const ADD_TO_CARD = `
 mutation AddLabTestToCart($data: CartInput!) {

@@ -5,7 +5,10 @@ import { useQuery } from "react-query";
 import { FaHospitalAlt } from "react-icons/fa";
 import { HOSPITAL_QUERY } from "./queries";
 import { useDispatch } from "react-redux";
-import { loadingEnd, loadingStart } from "../../../../../redux/slices/loadingSlice";
+import {
+  loadingEnd,
+  loadingStart,
+} from "../../../../../redux/slices/loadingSlice";
 
 export default function AdminHospitals() {
   const dispatch = useDispatch();
@@ -23,11 +26,11 @@ export default function AdminHospitals() {
 
   const { data } = useQuery({
     queryKey: ["adminHospitals"],
-     queryFn: async () => {
-          dispatch(loadingStart());
-          return getHospitals();
-        },
-        onSuccess: ()=> dispatch(loadingEnd()),
+    queryFn: async () => {
+      dispatch(loadingStart());
+      return getHospitals();
+    },
+    onSuccess: () => dispatch(loadingEnd()),
   });
 
   return (

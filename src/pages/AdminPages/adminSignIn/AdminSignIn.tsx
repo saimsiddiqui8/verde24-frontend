@@ -83,7 +83,7 @@ export default function AdminSignIn() {
     }
   };
 
-  const onSubmit:SubmitHandler<Inputs> = async (data: Inputs) => {
+  const onSubmit: SubmitHandler<Inputs> = async (data: Inputs) => {
     handleLogin(data);
   };
 

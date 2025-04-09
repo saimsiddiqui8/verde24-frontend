@@ -1,5 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import {useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { useDispatch, useSelector } from "react-redux";
@@ -25,7 +25,10 @@ import {
   FILE_UPLOAD,
   GET_DOCTOR_QUERY,
 } from "../consultationForm/queries";
-import { loadingEnd, loadingStart } from "../../../../../redux/slices/loadingSlice";
+import {
+  loadingEnd,
+  loadingStart,
+} from "../../../../../redux/slices/loadingSlice";
 import { UpdateDoctorData } from "../../../../../api/apiCalls/types";
 import { Toaster } from "react-hot-toast";
 import ImageUrl from "../../../../../components/Icons/Sidemenu/ImageUrl";
@@ -134,7 +137,6 @@ const Qualification = [
   },
 ];
 
-
 const servicesAndSpecializations = [
   {
     label: "Services",
@@ -229,10 +231,14 @@ const FormSchema = z
     consultation_mode: z
       .string({ invalid_type_error: "Consultation Mode is required" })
       .min(1, { message: "Consultation Mode is required" }),
-      consultation_fee_regular: z
-      .preprocess((val) => Number(val), z.number().min(1, { message: "Discounted Consultation Fee is required" })),
-      consultation_fee_discounted: z
-      .preprocess((val) => Number(val), z.number().min(1, { message: "Discounted Consultation Fee is required" })),
+    consultation_fee_regular: z.preprocess(
+      (val) => Number(val),
+      z.number().min(1, { message: "Discounted Consultation Fee is required" }),
+    ),
+    consultation_fee_discounted: z.preprocess(
+      (val) => Number(val),
+      z.number().min(1, { message: "Discounted Consultation Fee is required" }),
+    ),
     address: z.string().min(1, {
       message: "Address is required",
     }),
@@ -281,20 +287,26 @@ const FormSchema = z
     message: "Image is required.",
     path: ["image"],
   })
-  .refine((data) => {
-    if (typeof data.image === "string") return true; 
-    return ACCEPTED_IMAGE_TYPES.includes(data.image?.type?.toLowerCase());
-  }, {
-    message: ".JPG, .JPEG files are accepted.".toUpperCase(),
-    path: ["image"],
-  })
-  .refine((data) => {
-    if (typeof data.image === "string") return true; 
-    return data.image?.size && data.image.size <= MAX_FILE_SIZE;
-  }, {
-    message: `Max file size is 2MB.`,
-    path: ["image"],
-  });
+  .refine(
+    (data) => {
+      if (typeof data.image === "string") return true;
+      return ACCEPTED_IMAGE_TYPES.includes(data.image?.type?.toLowerCase());
+    },
+    {
+      message: ".JPG, .JPEG files are accepted.".toUpperCase(),
+      path: ["image"],
+    },
+  )
+  .refine(
+    (data) => {
+      if (typeof data.image === "string") return true;
+      return data.image?.size && data.image.size <= MAX_FILE_SIZE;
+    },
+    {
+      message: `Max file size is 2MB.`,
+      path: ["image"],
+    },
+  );
 
 const disabledFields = ["complete_name", "email", "gender", "phone_number"];
 
@@ -315,26 +327,20 @@ export default function VerifiedProfile() {
   const queryClient = useQueryClient();
   const id = useSelector((state: RootState) => state.user.currentUser?.id);
 
-
-const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-  const file = e.target.files?.[0];
-  if (!file) return;
-  setImage(URL.createObjectURL(file));
-  try {
-    dispatch(loadingStart());
-    const uploadedFileUrl = await uploadFileDoctor(
-      FILE_UPLOAD
-      ,
-      file
-    );
-    setValue("image", uploadedFileUrl , { shouldValidate: true })
-    dispatch(loadingEnd());
-  } catch (error) {
-    dispatch(loadingEnd());
-    console.error("File upload failed:", error);
-  }
-};
-
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setImage(URL.createObjectURL(file));
+    try {
+      dispatch(loadingStart());
+      const uploadedFileUrl = await uploadFileDoctor(FILE_UPLOAD, file);
+      setValue("image", uploadedFileUrl, { shouldValidate: true });
+      dispatch(loadingEnd());
+    } catch (error) {
+      dispatch(loadingEnd());
+      console.error("File upload failed:", error);
+    }
+  };
 
   const getDoctor = () => {
     if (!id) return;
@@ -346,175 +352,179 @@ const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     queryFn: getDoctor,
   });
 
-   const defaultDoctorData = useMemo(() => {
-      if (doctorData.isLoading || !doctorData.data) {
-        return {};
-      }
-  
-      const {
-        id,
-        first_name,
-        last_name,
-        email,
-        phone_number,
-        gender,
-        is_verified,
-        form_submitted,
-        image,
-        city,
-        country,
-        department,
-        experience,
-        registration_no,
-        qualification,
-        consultation_mode,
-        consultation_fee_regular,
-        consultation_fee_discounted,
-        payout_method_id,
-        address,
-        postal_code,
-        work,
-        degree,
-        designation,
-        enterSymptom,
-        institute,
-        ac_no,
-        upi_id,
-        services,
-        specialization,
-        bibliography,
-      } = doctorData.data;
-  
-      return {
-        id,
-        complete_name: `${first_name} ${last_name}`,
-        email,
-        phone_number,
-        gender,
-        is_verified,
-        form_submitted,
-        image,
-        city,
-        country,
-        department,
-        experience,
-        registration_no,
-        qualification,
-        consultation_mode,
-        consultation_fee_regular,
-        consultation_fee_discounted,
-        payout_method_id,
-        address,
-        postal_code,
-        work,
-        degree,
-        designation,
-        enterSymptom,
-        institute,
-        ac_no,
-        upi_id,
-        services,
-        specialization,
-        bibliography,
-      };
-    }, [doctorData?.data]);
-  
-    useEffect(() => {
-      if (doctorData?.data) {
-        reset(defaultDoctorData);
-      }
-    }, [doctorData?.data, reset]);
-  
-    const updateDoctorId = async (data: UpdateDoctorData) => {
-      if (!id) return;
-      const response = await updateDoctor(DOCTOR_UPDATE_QUERY, {
-        updateDoctorId: id,
-        data,
-      });
-      return response;
-    };
-  
-    const { data, mutate } = useMutation(updateDoctorId);
+  const defaultDoctorData = useMemo(() => {
+    if (doctorData.isLoading || !doctorData.data) {
+      return {};
+    }
 
-  
-    const onSubmit = async (data: UpdateDoctorData) => {
-    
-      setEdit(false);
-      const { 
-        work,
-        degree,
-        designation,
-        enterSymptom,
-        institute,
-        complete_name, 
-        gender, 
-        phone_number, 
-        email, 
-        city, 
-        country, 
-        department, 
-        experience, 
-        registration_no, 
-        ac_no,
-        upi_id,
-        qualification, 
-        consultation_mode, 
-        consultation_fee_regular, 
-        consultation_fee_discounted, 
-        payout_method, 
-        address, 
-        postal_code, 
-        services, 
-        specialization, 
-        bibliography 
-      } = data;
-      
-      const doctorData = {
-        first_name: complete_name?.split(" ")[0],
-        last_name: complete_name?.split(" ")[1],
-        gender,
-        ac_no,
-        upi_id,
-        phone_number,
-        email,
-        city,
-        country,
-        image: getValues("image"),
-        department,
-        experience,
-        registration_no,
-        qualification,
-        consultation_mode,
-        consultation_fee_regular: consultation_fee_regular !== undefined ? parseFloat(consultation_fee_regular.toString()) : 0,
-        consultation_fee_discounted: consultation_fee_discounted !== undefined ? parseFloat(consultation_fee_discounted.toString()) : 0,
-        payout_method_id: payout_method ,
-        address,
-        postal_code,
-        services,
-        specialization,
-        bibliography,
-        work,
-        degree,
-        designation,
-        enterSymptom,
-        institute,
-      };
-      mutate(doctorData);
+    const {
+      id,
+      first_name,
+      last_name,
+      email,
+      phone_number,
+      gender,
+      is_verified,
+      form_submitted,
+      image,
+      city,
+      country,
+      department,
+      experience,
+      registration_no,
+      qualification,
+      consultation_mode,
+      consultation_fee_regular,
+      consultation_fee_discounted,
+      payout_method_id,
+      address,
+      postal_code,
+      work,
+      degree,
+      designation,
+      enterSymptom,
+      institute,
+      ac_no,
+      upi_id,
+      services,
+      specialization,
+      bibliography,
+    } = doctorData.data;
+
+    return {
+      id,
+      complete_name: `${first_name} ${last_name}`,
+      email,
+      phone_number,
+      gender,
+      is_verified,
+      form_submitted,
+      image,
+      city,
+      country,
+      department,
+      experience,
+      registration_no,
+      qualification,
+      consultation_mode,
+      consultation_fee_regular,
+      consultation_fee_discounted,
+      payout_method_id,
+      address,
+      postal_code,
+      work,
+      degree,
+      designation,
+      enterSymptom,
+      institute,
+      ac_no,
+      upi_id,
+      services,
+      specialization,
+      bibliography,
     };
-  
-    useEffect(() => {
-      if (data?.email) {
-        notifySuccess("Profile Updated!");
-        queryClient.invalidateQueries({
-          queryKey: ["Doctors"],
-        });
-      }
-    }, [data, queryClient]);
+  }, [doctorData?.data]);
+
+  useEffect(() => {
+    if (doctorData?.data) {
+      reset(defaultDoctorData);
+    }
+  }, [doctorData?.data, reset]);
+
+  const updateDoctorId = async (data: UpdateDoctorData) => {
+    if (!id) return;
+    const response = await updateDoctor(DOCTOR_UPDATE_QUERY, {
+      updateDoctorId: id,
+      data,
+    });
+    return response;
+  };
+
+  const { data, mutate } = useMutation(updateDoctorId);
+
+  const onSubmit = async (data: UpdateDoctorData) => {
+    setEdit(false);
+    const {
+      work,
+      degree,
+      designation,
+      enterSymptom,
+      institute,
+      complete_name,
+      gender,
+      phone_number,
+      email,
+      city,
+      country,
+      department,
+      experience,
+      registration_no,
+      ac_no,
+      upi_id,
+      qualification,
+      consultation_mode,
+      consultation_fee_regular,
+      consultation_fee_discounted,
+      payout_method,
+      address,
+      postal_code,
+      services,
+      specialization,
+      bibliography,
+    } = data;
+
+    const doctorData = {
+      first_name: complete_name?.split(" ")[0],
+      last_name: complete_name?.split(" ")[1],
+      gender,
+      ac_no,
+      upi_id,
+      phone_number,
+      email,
+      city,
+      country,
+      image: getValues("image"),
+      department,
+      experience,
+      registration_no,
+      qualification,
+      consultation_mode,
+      consultation_fee_regular:
+        consultation_fee_regular !== undefined
+          ? parseFloat(consultation_fee_regular.toString())
+          : 0,
+      consultation_fee_discounted:
+        consultation_fee_discounted !== undefined
+          ? parseFloat(consultation_fee_discounted.toString())
+          : 0,
+      payout_method_id: payout_method,
+      address,
+      postal_code,
+      services,
+      specialization,
+      bibliography,
+      work,
+      degree,
+      designation,
+      enterSymptom,
+      institute,
+    };
+    mutate(doctorData);
+  };
+
+  useEffect(() => {
+    if (data?.email) {
+      notifySuccess("Profile Updated!");
+      queryClient.invalidateQueries({
+        queryKey: ["Doctors"],
+      });
+    }
+  }, [data, queryClient]);
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="pb-6 ">
       <DashboardSection title="Basic Information">
-      <div className="flex justify-end">
+        <div className="flex justify-end">
           <div className="flex gap-4">
             <Button
               title="Edit"
@@ -533,14 +543,16 @@ const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
         </div>
         <div className="grid grid-cols-12 mt-6">
           <div className="col-span-4">
-           {edit &&  <input
-              type="file"
-              className="bg-[#D9D9D9] w-40 h-40 rounded-full mx-auto"
-              hidden
-              id="upload-file"
-              onChange={handleFileChange}
-            />}
-               <label
+            {edit && (
+              <input
+                type="file"
+                className="bg-[#D9D9D9] w-40 h-40 rounded-full mx-auto"
+                hidden
+                id="upload-file"
+                onChange={handleFileChange}
+              />
+            )}
+            <label
               htmlFor="upload-file"
               className="bg-[#D9D9D9] w-36 h-36 rounded-full mx-auto block relative overflow-clip mt-16"
             >
@@ -550,8 +562,7 @@ const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
                   src={image}
                   alt=""
                 />
-              ) :
-                defaultDoctorData?.image ? (
+              ) : defaultDoctorData?.image ? (
                 <ImageUrl fileKey={defaultDoctorData.image} />
               ) : (
                 ""
@@ -566,7 +577,7 @@ const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
               Upload Photo
             </h5>
             <small className="text-xs text-center block text-primary">
-            Allowed JPG JPEG, Max size of 2 MB
+              Allowed JPG JPEG, Max size of 2 MB
             </small>
           </div>
           <div className="col-span-7">
@@ -590,14 +601,14 @@ const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
                       error={errors[input?.name]}
                       disabled={!edit || disabledFields?.includes(input?.name)}
                     />
-                  ) :input?.name === "country" ? 
-                  <CountrySelectComp
-                  name={input?.name}
-                  label={input?.label}
-                  control={control} 
-                  setValue={setValue} 
-                />
-                : (
+                  ) : input?.name === "country" ? (
+                    <CountrySelectComp
+                      name={input?.name}
+                      label={input?.label}
+                      control={control}
+                      setValue={setValue}
+                    />
+                  ) : (
                     <InputField
                       label={input.label}
                       name={input.name}
@@ -646,7 +657,7 @@ const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
       <DashboardSection title={"Consultation Fee"}>
         <>
           <div className="grid grid-cols-12 gap-x-4 gap-y-0">
-            {consultationFee?.map((input,index) => (
+            {consultationFee?.map((input, index) => (
               <div key={index} className="col-span-4">
                 <InputField
                   label={input?.label}
@@ -731,7 +742,7 @@ const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
       </DashboardSection>
       <DashboardSection title={"Contact Details"}>
         <div className="grid grid-cols-12 gap-x-4 gap-y-0">
-          {contactDetails?.map((input,index) => (
+          {contactDetails?.map((input, index) => (
             <div key={index} className="col-span-4">
               <InputField
                 label={input.label}
@@ -748,18 +759,18 @@ const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
       <DashboardSection title={"Services and Specialization"}>
         <>
           <div className="grid grid-cols-12 gap-x-4 gap-y-0">
-          {servicesAndSpecializations.map((input,index) => (
-      <div key={index} className="col-span-4">
-        <InputField
-          label={input.label}
-          name={input.name}
-          placeholder={input.placeholder}
-          properties={{ ...register(input.name) }}
-          error={errors[input.name]}
-          disabled={!edit}
-        />
-      </div>
-    ))}
+            {servicesAndSpecializations.map((input, index) => (
+              <div key={index} className="col-span-4">
+                <InputField
+                  label={input.label}
+                  name={input.name}
+                  placeholder={input.placeholder}
+                  properties={{ ...register(input.name) }}
+                  error={errors[input.name]}
+                  disabled={!edit}
+                />
+              </div>
+            ))}
           </div>
           <p>Type and press to add new Services and Specialization.</p>
         </>
@@ -798,7 +809,7 @@ const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
       </DashboardSection>
       <DashboardSection title={"Symptoms"}>
         <div className="flex items-center gap-2 text-base">
-          {Symptoms?.map((input,index) => (
+          {Symptoms?.map((input, index) => (
             <div key={index} className="col-span-4">
               <InputField
                 label={input.label}

@@ -32,7 +32,6 @@ mutation UpdateLab($updateLabId: Int!, $data: LabInputUpdate!) {
 }
 `;
 
-
 export const UPDATED_LAB_CORDINATES = `
 mutation UpdateLabCoordinates($updateLabCoordinatesId: Int!, $latitude: Float!, $longitude: Float!, $placeName: String!) {
   updateLabCoordinates(id: $updateLabCoordinatesId, latitude: $latitude, longitude: $longitude, place_name: $placeName) {
@@ -42,7 +41,6 @@ mutation UpdateLabCoordinates($updateLabCoordinatesId: Int!, $latitude: Float!, 
   }
 }
   `;
-
 
 export const ADD_LAB_TEST = `
 mutation Mutation($data: LabTestsInput!) {
@@ -55,7 +53,6 @@ mutation Mutation($data: LabTestsInput!) {
     createdAt
   }
 } `;
-
 
 export const FIND_ALL_LAB_TEST_BY_LAB_ID = `
 query FindAllLabTestsByLabId($findAllLabTestsByLabIdId: Int!) {
@@ -105,18 +102,19 @@ mutation UpdateLabTest($updateLabTestId: Int!, $data: LabTestInputUpdate!) {
   }
 }`;
 
-
 export const FIND_APPOINTMENT_BY_STATUS = `
 query FindLabAppointmentStatusByLabId($labId: Int!, $status: LabAppointmentStatus!) {
   findLabAppointmentStatusByLabId(lab_id: $labId, status: $status) {
-  id
+    id
     appointment_date
+    appointment_time
     appointment_weekday
     patient_name
-    status
+    labTests {
+      labTestId
+    }
   }
 }`;
-
 
 export const UPDATE_LAB_APPOINTMENT_STATUS = `
 mutation Mutation($updateLabAppointmentStatusId: Int!, $status: LabAppointmentStatus!, $message: String) {
@@ -154,9 +152,11 @@ query FindLabAppointmentById($findLabAppointmentByIdId: Int!) {
     patient_id
     payment_id
     labTests {
-      title
-      price
-      description
+      labTest {
+        title
+        price
+        description
+      }
     }
   }
 }`;

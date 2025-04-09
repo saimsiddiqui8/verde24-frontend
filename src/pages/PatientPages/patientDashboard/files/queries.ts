@@ -7,7 +7,6 @@ mutation CreateReport($data: PatientReportInput!) {
   }
 }`;
 
-
 export const FIND_REPORT_BY_PATIENT_ID = `
 query GetPatientReport($getPatientReportId: Int!) {
   getPatientReport(id: $getPatientReportId) {

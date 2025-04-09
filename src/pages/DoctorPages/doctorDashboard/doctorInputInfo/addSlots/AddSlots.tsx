@@ -109,6 +109,13 @@ export default function AddSlots() {
       }),
     );
   };
+  const deleteSlotsall = () => {
+    setWeekdays((prev) =>
+      prev?.map((day) => {
+        return { ...day, slots: [] };
+      }),
+    );
+  };
 
   const formatTimeTo12Hour = (time: string) => {
     let [hours, minutes] = time.split(":").map(Number);
@@ -135,6 +142,18 @@ export default function AddSlots() {
       notifyFailure(
         "This time slot conflicts with an existing slot for the selected day.",
       );
+      return;
+    }
+
+    const apiConflict = doctorTimeSlots.some((daySlot) => {
+      return (
+        daySlot.weekday === selectedDay.title &&
+        daySlot.timeSlots.some((slot) => slot.time === formattedTime)
+      );
+    });
+
+    if (apiConflict) {
+      notifyFailure("This time slot already exists in the database.");
       return;
     }
 
@@ -183,11 +202,10 @@ export default function AddSlots() {
   const handleSlots = async () => {
     dispatch(loadingStart());
     try {
-      const allResponses = await fetchData();
-      if (allResponses?.length > 0) {
-        notifySuccess("Time Slots added!");
-      }
+      await fetchData();
+      notifySuccess("Time Slots added!");
       dispatch(loadingEnd());
+      deleteSlotsall();
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -382,7 +400,7 @@ export default function AddSlots() {
             )}
           </div>
         </div>
-        <Toaster/>
+        <Toaster />
       </DashboardSection>
     </>
   );

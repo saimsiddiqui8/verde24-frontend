@@ -14,9 +14,6 @@ import { getVerifiedDoctors } from "../../../../api/apiCalls/patientsApi";
 import { UpdateDoctorData } from "../../../../api/apiCalls/types";
 import ImageUrl from "../../../../components/Icons/Sidemenu/ImageUrl";
 
-
-
-
 export default function FindDoctor() {
   const [doctors, setDoctors] = useState<UpdateDoctorData[]>([]);
   const [searchDoctor, setSearchDoctor] = useState<string>("");
@@ -251,110 +248,123 @@ export default function FindDoctor() {
           </div>
         </div>
         <div className="flex flex-col gap-4">
-  {doctors?.length > 0 ? (
-    doctors
-      ?.filter((doctor: UpdateDoctorData) => {
-        const matchesSearchDoctor =
-          searchDoctor.toLowerCase() === "" ||
-          doctor.first_name?.toLowerCase().includes(searchDoctor.toLowerCase()) ||
-          doctor.last_name?.toLowerCase().includes(searchDoctor.toLowerCase());
-        const matchesOnlineStatus =
-          availability === null
-            ? doctor
-            : availability === true
-            ? doctor.online
-            : !doctor.online;
-        return matchesSearchDoctor && matchesOnlineStatus;
-      })
-      ?.map((doctor: UpdateDoctorData) => {
-        return (
-          <Link
-            to={`/patient-dashboard/find-doctor/appointment/${doctor?.id}`}
-            key={doctor?.id}
-          >
-            <div className="border-primary border rounded-lg p-3 cursor-pointer">
-              <div className="flex flex-col sm:flex-row justify-between gap-2 my-2">
-                <div className="w-full sm:w-1/5 mb-4 sm:mb-0 relative">
-                {doctor?.image ? <ImageUrl fileKey={doctor?.image}/> :   <img
-                    src={doctorImg}
-                    alt="Doctor"
-                    className="w-full h-auto p-2 rounded-full block mx-auto"
-                  />}
-                  <div
-                    className={`absolute top-7 right-6 transform translate-x-1/2 -translate-y-1/2 w-5 h-5 rounded-full border-2 border-white ${
-                      doctor.online ? "bg-green-500" : "bg-gray-500"
-                    }`}
-                  ></div>
-                </div>
-                <div className="w-full sm:w-3/5 order-2 sm:order-1">
-                  <h2 className="text-xl sm:text-3xl font-medium">
-                    {doctor.first_name} {doctor.last_name}
-                  </h2>
-                  {doctor?.qualification || "BDS (Gold Medalist) FCPS Res. (Orthodontics), RDS"}
-                  <p>{doctor?.specialization}</p>
-                  <div className="flex flex-col sm:flex-row justify-between gap-2">
-                    <div>
-                      <p>Reviews</p>
-                      <p>195</p>
-                    </div>
-                    <div>
-                      <p>Experience</p>
-                      <p>{doctor?.experience} years</p>
-                    </div>
-                    <div>
-                      <p>Satisfaction</p>
-                      <p>100%</p>
-                    </div>
-                  </div>
-                </div>
-                <div className="w-full sm:w-1/5 flex flex-col gap-4 order-1 sm:order-2">
-                  <Button title="Video Call" secondary={true} />
+          {doctors?.length > 0 ? (
+            doctors
+              ?.filter((doctor: UpdateDoctorData) => {
+                const matchesSearchDoctor =
+                  searchDoctor.toLowerCase() === "" ||
+                  doctor.first_name
+                    ?.toLowerCase()
+                    .includes(searchDoctor.toLowerCase()) ||
+                  doctor.last_name
+                    ?.toLowerCase()
+                    .includes(searchDoctor.toLowerCase());
+                const matchesOnlineStatus =
+                  availability === null
+                    ? doctor
+                    : availability === true
+                      ? doctor.online
+                      : !doctor.online;
+                return matchesSearchDoctor && matchesOnlineStatus;
+              })
+              ?.map((doctor: UpdateDoctorData) => {
+                return (
                   <Link
-                    to={`/patient-dashboard/find-doctor/profile/${doctor.id}`}
+                    to={`/patient-dashboard/find-doctor/appointment/${doctor?.id}`}
+                    key={doctor?.id}
                   >
-                    <Button title="View Profile" secondary={true} />
+                    <div className="border-primary border rounded-lg p-3 cursor-pointer">
+                      <div className="flex flex-col sm:flex-row justify-between gap-2 my-2">
+                        <div className="w-full sm:w-1/5 mb-4 sm:mb-0 relative">
+                          {doctor?.image ? (
+                            <ImageUrl fileKey={doctor?.image} />
+                          ) : (
+                            <img
+                              src={doctorImg}
+                              alt="Doctor"
+                              className="w-full h-auto p-2 rounded-full block mx-auto"
+                            />
+                          )}
+                          <div
+                            className={`absolute top-7 right-6 transform translate-x-1/2 -translate-y-1/2 w-5 h-5 rounded-full border-2 border-white ${
+                              doctor.online ? "bg-green-500" : "bg-gray-500"
+                            }`}
+                          ></div>
+                        </div>
+                        <div className="w-full sm:w-3/5 order-2 sm:order-1">
+                          <h2 className="text-xl sm:text-3xl font-medium">
+                            {doctor.first_name} {doctor.last_name}
+                          </h2>
+                          {doctor?.qualification ||
+                            "BDS (Gold Medalist) FCPS Res. (Orthodontics), RDS"}
+                          <p>{doctor?.specialization}</p>
+                          <div className="flex flex-col sm:flex-row justify-between gap-2">
+                            <div>
+                              <p>Reviews</p>
+                              <p>195</p>
+                            </div>
+                            <div>
+                              <p>Experience</p>
+                              <p>{doctor?.experience} years</p>
+                            </div>
+                            <div>
+                              <p>Satisfaction</p>
+                              <p>100%</p>
+                            </div>
+                          </div>
+                        </div>
+                        <div className="w-full sm:w-1/5 flex flex-col gap-4 order-1 sm:order-2">
+                          <Button title="Video Call" secondary={true} />
+                          <Link
+                            to={`/patient-dashboard/find-doctor/profile/${doctor.id}`}
+                          >
+                            <Button title="View Profile" secondary={true} />
+                          </Link>
+                        </div>
+                      </div>
+                      <div className="flex flex-wrap sm:flex-nowrap justify-between gap-4 my-2">
+                        <div className="border-primary border w-full sm:w-1/3 p-2 rounded-lg flex flex-col gap-2">
+                          <p className="text-sm">{doctor?.consultation_mode}</p>
+                          <p className="text-sm">Available today</p>
+                          <p className="text-sm">
+                            fee:{" "}
+                            <span className="font-medium text-primary">
+                              ${doctor?.consultation_fee_regular}
+                            </span>
+                          </p>
+                          <p className="text-sm">
+                            discounted:{" "}
+                            <span className="font-medium text-primary">
+                              ${doctor?.consultation_fee_discounted}
+                            </span>
+                          </p>
+                          <p className="text-sm">
+                            total:{" "}
+                            <span className="font-semibold text-primary">
+                              {doctor?.consultation_fee_regular &&
+                              doctor?.consultation_fee_discounted
+                                ? `$ ${Math.round(doctor.consultation_fee_regular - (doctor.consultation_fee_regular * doctor.consultation_fee_discounted) / 100)}`
+                                : "N/A"}
+                            </span>
+                          </p>
+                        </div>
+                        <div className="border-primary border w-full sm:w-2/3 p-2 rounded-lg">
+                          <h5 className="text-base">
+                            Smile Solutions | Dental Clinic | Orthodontic &
+                            Implant Centre, Model Town, Lahore
+                          </h5>
+                        </div>
+                      </div>
+                    </div>
                   </Link>
-                </div>
-              </div>
-              <div className="flex flex-wrap sm:flex-nowrap justify-between gap-4 my-2">
-                <div className="border-primary border w-full sm:w-1/3 p-2 rounded-lg flex flex-col gap-2">
-                  <p className="text-sm">{doctor?.consultation_mode}</p>
-                  <p className="text-sm">Available today</p>
-                  <p className="text-sm">
-    fee: <span className="font-medium text-primary">${doctor?.consultation_fee_regular}</span>
-  </p>
-  <p className="text-sm">
-discounted: <span className="font-medium text-primary">${doctor?.consultation_fee_discounted}</span>
-  </p>
-  <p className="text-sm">
-  total:{" "}
-  <span className="font-semibold text-primary">
-  {doctor?.consultation_fee_regular && doctor?.consultation_fee_discounted
-    ? `$ ${Math.round(doctor.consultation_fee_regular - (doctor.consultation_fee_regular * doctor.consultation_fee_discounted) / 100)}`
-    : "N/A"}
-</span>
-
-</p>
-
-                </div>
-                <div className="border-primary border w-full sm:w-2/3 p-2 rounded-lg">
-                  <h5 className="text-base">
-                    Smile Solutions | Dental Clinic | Orthodontic & Implant
-                    Centre, Model Town, Lahore
-                  </h5>
-                </div>
-              </div>
+                );
+              })
+          ) : (
+            <div className="text-center text-2xl font-medium mt-6">
+              No doctors found.
             </div>
-          </Link>
-        );
-      })
-  ) : (
-    <div className="text-center text-2xl font-medium mt-6">
-      No doctors found.
-    </div>
-  )}
-</div>
-
+          )}
+        </div>
       </DashboardSection>
     </>
   );

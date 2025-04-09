@@ -37,5 +37,5 @@ interface TextareaFieldProps {
   rows: number;
   error?: any;
   properties?: any;
-  disabled?:boolean;
+  disabled?: boolean;
 }

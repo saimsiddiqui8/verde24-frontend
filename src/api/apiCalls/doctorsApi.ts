@@ -79,8 +79,6 @@ export const getDoctorToken = async (
   }
 };
 
-
-
 export const createDoctor = async (
   query: string,
   variables: createDoctorData,
@@ -180,7 +178,6 @@ export const checkDoctorEmail = async (
   }
 };
 
-
 export const sendDoctorOTP = async (query: string, variables: OtpVariables) => {
   try {
     const response = await publicRequest.post("/graphql", {
@@ -209,7 +206,6 @@ export const verifyDoctorOTP = async (
     throw error;
   }
 };
-
 
 export const createDoctorTimeSlot = async (
   query: string,
@@ -286,13 +282,15 @@ export const createMeeting = async (query: string, data: CreateMeetingLink) => {
   }
 };
 
-
 export const uploadFileDoctor = async (query: string, file: File) => {
   try {
     const formData = new FormData();
-    formData.append("operations", JSON.stringify({ query, variables: { file: null } }));
+    formData.append(
+      "operations",
+      JSON.stringify({ query, variables: { file: null } }),
+    );
     formData.append("map", JSON.stringify({ "0": ["variables.file"] }));
-    formData.append("0", file); 
+    formData.append("0", file);
     const response = await publicRequest.post("/graphql", formData, {
       headers: {
         "Content-Type": "multipart/form-data",
@@ -305,7 +303,7 @@ export const uploadFileDoctor = async (query: string, file: File) => {
   }
 };
 
-export const getUrl = async (query: string, variables: {fileKey : string}) => {
+export const getUrl = async (query: string, variables: { fileKey: string }) => {
   try {
     const response = await publicRequest.post("/graphql", {
       query,
@@ -317,5 +315,3 @@ export const getUrl = async (query: string, variables: {fileKey : string}) => {
     throw error;
   }
 };
-
-

@@ -90,17 +90,17 @@ export const verifyLabOTP = async (
   }
 };
 
-
 export const updateLabCordinatesById = async (
   query: string,
-  variables: { updateLabCoordinatesId: number; latitude: number; longitude: number ,placeName: string},
+  variables: {
+    updateLabCoordinatesId: number;
+    latitude: number;
+    longitude: number;
+    placeName: string;
+  },
 ) => {
   try {
-    const response = await publicRequest.post("/graphql",
-       { query,
-         variables,
-       }
-      );
+    const response = await publicRequest.post("/graphql", { query, variables });
     return response?.data?.data?.updateLabCoordinates;
   } catch (error) {
     console.error("Error updating pharmacy cordinates:", error);
@@ -108,17 +108,12 @@ export const updateLabCordinatesById = async (
   }
 };
 
-
 export const AddLabTest = async (
   query: string,
-  variables: { data: AddlabtestType  },
+  variables: { data: AddlabtestType },
 ) => {
   try {
-    const response = await publicRequest.post("/graphql",
-       { query,
-         variables,
-       }
-      );
+    const response = await publicRequest.post("/graphql", { query, variables });
     return response?.data?.data?.createLabTest;
   } catch (error) {
     console.error("Error creating lab test:", error);
@@ -128,14 +123,10 @@ export const AddLabTest = async (
 
 export const FindAllLabTestByLabId = async (
   query: string,
-  variables: { findAllLabTestsByLabIdId : number  },
+  variables: { findAllLabTestsByLabIdId: number },
 ) => {
   try {
-    const response = await publicRequest.post("/graphql",
-       { query,
-         variables,
-       }
-      );
+    const response = await publicRequest.post("/graphql", { query, variables });
     return response?.data?.data?.findAllLabTestsByLabId;
   } catch (error) {
     console.error("Error finding all lab test by id:", error);
@@ -143,17 +134,12 @@ export const FindAllLabTestByLabId = async (
   }
 };
 
-
 export const DeleteLabTestById = async (
   query: string,
-  variables: { deleteLabTestId: number  },
+  variables: { deleteLabTestId: number },
 ) => {
   try {
-    const response = await publicRequest.post("/graphql",
-       { query,
-         variables,
-       }
-      );
+    const response = await publicRequest.post("/graphql", { query, variables });
     return response?.data?.data?.deleteLabTest;
   } catch (error) {
     console.error("Error deleting lab test by id:", error);
@@ -163,14 +149,10 @@ export const DeleteLabTestById = async (
 
 export const FindLabTestById = async (
   query: string,
-  variables: { findLabTestByIdId: number  },
+  variables: { findLabTestByIdId: number },
 ) => {
   try {
-    const response = await publicRequest.post("/graphql",
-       { query,
-         variables,
-       }
-      );
+    const response = await publicRequest.post("/graphql", { query, variables });
     return response?.data?.data?.findLabTestById;
   } catch (error) {
     console.error("Error finding lab test by id:", error);
@@ -180,14 +162,10 @@ export const FindLabTestById = async (
 
 export const UpdateLabTestById = async (
   query: string,
-  variables: { updateLabTestId: number , data: AddlabtestType },
+  variables: { updateLabTestId: number; data: AddlabtestType },
 ) => {
   try {
-    const response = await publicRequest.post("/graphql",
-       { query,
-         variables,
-       }
-      );
+    const response = await publicRequest.post("/graphql", { query, variables });
     return response?.data?.data?.updateLabTest;
   } catch (error) {
     console.error("Error updating lab test by id:", error);
@@ -195,17 +173,12 @@ export const UpdateLabTestById = async (
   }
 };
 
-
 export const FindAppointmentByStatus = async (
   query: string,
-  variables: {labId:number , status:string },
+  variables: { labId: number; status: string },
 ) => {
   try {
-    const response = await publicRequest.post("/graphql",
-       { query,
-         variables,
-       }
-      );
+    const response = await publicRequest.post("/graphql", { query, variables });
     return response?.data?.data?.findLabAppointmentStatusByLabId;
   } catch (error) {
     console.error("Error find Appointment By Status:", error);
@@ -215,14 +188,14 @@ export const FindAppointmentByStatus = async (
 
 export const UpdateLabAppointmentStatus = async (
   query: string,
-  variables: {updateLabAppointmentStatusId:number , status:string },
+  variables: {
+    updateLabAppointmentStatusId: number;
+    status: string;
+    message?: string;
+  },
 ) => {
   try {
-    const response = await publicRequest.post("/graphql",
-       { query,
-         variables,
-       }
-      );
+    const response = await publicRequest.post("/graphql", { query, variables });
     return response?.data?.data?.updateLabAppointmentStatus;
   } catch (error) {
     console.error("Error updateLabAppointment Status:", error);
@@ -230,17 +203,12 @@ export const UpdateLabAppointmentStatus = async (
   }
 };
 
-
 export const FindAppointmentById = async (
   query: string,
-  variables: {findLabAppointmentByIdId:number },
+  variables: { findLabAppointmentByIdId: number },
 ) => {
   try {
-    const response = await publicRequest.post("/graphql",
-       { query,
-         variables,
-       }
-      );
+    const response = await publicRequest.post("/graphql", { query, variables });
     return response?.data?.data?.findLabAppointmentById;
   } catch (error) {
     console.error("Error findLabAppointmentById Status:", error);

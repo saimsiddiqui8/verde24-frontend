@@ -50,7 +50,7 @@ export default function DoctorDashboardAfterApproval() {
     });
   };
 
-  const {data} = useQuery({
+  const { data } = useQuery({
     queryKey: ["Doctors", id],
     queryFn: getDoctor,
   });
@@ -61,7 +61,6 @@ export default function DoctorDashboardAfterApproval() {
   } else {
     dispatch(loadingEnd());
   }
-
 
   const handleToggle = (linkTitle: string) => {
     setCollapsed(linkTitle === "My Patients");
@@ -75,22 +74,25 @@ export default function DoctorDashboardAfterApproval() {
         } pt-10 pb-5 h-fit border border-primary rounded-md`}
       >
         <div className="py-1 px-4">
-        {data && (
-          <div>
-            <div className="py-1 px-4 my-5">
-              {data?.image ? 
-              <ImageUrl fileKey={data?.image}/>:  <img
-                src={doctorImg}
-                alt="Doctor"
-                className="w-36 h-36 rounded-full block mx-auto"
-              />}
-            
-              <p className="text-[#5C89D8] text-sm text-center font-semibold my-4">
-                {`${data?.first_name} ${data?.last_name}`}
-              </p>
+          {data && (
+            <div>
+              <div className="py-1 px-4 my-5">
+                {data?.image ? (
+                  <ImageUrl fileKey={data?.image} />
+                ) : (
+                  <img
+                    src={doctorImg}
+                    alt="Doctor"
+                    className="w-36 h-36 rounded-full block mx-auto"
+                  />
+                )}
+
+                <p className="text-[#5C89D8] text-sm text-center font-semibold my-4">
+                  {`${data?.first_name} ${data?.last_name}`}
+                </p>
+              </div>
             </div>
-          </div>
-        )}
+          )}
         </div>
         <div className="mt-5 flex flex-col items-center w-full">
           {links.map((link, index) => {

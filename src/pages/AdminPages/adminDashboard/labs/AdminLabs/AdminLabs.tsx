@@ -3,9 +3,12 @@ import { DashboardSection } from "../../../../../components";
 import { publicRequest } from "../../../../../api/requestMethods";
 import { useQuery } from "react-query";
 import { FaUserCircle } from "react-icons/fa";
-import {  MdLock, MdLockOpen  } from "react-icons/md";
+import { MdLock, MdLockOpen } from "react-icons/md";
 import { useDispatch } from "react-redux";
-import { loadingEnd, loadingStart } from "../../../../../redux/slices/loadingSlice";
+import {
+  loadingEnd,
+  loadingStart,
+} from "../../../../../redux/slices/loadingSlice";
 import { GET_ALL_LABS } from "./queries";
 
 export default function AdminLabs() {
@@ -24,11 +27,11 @@ export default function AdminLabs() {
 
   const { data } = useQuery({
     queryKey: ["adminLabs"],
-    queryFn: async ()=>{
+    queryFn: async () => {
       dispatch(loadingStart());
       return getLabs();
     },
-    onSuccess:()=> dispatch(loadingEnd())
+    onSuccess: () => dispatch(loadingEnd()),
   });
 
   return (
@@ -54,9 +57,11 @@ export default function AdminLabs() {
               <div className="absolute top-2 right-2">
                 <MdLock size={25} />
               </div>
-            ) :  <div className="absolute top-2 right-2">
-            <MdLockOpen size={25} />
-          </div>}
+            ) : (
+              <div className="absolute top-2 right-2">
+                <MdLockOpen size={25} />
+              </div>
+            )}
           </div>
         ))}
       </div>

@@ -1,4 +1,3 @@
-
 export interface Doctor {
   first_name: string;
   last_name: string;
@@ -49,7 +48,7 @@ export interface ApiResponse<T> {
 export interface UserData {
   first_name: string;
   last_name: string;
-  image?:string;
+  image?: string;
   gender: string;
   phone_number: string;
   insurance_id: string;
@@ -57,8 +56,8 @@ export interface UserData {
   weight: number;
   blood_group: string;
   other_history: string;
-  patient_name?:string;
-  patient_age?:string;
+  patient_name?: string;
+  patient_age?: string;
 }
 
 export interface UpdateDoctorData {
@@ -79,8 +78,8 @@ export interface UpdateDoctorData {
   registration_no?: string;
   qualification?: string;
   consultation_mode?: string;
-  consultation_fee_regular?: number | undefined; 
-  consultation_fee_discounted?: number | undefined; 
+  consultation_fee_regular?: number | undefined;
+  consultation_fee_discounted?: number | undefined;
   payout_method?: string;
   payout_method_id?: string;
   address?: string;
@@ -97,7 +96,6 @@ export interface UpdateDoctorData {
   ac_no?: string;
   upi_id?: string;
 }
-
 
 export type FindDoctorByIdVariables = {
   findDoctorByIdId: number | null;
@@ -189,9 +187,9 @@ export interface UpdatedPharmacyData {
 }
 
 export interface updatePharmacyCoordinatesFData {
-  latitude:number;
-  longitude:number;
-  placeName:string;
+  latitude: number;
+  longitude: number;
+  placeName: string;
 }
 
 export interface UpdateLabResponse {
@@ -205,18 +203,17 @@ export interface UpdateLabResponse {
   createdAt?: string;
 }
 
-
 export interface CreateLabResponse {
   name: string;
   email: string;
   phone_number: string;
   password: string;
-  longitude:number;
-  latitude:number;
+  longitude: number;
+  latitude: number;
 }
 
 export interface AddlabtestType {
-  id?:number;
+  id?: number;
   title: string;
   price: number;
   lab_id?: number | null;
@@ -254,13 +251,10 @@ export interface CreateMeetingLink {
   };
 }
 
-
 export interface hospitalsType {
-  id : string,
-  name : string
+  id: string;
+  name: string;
 }
-
-
 
 export interface CreateReportType {
   files: string[];
@@ -272,21 +266,17 @@ export interface NearestLabType {
   radiusInKm?: number;
 }
 
- export type labTests = {
-  title: string | null;
-  price: number | null;
-  description: string | null;
+export type labTests = {
+  title?: string | null;
+  price?: number | null;
+  description?: string | null;
   id: number | null;
-  lab_id: number | null;
-  createdAt: string | null;
 };
-
-
 
 export interface labAppointmenttype {
   appointment_date: string | null;
   appointment_time: string | null;
-  appointment_weekday:string | null
+  appointment_weekday: string | null;
   lab_id: number | null;
   patient_age: number | null;
   patient_email: string | null;
@@ -297,19 +287,38 @@ export interface labAppointmenttype {
   payment_id?: number | string | null;
   status?: string | null;
   currency?: string | null;
-  labTests : labTests[];
+  labTests: labTests[];
+}
+export interface labAppointmenttypecheckout {
+  appointment_date: string | null;
+  appointment_time: string | null;
+  appointment_weekday: string | null;
+  lab_id: number | null;
+  patient_age: number | null;
+  patient_email: string | null;
+  patient_gender: string | null;
+  patient_id: number | null;
+  patient_name: string | null;
+  patient_phone_number: string | null;
+  payment_id?: number | string | null;
+  status?: string | null;
+  currency?: string | null;
+  labTests: number[];
 }
 
-
-
-interface LabTest {
-  title: string;
+interface LabTestItem {
+  labTestId: number;
 }
 
 export interface PatientAppointmentlab {
   id: number;
-  appointment_date: string;  
-  appointment_weekday: string; 
+  appointment_date: string;
+  appointment_time: string;
+  appointment_weekday: string;
   patient_name: string;
-  labTest: LabTest;
+  labTests: LabTestItem[];
+}
+
+export interface LabTestWrapper {
+  labTest: labTests;
 }

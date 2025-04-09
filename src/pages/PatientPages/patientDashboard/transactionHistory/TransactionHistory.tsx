@@ -9,6 +9,8 @@ import {
   loadingStart,
 } from "../../../../redux/slices/loadingSlice";
 import { useQuery } from "react-query";
+import { notifyFailure } from "../../../../utils/Utils";
+import { Toaster } from "react-hot-toast";
 
 interface Payment {
   id: string;
@@ -30,20 +32,28 @@ export default function TransactionHistory() {
   const dispatch = useDispatch();
 
   const getPaymentByPatient = async () => {
-    if(!id) return;
-      return  findPaymentByPatient(FIND_PAYMENT_BY_PATIENTID, {
-        findPaymentByPatientId: id,
-      });
+    if (!id) return;
+    const response = await findPaymentByPatient(FIND_PAYMENT_BY_PATIENTID, {
+      findPaymentByPatientId: id,
+    });
+    if (!response) {
+      throw new Error("Failed to fetch payment details!");
+    }
+    return response;
   };
 
-  const {data} = useQuery({
-    queryKey:["getpaymentbypatient" , id],
-    queryFn: async ()=>{
-       dispatch(loadingStart()); 
-          return getPaymentByPatient();
+  const { data } = useQuery({
+    queryKey: ["getpaymentbypatient", id],
+    queryFn: async () => {
+      dispatch(loadingStart());
+      return getPaymentByPatient();
     },
-    onSuccess: () => dispatch(loadingEnd()), 
-  })
+    onSuccess: () => dispatch(loadingEnd()),
+    onError: (err: Error) => {
+      dispatch(loadingEnd());
+      notifyFailure(err.message);
+    },
+  });
 
   return (
     <DashboardSection>
@@ -70,8 +80,8 @@ export default function TransactionHistory() {
             </tr>
           </thead>
           <tbody>
-            {data?.length > 0 ? (
-              data?.map(({ id, amount, payment_date, is_paid } : Payment) => (
+            {(data ?? [])?.length > 0 ? (
+              data?.map(({ id, amount, payment_date, is_paid }: Payment) => (
                 <tr key={id} className="odd:bg-[#5C89D826]">
                   <td className="p-2 sm:p-4">
                     <Typography variant="small" className="font-normal">
@@ -112,6 +122,7 @@ export default function TransactionHistory() {
           </tbody>
         </table>
       </div>
+      <Toaster />
     </DashboardSection>
   );
 }

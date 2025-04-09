@@ -14,8 +14,15 @@ import { useMutation, useQuery, useQueryClient } from "react-query";
 import { Toaster } from "react-hot-toast";
 import { getLabById, updateLabById } from "../../../../api/apiCalls/labApi";
 import { FIND_LAB_QUERY, UPDATED_LAB_QUERY } from "./queries";
-import { notifySuccess, isPhoneValid } from "../../../../utils/Utils";
-import { loadingEnd, loadingStart } from "../../../../redux/slices/loadingSlice";
+import {
+  notifySuccess,
+  isPhoneValid,
+  notifyFailure,
+} from "../../../../utils/Utils";
+import {
+  loadingEnd,
+  loadingStart,
+} from "../../../../redux/slices/loadingSlice";
 import { uploadFileDoctor } from "../../../../api/apiCalls/doctorsApi";
 import { FILE_UPLOAD } from "../../../DoctorPages/doctorDashboard/doctorInputInfo/consultationForm/queries";
 import { UpdateLabResponse } from "../../../../api/apiCalls/types";
@@ -68,7 +75,7 @@ const FormSchema = z
     registration_number: z
       .string()
       .min(1, { message: "Registration Number is required" }),
-      email: z.string().email({ message: "Invalid email address" }),
+    email: z.string().email({ message: "Invalid email address" }),
     phone_number: z.string().min(1, { message: "Phone Number is required" }),
     logo: z.string().min(1, { message: "Image is required" }),
   })
@@ -102,12 +109,8 @@ const LabAccountManagement = () => {
     setImage(URL.createObjectURL(file));
     try {
       dispatch(loadingStart());
-      const uploadedFileUrl = await uploadFileDoctor(
-        FILE_UPLOAD
-        ,
-        file
-      );
-      setValue("logo", uploadedFileUrl , { shouldValidate: true })
+      const uploadedFileUrl = await uploadFileDoctor(FILE_UPLOAD, file);
+      setValue("logo", uploadedFileUrl, { shouldValidate: true });
       dispatch(loadingEnd());
     } catch (error) {
       dispatch(loadingEnd());
@@ -130,8 +133,15 @@ const LabAccountManagement = () => {
       return {};
     }
 
-    const { name, lab_name, city, registration_number, email, phone_number ,logo} =
-      labData.data;
+    const {
+      name,
+      lab_name,
+      city,
+      registration_number,
+      email,
+      phone_number,
+      logo,
+    } = labData.data;
     return {
       name,
       lab_name,
@@ -151,15 +161,37 @@ const LabAccountManagement = () => {
 
   const updateLab = async (data: UpdateLabResponse) => {
     if (!id) return;
-    return updateLabById(UPDATED_LAB_QUERY, {
+
+    const response = await updateLabById(UPDATED_LAB_QUERY, {
       updateLabId: id,
       data,
     });
+
+    if (!response) {
+      throw new Error("Failed to update Lab!");
+    }
+
+    return response;
   };
 
-  const { data, mutate } = useMutation(updateLab);
+  const { mutate } = useMutation(updateLab, {
+    onMutate: () => {
+      dispatch(loadingStart());
+    },
+    onSuccess: () => {
+      dispatch(loadingEnd());
+      notifySuccess("Profile Updated!");
+      queryClient.invalidateQueries(["lab"]);
+    },
+    onError: (error: Error) => {
+      dispatch(loadingEnd());
+      notifyFailure(error.message || "Something went wrong!");
+    },
+  });
 
-  const onSubmit:SubmitHandler<UpdateLabResponse> = (data: UpdateLabResponse) => {
+  const onSubmit: SubmitHandler<UpdateLabResponse> = (
+    data: UpdateLabResponse,
+  ) => {
     setEdit(false);
     const updatedData = {
       name: data.name,
@@ -172,14 +204,6 @@ const LabAccountManagement = () => {
     };
     mutate(updatedData);
   };
-
-  useEffect(() => {
-    if (data?.email) {
-      notifySuccess("Profile Updated!");
-      queryClient.invalidateQueries(["lab"]);
-    }
-  }, [data, queryClient]);
-
 
   const handleUploadClick = () => {
     if (fileInputRef.current) {
@@ -233,7 +257,9 @@ const LabAccountManagement = () => {
                         placeholder={input.placeholder}
                         type={input.type}
                         disabled={!edit}
-                        properties={{ ...register(input.name as keyof UpdateLabResponse) }}
+                        properties={{
+                          ...register(input.name as keyof UpdateLabResponse),
+                        }}
                         error={errors[input.name as keyof UpdateLabResponse]}
                       />
                     )}
@@ -243,24 +269,24 @@ const LabAccountManagement = () => {
               <div className="w-full md:w-2/5 flex flex-col items-center">
                 <div className="mt-4 flex flex-col items-center">
                   <span className="inline-block h-32 w-32 rounded-full overflow-hidden bg-gray-100 border-2 border-green-500">
-                  {image ? (
-  <img
-    src={image}
-    alt="Selected logo"
-    className="h-full w-full object-cover"
-  />
-) : defaultLabData?.logo ? (
-  <ImageUrl fileKey={defaultLabData.logo} />
-) : (
-  <svg
-    className="h-full w-full text-gray-400"
-    fill="currentColor"
-    viewBox="0 0 24 24"
-  >
-    <path d="M24 24H0V0h24v24z" fill="none" />
-    <path d="M12 0c-1.65 0-3.22.67-4.38 1.76L0 12h5v7h7v5l6.24-6.24c1.09-1.16 1.76-2.73 1.76-4.38 0-3.31-2.69-6-6-6zm2 13.5v-2h-4v-2h4V7l3 3-3 3.5z" />
-  </svg>
-)}
+                    {image ? (
+                      <img
+                        src={image}
+                        alt="Selected logo"
+                        className="h-full w-full object-cover"
+                      />
+                    ) : defaultLabData?.logo ? (
+                      <ImageUrl fileKey={defaultLabData.logo} />
+                    ) : (
+                      <svg
+                        className="h-full w-full text-gray-400"
+                        fill="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path d="M24 24H0V0h24v24z" fill="none" />
+                        <path d="M12 0c-1.65 0-3.22.67-4.38 1.76L0 12h5v7h7v5l6.24-6.24c1.09-1.16 1.76-2.73 1.76-4.38 0-3.31-2.69-6-6-6zm2 13.5v-2h-4v-2h4V7l3 3-3 3.5z" />
+                      </svg>
+                    )}
                   </span>
                   {edit && (
                     <>
@@ -280,11 +306,11 @@ const LabAccountManagement = () => {
                       </button>
                     </>
                   )}
-                   {errors["logo"] && (
-              <small className="text-red-500 font-medium uppercase">
-                <>{errors["logo"]?.message}</>
-              </small>
-            )}
+                  {errors["logo"] && (
+                    <small className="text-red-500 font-medium uppercase">
+                      <>{errors["logo"]?.message}</>
+                    </small>
+                  )}
                 </div>
               </div>
             </div>
