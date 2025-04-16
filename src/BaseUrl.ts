@@ -1,4 +1,4 @@
-const production = false;
+const production = true;
 let baseURL;
 if (production) {
   baseURL = "https://dev-api.verde24health.com";
