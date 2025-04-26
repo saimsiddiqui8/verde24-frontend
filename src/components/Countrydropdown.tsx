@@ -1,14 +1,14 @@
 import Select from "react-select";
 import countries from "world-countries";
 import { useEffect } from "react";
+import { Path, PathValue } from "react-hook-form";
 import { Controller, Control, UseFormSetValue } from "react-hook-form";
 
-// TypeScript interface for props
-interface CountrySelectProps {
+interface CountrySelectProps<T extends object> {
   label?: string;
-  name: string;
-  control: Control<any>;
-  setValue: UseFormSetValue<any>;
+  name: Path<T>;
+  control: Control<T>;
+  setValue: UseFormSetValue<T>;
 }
 
 interface CountryOption {
@@ -23,14 +23,14 @@ const formattedCountries: CountryOption[] = countries.map((country) => ({
   flag: `https://flagcdn.com/w40/${country.cca2.toLowerCase()}.png`,
 }));
 
-export default function CountrySelectComp({
+export default function CountrySelectComp<T extends object>({
   label,
   name,
   control,
   setValue,
-}: CountrySelectProps) {
+}: CountrySelectProps<T>) {
   useEffect(() => {
-    setValue(name, ""); // Reset value
+    setValue(name, "" as PathValue<T, Path<T>>);
   }, [setValue, name]);
 
   return (
