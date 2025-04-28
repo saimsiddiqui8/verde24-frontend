@@ -11,7 +11,7 @@ import {
 import { notifyFailure, notifySuccess } from "../../../../utils/Utils";
 import { Toaster } from "react-hot-toast";
 import {
-  addLabdetail,
+  addLabDetail,
   addLabTestLocal,
 } from "../../../../redux/slices/LabBooking";
 import { useNavigate } from "react-router-dom";
@@ -46,7 +46,7 @@ const Card = () => {
     return response;
   };
 
-  const handledeleteCard = async (deleteItemFromCartId: number) => {
+  const handleDeleteCard  = async (deleteItemFromCartId: number) => {
     if (!id) return;
     const response = await DeleteCard(DELETE_CARD, { deleteItemFromCartId });
     if (!response) {
@@ -69,7 +69,7 @@ const Card = () => {
     },
   });
 
-  const { mutate } = useMutation(handledeleteCard, {
+  const { mutate } = useMutation(handleDeleteCard , {
     onMutate: () => {
       dispatch(loadingStart());
     },
@@ -86,7 +86,7 @@ const Card = () => {
 
   const handleviewprofile = () => {
     dispatch(
-      addLabdetail({
+      addLabDetail({
         lab_id: data[0].labTest.lab_id,
         patient_id: data[0].patient_id,
         currency: "usd",

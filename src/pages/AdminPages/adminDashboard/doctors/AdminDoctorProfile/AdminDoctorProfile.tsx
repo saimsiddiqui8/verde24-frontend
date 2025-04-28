@@ -119,7 +119,7 @@ export default function AdminDoctorProfile() {
           <span>Form:</span>
           <span>
             {doctorData?.data?.form_submitted
-              ? "Doctor sumbit the form"
+              ? "Doctor submit the form"
               : "Not submitted"}
           </span>
         </div>

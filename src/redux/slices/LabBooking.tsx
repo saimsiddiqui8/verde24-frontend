@@ -16,11 +16,11 @@ const initialState: labAppointmenttype = {
   labTests: [],
 };
 
-const LabBookinyslice = createSlice({
+const LabBookingSlice = createSlice({
   name: "LabBooking",
   initialState,
   reducers: {
-    addLabdetail: (state, action) => {
+    addLabDetail: (state, action) => {
       state.lab_id = action.payload.lab_id;
       state.patient_id = action.payload.patient_id;
       state.currency = action.payload.currency;
@@ -70,7 +70,7 @@ const LabBookinyslice = createSlice({
 });
 
 export const {
-  addLabdetail,
+  addLabDetail,
   addPatientdetail,
   addPatientaddress,
   deleteLabBooking,
@@ -80,6 +80,6 @@ export const {
   addLabTestLocal,
   deleteLabTestLocal,
   clearAlllabTests,
-} = LabBookinyslice.actions;
+} = LabBookingSlice.actions;
 
-export default LabBookinyslice.reducer;
+export default LabBookingSlice.reducer;

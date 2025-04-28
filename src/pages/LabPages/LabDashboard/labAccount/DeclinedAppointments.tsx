@@ -10,7 +10,7 @@ import {
   loadingEnd,
   loadingStart,
 } from "../../../../redux/slices/loadingSlice";
-import { PatientAppointmentlab } from "../../../../api/apiCalls/types";
+import { PatientLabAppointment } from "../../../../api/apiCalls/types";
 import { notifyFailure } from "../../../../utils/Utils";
 
 const DeclinedAppointments = () => {
@@ -52,7 +52,7 @@ const DeclinedAppointments = () => {
       <div className="flex flex-col lg:flex-row justify-between">
         <div className="w-full lg:w-3/5">
           {(data ?? [])?.length > 0 ? (
-            data.map((test: PatientAppointmentlab) => (
+            data.map((test: PatientLabAppointment) => (
               <div
                 key={test?.id}
                 className="flex flex-col sm:flex-row items-center justify-between p-4 mb-3 border border-primary rounded-lg bg-white"

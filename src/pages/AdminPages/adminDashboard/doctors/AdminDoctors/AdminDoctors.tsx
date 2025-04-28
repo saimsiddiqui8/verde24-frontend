@@ -11,6 +11,15 @@ import {
   loadingStart,
 } from "../../../../../redux/slices/loadingSlice";
 
+
+type Doctor = {
+  id: number;
+  first_name: string;
+  last_name: string;
+  is_verified: boolean;
+};
+
+
 export default function AdminDoctors() {
   const dispatch = useDispatch();
   const getDoctors = async () => {
@@ -69,10 +78,3 @@ export default function AdminDoctors() {
     </DashboardSection>
   );
 }
-
-type Doctor = {
-  id: number;
-  first_name: string;
-  last_name: string;
-  is_verified: boolean;
-};

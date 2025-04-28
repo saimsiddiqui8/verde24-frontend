@@ -10,8 +10,8 @@ import {
 } from "../patientProfile/queries";
 import {
   findNearestLabs,
-  SearchLabname,
-  SearchLabtest,
+  searchLabByName,
+  searchLabTest,
 } from "../../../../api/apiCalls/patientsApi";
 import { useMutation, useQuery } from "react-query";
 import { RiMapPinLine, RiTimerLine } from "react-icons/ri";
@@ -111,7 +111,7 @@ export default function BookLabTest() {
 
   const { data: labResults, refetch } = useQuery(
     ["searchLabs", labSearch],
-    () => SearchLabname(SEARCH_LABS_NAME, { labName: labSearch }),
+    () => searchLabByName(SEARCH_LABS_NAME, { labName: labSearch }),
     {
       enabled: false,
       keepPreviousData: true,
@@ -120,7 +120,7 @@ export default function BookLabTest() {
 
   const { data: labtestResults, refetch: testrefetch } = useQuery(
     ["searchLabsTest", testSearch],
-    () => SearchLabtest(SEARCH_LABS_TEST, { labTestName: testSearch }),
+    () => searchLabTest(SEARCH_LABS_TEST, { labTestName: testSearch }),
     {
       enabled: false,
       keepPreviousData: true,

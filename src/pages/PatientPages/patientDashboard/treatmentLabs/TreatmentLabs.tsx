@@ -38,7 +38,7 @@ export default function TreatmentLabs() {
   const dispatch = useDispatch();
   const [searchQuery, setSearchQuery] = useState("");
 
-  const getLabAppoitment = async () => {
+  const getLabAppointment = async () => {
     if (!id) return;
 
     const response = await FindLabAppointmentByPatientId(
@@ -57,7 +57,7 @@ export default function TreatmentLabs() {
     queryKey: ["findlabappointment", id],
     queryFn: async () => {
       dispatch(loadingStart());
-      return getLabAppoitment();
+      return getLabAppointment();
     },
     onSuccess: () => dispatch(loadingEnd()),
     onError: (err: Error) => {
@@ -91,7 +91,7 @@ export default function TreatmentLabs() {
         <table className="w-full min-w-max table-auto text-left">
           <thead>
             <tr>
-              {TABLE_HEAD?.map((head) => (
+             {TABLE_HEAD.map((head) => (
                 <th key={head} className="bg-white p-2 sm:p-4">
                   <Typography
                     variant="small"

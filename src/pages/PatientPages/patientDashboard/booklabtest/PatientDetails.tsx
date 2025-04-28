@@ -118,7 +118,7 @@ const PatientDetails: React.FC<StepProps> = ({ nextStep, data, id }) => {
     nextStep();
   };
 
-  const handleback = () => {
+  const handleBack = () => {
     dispatch(deleteLabDetail());
     dispatch(clearAlllabTests());
     navigate(`/patient-dashboard/book-lab-test/lab-profile/${id}`);

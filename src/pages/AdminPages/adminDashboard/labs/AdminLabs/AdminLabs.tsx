@@ -11,6 +11,14 @@ import {
 } from "../../../../../redux/slices/loadingSlice";
 import { GET_ALL_LABS } from "./queries";
 
+
+type Lab = {
+  id: number;
+  lab_name: string;
+  is_verified: boolean;
+};
+
+
 export default function AdminLabs() {
   const dispatch = useDispatch();
   const getLabs = async () => {
@@ -65,17 +73,6 @@ export default function AdminLabs() {
           </div>
         ))}
       </div>
-      {/* <div className="w-4/5 mx-auto">
-        <Link to="/admin-dashboard/doctors/add-new">
-          <button className="form-btn my-3">Add New Doctor</button>
-        </Link>
-      </div> */}
     </DashboardSection>
   );
 }
-
-type Lab = {
-  id: number;
-  lab_name: string;
-  is_verified: boolean;
-};

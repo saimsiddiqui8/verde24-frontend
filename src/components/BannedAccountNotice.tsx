@@ -5,17 +5,17 @@ import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 
 export default function BannedAccountNotice() {
-  const is_banned = useSelector(
+  const isBanned = useSelector(
     (state: RootState) => state.user.currentUser?.is_verified,
   );
   const navigate = useNavigate();
   useEffect(() => {
-    if (is_banned) {
+    if (isBanned) {
       return;
     } else {
       navigate(-1);
     }
-  }, [is_banned]);
+  }, [isBanned]);
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50 p-6">

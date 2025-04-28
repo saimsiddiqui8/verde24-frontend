@@ -10,6 +10,11 @@ import {
   loadingStart,
 } from "../../../../../redux/slices/loadingSlice";
 
+type Hospital = {
+  id: number;
+  name: string;
+};
+
 export default function AdminHospitals() {
   const dispatch = useDispatch();
   const getHospitals = async () => {
@@ -65,8 +70,3 @@ export default function AdminHospitals() {
     </DashboardSection>
   );
 }
-
-type Hospital = {
-  id: number;
-  name: string;
-};

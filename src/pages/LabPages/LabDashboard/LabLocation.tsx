@@ -11,7 +11,7 @@ import { useSelector } from "react-redux";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import {
   getLabById,
-  updateLabCordinatesById,
+  updateLabCoordinatesById,
 } from "../../../api/apiCalls/labApi";
 import { FIND_LAB_QUERY, UPDATED_LAB_CORDINATES } from "./labAccount/queries";
 import { RootState } from "../../../redux/store";
@@ -105,10 +105,10 @@ const LabLocation = () => {
     }
   }, [data]);
 
-  const updateLabCordinate = async (data: updatePharmacyCoordinatesFData) => {
+  const updateLabCoordinate = async (data: updatePharmacyCoordinatesFData) => {
     if (!id) return;
 
-    return updateLabCordinatesById(UPDATED_LAB_CORDINATES, {
+    return updateLabCoordinatesById(UPDATED_LAB_CORDINATES, {
       updateLabCoordinatesId: id,
       latitude: data?.latitude,
       longitude: data?.longitude,
@@ -116,7 +116,7 @@ const LabLocation = () => {
     });
   };
 
-  const { data: updated, mutate } = useMutation(updateLabCordinate);
+  const { data: updated, mutate } = useMutation(updateLabCoordinate);
 
   const handleLabCordinate = () => {
     setEdit(false);
@@ -169,7 +169,7 @@ const LabLocation = () => {
       </div>
 
       <LoadScript
-        googleMapsApiKey="AIzaSyD_UG0Q5SzKVBFPbxwfs1q9dRjnxsmhQBo"
+        googleMapsApiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}
         libraries={libraries}
       >
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">

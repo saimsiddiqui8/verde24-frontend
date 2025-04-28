@@ -7,7 +7,7 @@ import {
 } from "../../../../api/apiCalls/labApi";
 import { DELETE_LAB_TEST_BY_ID, FIND_ALL_LAB_TEST_BY_LAB_ID } from "./queries";
 import { useMutation, useQuery, useQueryClient } from "react-query";
-import { AddlabtestType } from "../../../../api/apiCalls/types";
+import { AddLabTestType } from "../../../../api/apiCalls/types";
 import {
   loadingEnd,
   loadingStart,
@@ -48,11 +48,11 @@ const ViewTest = () => {
     },
   });
 
-  const filteredData = data?.filter((test: AddlabtestType) =>
+  const filteredData = data?.filter((test: AddLabTestType) =>
     test?.title?.toLowerCase().includes(searchTerm.toLowerCase()),
   );
 
-  const handledeletelabtest = async (Testid: number) => {
+  const handleDeleteLabTest = async (Testid: number) => {
     dispatch(loadingStart());
     const response = await DeleteLabTestById(DELETE_LAB_TEST_BY_ID, {
       deleteLabTestId: Testid,
@@ -64,7 +64,7 @@ const ViewTest = () => {
     return response;
   };
 
-  const { mutate } = useMutation(handledeletelabtest, {
+  const { mutate } = useMutation(handleDeleteLabTest, {
     onSuccess: () => {
       notifySuccess("Deleted Successfully!");
       queryClient.invalidateQueries(["labtest"]);
@@ -103,7 +103,7 @@ const ViewTest = () => {
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredData?.map((test: AddlabtestType, index: number) => (
+          {filteredData?.map((test: AddLabTestType, index: number) => (
             <div
               key={index}
               className="border border-primary py-4 px-6 rounded-3xl shadow-md flex flex-col items-center text-center"

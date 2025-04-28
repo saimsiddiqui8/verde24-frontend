@@ -11,11 +11,11 @@ import { RootState } from "../../../redux/store";
 import { useSelector } from "react-redux";
 import {
   getPharmacyById,
-  updatePharmacyCordinatesById,
+  updatePharmacyCoordinatesById,
 } from "../../../api/apiCalls/pharmacyApi";
 import {
   FIND_PHARMACY_QUERY,
-  UPDATED_PHARMACY_CORDINATES,
+  UPDATED_PHARMACY_COORDINATES ,
 } from "./accountManagement/queries";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { updatePharmacyCoordinatesFData } from "../../../api/apiCalls/types";
@@ -114,7 +114,7 @@ const PharmacyLocation = () => {
     data: updatePharmacyCoordinatesFData,
   ) => {
     if (!id) return;
-    return updatePharmacyCordinatesById(UPDATED_PHARMACY_CORDINATES, {
+    return updatePharmacyCoordinatesById(UPDATED_PHARMACY_COORDINATES , {
       updatePharmacyCoordinatesId: id,
       latitude: data?.latitude,
       longitude: data?.longitude,
@@ -177,7 +177,7 @@ const PharmacyLocation = () => {
       </div>
 
       <LoadScript
-        googleMapsApiKey="AIzaSyD_UG0Q5SzKVBFPbxwfs1q9dRjnxsmhQBo"
+        googleMapsApiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}
         libraries={libraries}
       >
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">

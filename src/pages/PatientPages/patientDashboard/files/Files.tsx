@@ -17,7 +17,7 @@ import { uploadFileDoctor } from "../../../../api/apiCalls/doctorsApi";
 import { CREATE_REPORT_BY_PATIENT, FIND_REPORT_BY_PATIENT_ID } from "./queries";
 import { RootState } from "../../../../redux/store";
 import {
-  CreateReportByPatient,
+  createReportByPatient,
   findPatientReportById,
 } from "../../../../api/apiCalls/patientsApi";
 import { notifyFailure, notifySuccess } from "../../../../utils/Utils";
@@ -43,7 +43,7 @@ interface PatientReport {
 export default function Files() {
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const [selectedFileaws, setSelectedFileAws] = useState<string | null>(null);
+  const [selectedFileAws, setSelectedFileAws] = useState<string | null>(null);
   const id = useSelector((state: RootState) => state.user.currentUser?.id);
   const dispatch = useDispatch();
   const queryClient = useQueryClient();
@@ -70,10 +70,10 @@ export default function Files() {
   };
 
   const handlecreatereport = async () => {
-    if (!selectedFileaws || !id) return;
+    if (!selectedFileAws || !id) return;
 
-    const response = await CreateReportByPatient(CREATE_REPORT_BY_PATIENT, {
-      files: [selectedFileaws],
+    const response = await createReportByPatient(CREATE_REPORT_BY_PATIENT, {
+      files: [selectedFileAws],
       patient_id: id,
     });
 
@@ -207,7 +207,7 @@ export default function Files() {
               <div key={index} className="w-full grid grid-cols-3">
                 {report.files && report.files.length > 0 ? (
                   report.files.map((img: string, index) => (
-                    <ImageUrl key={index} fileKey={img} istrue={true} />
+                    <ImageUrl key={index} fileKey={img} isViewFileTrue={true} />
                   ))
                 ) : (
                   <p className="text-primary text-lg text-center">

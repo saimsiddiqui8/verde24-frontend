@@ -13,13 +13,13 @@ const GET_IMG_URL = `
 
 type ImageComponentProp = {
   fileKey: string;
-  istrue?: boolean;
+  isViewFileTrue?: boolean;
   className?: string;
 };
 
 const ImageUrl: React.FC<ImageComponentProp> = ({
   fileKey,
-  istrue,
+  isViewFileTrue,
   className,
 }) => {
   const { data, isLoading, error } = useQuery({
@@ -48,7 +48,7 @@ const ImageUrl: React.FC<ImageComponentProp> = ({
 
   return (
     <div className="my-2 text-center mx-auto">
-      {isImage && !istrue ? (
+      {isImage && !isViewFileTrue ? (
         <img
           src={data}
           alt="image"
@@ -64,7 +64,7 @@ const ImageUrl: React.FC<ImageComponentProp> = ({
             View PDF
           </button>
         </>
-      ) : isImage && istrue ? (
+      ) : isImage && isViewFileTrue ? (
         <>
           <img src={jpgIcon} alt="jpgIcon" className="w-32" />
           <button

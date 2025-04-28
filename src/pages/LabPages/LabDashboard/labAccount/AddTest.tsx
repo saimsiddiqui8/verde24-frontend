@@ -14,7 +14,7 @@ import { useMutation, useQuery, useQueryClient } from "react-query";
 import { Toaster } from "react-hot-toast";
 import { notifySuccess, notifyFailure } from "../../../../utils/Utils";
 import {
-  AddLabTest,
+  addLabTest,
   FindLabTestById,
   UpdateLabTestById,
 } from "../../../../api/apiCalls/labApi";
@@ -23,7 +23,7 @@ import {
   FIND_LAB_TEST_BY_ID,
   UPDATE_LAB_TEST_BY_ID,
 } from "./queries";
-import { AddlabtestType } from "../../../../api/apiCalls/types";
+import { AddLabTestType } from "../../../../api/apiCalls/types";
 import { useNavigate, useParams } from "react-router-dom";
 
 const inputs = [
@@ -192,7 +192,7 @@ const AddTest = () => {
     handleSubmit,
     reset,
     formState: { errors },
-  } = useForm<AddlabtestType>({
+  } = useForm<AddLabTestType>({
     resolver: zodResolver(FormSchema),
   });
 
@@ -229,9 +229,9 @@ const AddTest = () => {
     }
   }, [labtestdata.data, reset]);
 
-  const addlabtest = async (data: AddlabtestType) => {
+  const addlabtest = async (data: AddLabTestType) => {
     if (!id) return;
-    const response = await AddLabTest(ADD_LAB_TEST, { data });
+    const response = await addLabTest(ADD_LAB_TEST, { data });
 
     if (!response) {
       throw new Error("Lab test creation failed!");
@@ -240,8 +240,9 @@ const AddTest = () => {
     return response;
   };
 
-  const updatelabtest = async (data: AddlabtestType) => {
+  const updatelabtest = async (data: AddLabTestType) => {
     if (!labid) return;
+    
     const response = await UpdateLabTestById(UPDATE_LAB_TEST_BY_ID, {
       updateLabTestId: Number(labid),
       data,
@@ -261,16 +262,16 @@ const AddTest = () => {
     },
   );
 
-  const onSubmit: SubmitHandler<AddlabtestType> = (data: AddlabtestType) => {
+  const onSubmit: SubmitHandler<AddLabTestType> = (data: AddLabTestType) => {
     if (!labid) {
-      const AddLabTest = {
+      const addLabTest = {
         title: data.title,
         price: data.price,
         description: data.description,
         lab_id: id,
       };
 
-      mutate(AddLabTest);
+      mutate(addLabTest);
       reset();
     } else {
       const UpdateLabTest = {
@@ -344,9 +345,9 @@ const AddTest = () => {
                         options={input?.options!}
                         placeholder={input?.placeholder}
                         properties={{
-                          ...register(input?.name as keyof AddlabtestType),
+                          ...register(input?.name as keyof AddLabTestType),
                         }}
-                        error={errors[input?.name as keyof AddlabtestType]}
+                        error={errors[input?.name as keyof AddLabTestType]}
                       />
                     ) : (
                       <InputField
@@ -355,9 +356,9 @@ const AddTest = () => {
                         placeholder={input.placeholder}
                         type={input.type}
                         properties={{
-                          ...register(input.name as keyof AddlabtestType),
+                          ...register(input.name as keyof AddLabTestType),
                         }}
-                        error={errors[input.name as keyof AddlabtestType]}
+                        error={errors[input.name as keyof AddLabTestType]}
                       />
                     )}
                   </div>

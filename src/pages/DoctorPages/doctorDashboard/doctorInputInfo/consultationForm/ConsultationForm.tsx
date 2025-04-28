@@ -602,7 +602,7 @@ export default function ConsultationForm() {
                 Your Email Id will not be shared with anyone. Registration No.
                 will be printed on Prescription. Please specify the complete
                 Registration No. Medical Qualification will be displayed under
-                your name in doctor listing. All fields are requred.
+                your name in doctor listing. All fields are required.
               </small>
             </div>
           </div>

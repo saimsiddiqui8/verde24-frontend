@@ -8,7 +8,6 @@ import {
   loadingStart,
 } from "../../../../../redux/slices/loadingSlice";
 
-// Define Payment interface
 interface Payment {
   id: string;
   amount: number;

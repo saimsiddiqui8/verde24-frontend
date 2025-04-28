@@ -41,7 +41,7 @@ wallet
 }
 }`;
 
-const updatebanned = `
+const updateBanned = `
 mutation UpdatePatient($updatePatientId: Int!, $data: PatientInputUpdate!) {
   updatePatient(id: $updatePatientId, data: $data) {
     id

@@ -47,7 +47,7 @@ export default function LabDetails() {
             />
           </div>
           <div className="flex-1 text-center sm:text-left">
-            <h2 className="text-xl sm:text-3xl font-medium">aghakhan</h2>
+            <h2 className="text-xl sm:text-3xl font-medium">Hospital</h2>
             <div className="flex justify-center sm:justify-between gap-10 mt-2">
               <div>
                 <p className="text-sm sm:text-base">Reviews</p>
@@ -121,7 +121,7 @@ export default function LabDetails() {
           <p>Satisfied with diagnosis and treatment</p>
           <p>PA & Staff was helpful</p>
           <p>Hospital / Clinic environment was well-maintained</p>
-          <p>Review shared on Marham feedback call - 20 hours ago</p>
+         <p>Review shared on Verde feedback call - 20 hours ago</p>
         </div>
       </ContentSection>
       <h2 className="text-2xl font-semibold">More Reviews</h2>

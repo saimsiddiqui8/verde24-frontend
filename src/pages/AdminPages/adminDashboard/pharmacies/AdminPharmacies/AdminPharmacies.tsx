@@ -10,6 +10,13 @@ import {
   loadingStart,
 } from "../../../../../redux/slices/loadingSlice";
 import { GET_ALL_PHARMACY } from "./queries";
+
+
+type Pharmacies = {
+  id: number;
+  pharmacy_name: string;
+  is_verified: boolean;
+};
 export default function AdminPharmacies() {
   const dispatch = useDispatch();
   const getPharmacies = async () => {
@@ -64,17 +71,7 @@ export default function AdminPharmacies() {
           </div>
         ))}
       </div>
-      {/* <div className="w-4/5 mx-auto">
-        <Link to="/admin-dashboard/doctors/add-new">
-          <button className="form-btn my-3">Add New Doctor</button>
-        </Link>
-      </div> */}
     </DashboardSection>
   );
 }
 
-type Pharmacies = {
-  id: number;
-  pharmacy_name: string;
-  is_verified: boolean;
-};

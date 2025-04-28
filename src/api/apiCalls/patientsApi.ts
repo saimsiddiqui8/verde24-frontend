@@ -4,7 +4,7 @@ import {
   CreateAppointmentData,
   CreatePatientType,
   CreateReportType,
-  labAppointmenttypecheckout,
+  labAppointmentTypeCheckout,
   NearestLabType,
   UserData,
 } from "./types";
@@ -186,7 +186,7 @@ export const getVerifiedDoctors = async () => {
   }
 };
 
-export const CreateReportByPatient = async (
+export const createReportByPatient = async (
   query: string,
   data: CreateReportType,
 ) => {
@@ -216,7 +216,7 @@ export const findNearestLabs = async (query: string, data: NearestLabType) => {
 
 export const LabAppointmentBooking = async (
   query: string,
-  variables: { data: labAppointmenttypecheckout },
+  variables: { data: labAppointmentTypeCheckout },
 ) => {
   try {
     const response = await publicRequest.post("/graphql", {
@@ -235,7 +235,7 @@ export const LabAppointmentBooking = async (
   }
 };
 
-export const AddToCard = async (
+export const addToCard = async (
   query: string,
   variables: { data: { patient_id: number; labTest_id: number } },
 ) => {
@@ -318,7 +318,7 @@ export const FindLabAppointmentByPatientId = async (
   }
 };
 
-export const SearchLabname = async (
+export const searchLabByName = async (
   query: string,
   variables: { labName: string },
 ) => {
@@ -334,7 +334,7 @@ export const SearchLabname = async (
   }
 };
 
-export const SearchLabtest = async (
+export const searchLabTest = async (
   query: string,
   variables: { labTestName: string },
 ) => {

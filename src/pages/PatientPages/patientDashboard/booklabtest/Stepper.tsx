@@ -9,7 +9,7 @@ import { useSelector } from "react-redux";
 const Stepper = () => {
   const navigate = useNavigate();
   const [step, setStep] = useState(1);
-  const Labbooking = useSelector((state: RootState) => state.Labbooking);
+  const labBooking = useSelector((state: RootState) => state.Labbooking);
   const { labTests, lab_id } = Labbooking;
   useEffect(() => {
     if (labTests?.length === 0) {

@@ -32,7 +32,7 @@ export const UPDATED_PHARMACY_QUERY = `
   }
 `;
 
-export const UPDATED_PHARMACY_CORDINATES = `
+export const UPDATED_PHARMACY_COORDINATES  = `
 mutation UpdatePharmacyCoordinates($updatePharmacyCoordinatesId: Int!, $latitude: Float!, $longitude: Float!, $placeName: String!) {
   updatePharmacyCoordinates(id: $updatePharmacyCoordinatesId, latitude: $latitude, longitude: $longitude, place_name: $placeName) {
     latitude

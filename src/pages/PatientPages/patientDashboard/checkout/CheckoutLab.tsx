@@ -17,7 +17,7 @@ import {
   DELETE_ALL_CARD,
   LAB_APPOINTMENT_BOOKING,
 } from "../patientProfile/queries";
-import { labAppointmenttypecheckout } from "../../../../api/apiCalls/types";
+import { labAppointmentTypeCheckout } from "../../../../api/apiCalls/types";
 import clock from "../../../../assets/clock.png";
 import calender from "../../../../assets/calendar.png";
 import bar from "../../../../assets/bar.png";
@@ -29,7 +29,7 @@ const CheckoutLab = () => {
   const patientId = useSelector(
     (state: RootState) => state.user.currentUser?.id,
   );
-  const Labbooking = useSelector((state: RootState) => state.Labbooking);
+  const labBooking = useSelector((state: RootState) => state.Labbooking);
   const {
     labTests,
     currency,
@@ -110,7 +110,7 @@ const CheckoutLab = () => {
     .map((test) => test.id)
     .filter((id): id is number => id !== null && id !== undefined);
 
-  const handleCreateAppointment = async (data: labAppointmenttypecheckout) => {
+  const handleCreateAppointment = async (data: labAppointmentTypeCheckout) => {
     const response = await LabAppointmentBooking(LAB_APPOINTMENT_BOOKING, {
       data,
     });
@@ -132,7 +132,7 @@ const CheckoutLab = () => {
 
     if (response?.message === "Amount has been deducted from wallet!") {
       setPaymentId(response.message);
-      const appointmentData: labAppointmenttypecheckout = {
+      const appointmentData: labAppointmentTypeCheckout = {
         appointment_date: appointment_date,
         appointment_time: appointment_time,
         appointment_weekday: appointment_weekday,
@@ -148,7 +148,7 @@ const CheckoutLab = () => {
       appointmentMutate(appointmentData);
     } else if (response?.payment?.id) {
       setPaymentId(response.payment.id);
-      const appointmentData: labAppointmenttypecheckout = {
+      const appointmentData: labAppointmentTypeCheckout = {
         appointment_date: appointment_date,
         appointment_time: appointment_time,
         appointment_weekday: appointment_weekday,

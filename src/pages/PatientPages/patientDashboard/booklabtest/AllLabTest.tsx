@@ -16,18 +16,18 @@ import {
   loadingEnd,
   loadingStart,
 } from "../../../../redux/slices/loadingSlice";
-import { AddlabtestType } from "../../../../api/apiCalls/types";
+import { AddLabTestType } from "../../../../api/apiCalls/types";
 import { useEffect, useState } from "react";
 import testimg from "../../../../assets/test-img.png";
 import { RootState } from "../../../../redux/store";
 import {
-  addLabdetail,
+  addLabDetail,
   addLabTestLocal,
   clearAlllabTests,
   deleteLabDetail,
 } from "../../../../redux/slices/LabBooking";
 import { ADD_TO_CARD } from "../patientProfile/queries";
-import { AddToCard } from "../../../../api/apiCalls/patientsApi";
+import { addToCard } from "../../../../api/apiCalls/patientsApi";
 import { notifyFailure, notifySuccess } from "../../../../utils/Utils";
 import { Toaster } from "react-hot-toast";
 
@@ -35,7 +35,7 @@ const AllLabTest = () => {
   const [search, setsearch] = useState("");
   const { id } = useParams();
   const dispatch = useDispatch();
-  const Patienid = useSelector(
+  const patientID = useSelector(
     (state: RootState) => state.user.currentUser?.id,
   );
   const queryClient = useQueryClient();
@@ -76,7 +76,7 @@ const AllLabTest = () => {
   const handleaddtocard = async (labTest_id: number) => {
     if (!Patienid) return;
 
-    const response = await AddToCard(ADD_TO_CARD, {
+    const response = await addToCard(ADD_TO_CARD, {
       data: { patient_id: Patienid, labTest_id },
     });
     return response;
@@ -97,7 +97,7 @@ const AllLabTest = () => {
     },
   });
 
-  const filteredData = data?.filter((item: AddlabtestType) =>
+  const filteredData = data?.filter((item: AddLabTestType) =>
     item.title.toLowerCase().includes(search.toLowerCase()),
   );
 
@@ -108,7 +108,7 @@ const AllLabTest = () => {
     description: string,
   ) => {
     dispatch(
-      addLabdetail({
+      addLabDetail({
         lab_id: Number(id),
         patient_id: Patienid,
         currency: "usd",
@@ -125,7 +125,7 @@ const AllLabTest = () => {
 
     navigate(`/patient-dashboard/book-lab-test/stepper`);
   };
-  const handleback = () => {
+  const handleBack = () => {
     dispatch(deleteLabDetail());
     dispatch(clearAlllabTests());
     navigate(-1);
@@ -197,7 +197,7 @@ const AllLabTest = () => {
         </div>
       )}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-5">
-        {filteredData?.map((test: AddlabtestType, index: number) => (
+        {filteredData?.map((test: AddLabTestType, index: number) => (
           <div
             key={index}
             className="border border-primary py-2 rounded-3xl shadow-md flex flex-col items-center text-center"

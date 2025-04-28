@@ -17,7 +17,7 @@ import {
 import { RootState } from "../../../../redux/store";
 import { notifyFailure, notifySuccess } from "../../../../utils/Utils";
 import { ADD_TO_CARD } from "../patientProfile/queries";
-import { AddToCard } from "../../../../api/apiCalls/patientsApi";
+import { addToCard } from "../../../../api/apiCalls/patientsApi";
 import { Toaster } from "react-hot-toast";
 
 const TestProfile = () => {
@@ -25,7 +25,7 @@ const TestProfile = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-  const Patienid = useSelector(
+  const patientID = useSelector(
     (state: RootState) => state.user.currentUser?.id,
   );
   useEffect(() => {
@@ -51,7 +51,7 @@ const TestProfile = () => {
 
   const handleaddtocard = async (labTest_id: number) => {
     if (!Patienid) return;
-    return await AddToCard(ADD_TO_CARD, {
+    return await addToCard(ADD_TO_CARD, {
       data: { patient_id: Patienid, labTest_id },
     });
   };
@@ -71,7 +71,7 @@ const TestProfile = () => {
     },
   });
 
-  const handleback = () => {
+  const handleBack = () => {
     dispatch(deleteLabDetail());
     dispatch(clearAlllabTests());
     navigate(-1);

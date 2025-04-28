@@ -109,7 +109,7 @@ export default function AddSlots() {
       }),
     );
   };
-  const deleteSlotsall = () => {
+  const deleteAllSlots= () => {
     setWeekdays((prev) =>
       prev?.map((day) => {
         return { ...day, slots: [] };

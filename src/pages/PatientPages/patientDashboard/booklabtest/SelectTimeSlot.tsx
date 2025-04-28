@@ -92,7 +92,7 @@ const SelectTimeSlot: React.FC<StepProps> = ({ prevStep, data }) => {
     navigate("/patient-dashboard/book-lab-test/checkout-lab");
   };
 
-  const handleback = () => {
+  const handleBack = () => {
     dispatch(deletePatientDetail());
     prevStep();
   };

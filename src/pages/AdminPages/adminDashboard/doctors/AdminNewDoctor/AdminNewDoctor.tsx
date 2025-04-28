@@ -71,6 +71,16 @@ const inputs = [
   },
 ];
 
+interface Inputs {
+  first_name: string;
+  last_name: string;
+  email: string;
+  phone_number: string;
+  gender: string;
+  password: string;
+}
+
+
 const UserSchema = z
   .object({
     first_name: z.string().min(1, { message: "First Name is required" }),
@@ -190,11 +200,3 @@ export default function AdminNewDoctor() {
   );
 }
 
-interface Inputs {
-  first_name: string;
-  last_name: string;
-  email: string;
-  phone_number: string;
-  gender: string;
-  password: string;
-}

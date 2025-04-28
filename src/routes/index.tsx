@@ -3,13 +3,10 @@ import {
   createRoutesFromElements,
   Route,
   Outlet,
-  Navigate,
 } from "react-router-dom";
 import PublicRoutes from "./PublicRoutes";
 import Navbar from "../components/Navbar";
 import ProtectedRoutes from "./ProtectedRoutes";
-import { RootState } from "../redux/store";
-import { useSelector } from "react-redux";
 import { USER_ROLES } from "../api/roles";
 import DoctorLayout from "./layouts/DoctorLayout";
 import PatientLayout from "./layouts/PatientLayout";
@@ -20,7 +17,6 @@ import {
   ForgotPasswordReset,
   Homepage,
   Page404,
-  Unauthorized,
 } from "../pages/CommonPages";
 import {
   BookSlot,
@@ -80,7 +76,6 @@ import DeclinedAppointments from "../pages/LabPages/LabDashboard/labAccount/Decl
 import PaymentsAndPayouts from "../pages/LabPages/LabDashboard/labAccount/PaymentsAndPayouts.tsx";
 import CollectionCenter from "../pages/LabPages/LabDashboard/labAccount/CollectionCenter.tsx";
 import LabPatientProfile from "../pages/LabPages/LabDashboard/labAccount/LabPatientProfile.tsx";
-import Patientgoogleauth from "../pages/PatientPages/patientSignIn/Patientgoogleauth.tsx";
 import PharmacyLocation from "../pages/PharmacyPages/pharmacyDashboard/PharmacyLocation.tsx";
 import LabLocation from "../pages/LabPages/LabDashboard/LabLocation.tsx";
 import AddTest from "../pages/LabPages/LabDashboard/labAccount/AddTest.tsx";
@@ -98,10 +93,8 @@ import AdminLabsProfile from "../pages/AdminPages/adminDashboard/labs/AdminLabsP
 import AdminPharmacies from "../pages/AdminPages/adminDashboard/pharmacies/AdminPharmacies/AdminPharmacies.tsx";
 import AdminPharmaciesProfile from "../pages/AdminPages/adminDashboard/pharmacies/AdminPharmaciesProfile/AdminPharmaciesProfile.tsx";
 import BannedAccountNotice from "../components/BannedAccountNotice.tsx";
-
-interface RequireAuthProps {
-  role: string;
-}
+import PatientGoogleAuth from "../pages/PatientPages/patientSignIn/Patientgoogleauth.tsx";
+import { RequireAuth, RequireBannedLab, RequireBannedPatient, RequireBannedPharmacy, RequireVerification } from "./RequireAuth.tsx";
 
 const AppLayout = () => {
   return (
@@ -112,86 +105,8 @@ const AppLayout = () => {
   );
 };
 
-const RequireVerification = () => {
-  const is_verified = useSelector(
-    (state: RootState) => state.user.currentUser?.is_verified,
-  );
 
-  if (is_verified === undefined) {
-    return (
-      <div className="flex items-center justify-center h-screen">
-        Loading...
-      </div>
-    );
-  }
 
-  return is_verified ? (
-    <Outlet />
-  ) : (
-    <Navigate to="/doctor-dashboard-unverified" replace />
-  );
-};
-
-const RequireBannedPatient = () => {
-  const is_banned = useSelector(
-    (state: RootState) => state.user.currentUser?.is_verified,
-  );
-
-  if (is_banned === undefined) {
-    return (
-      <div className="flex items-center justify-center h-screen">
-        Loading...
-      </div>
-    );
-  }
-
-  return is_banned ? (
-    <Navigate to="/patient-banned-account" replace />
-  ) : (
-    <Outlet />
-  );
-};
-
-const RequireBannedPharmacy = () => {
-  const is_banned = useSelector(
-    (state: RootState) => state.user.currentUser?.is_verified,
-  );
-
-  if (is_banned === undefined) {
-    return (
-      <div className="flex items-center justify-center h-screen">
-        Loading...
-      </div>
-    );
-  }
-
-  return is_banned ? (
-    <Navigate to="/pharmacy-banned-account" replace />
-  ) : (
-    <Outlet />
-  );
-};
-
-const RequireBannedLab = () => {
-  const is_banned = useSelector(
-    (state: RootState) => state.user.currentUser?.is_verified,
-  );
-
-  if (is_banned === undefined) {
-    return (
-      <div className="flex items-center justify-center h-screen">
-        Loading...
-      </div>
-    );
-  }
-
-  return is_banned ? <Navigate to="/lab-banned-account" replace /> : <Outlet />;
-};
-
-const RequireAuth = ({ role }: RequireAuthProps) => {
-  const user = useSelector((state: RootState) => state.user.currentUser);
-  return <>{user?.role === role ? <Outlet /> : <Unauthorized />}</>;
-};
 
 export const router = createBrowserRouter(
   createRoutesFromElements(
@@ -199,7 +114,7 @@ export const router = createBrowserRouter(
       <Route element={<AppLayout />}>
         <Route element={<PublicRoutes />}>
           <Route index element={<Homepage />} />
-          <Route path="auth" element={<Patientgoogleauth />} />
+          <Route path="auth" element={<PatientGoogleAuth  />} />
           <Route path="patient/sign-in" element={<PatientSignIn />} />
           <Route path="patient/sign-up" element={<PatientSignUp />} />
           <Route path="doctor/sign-in" element={<DoctorSignIn />} />

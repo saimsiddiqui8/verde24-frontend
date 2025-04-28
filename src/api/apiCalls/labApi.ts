@@ -1,5 +1,5 @@
 import { publicRequest } from "../requestMethods";
-import { AddlabtestType, UpdateLabResponse } from "./types";
+import { AddLabTestType, UpdateLabResponse } from "./types";
 
 export const getLabById = async (
   query: string,
@@ -90,7 +90,7 @@ export const verifyLabOTP = async (
   }
 };
 
-export const updateLabCordinatesById = async (
+export const updateLabCoordinatesById = async (
   query: string,
   variables: {
     updateLabCoordinatesId: number;
@@ -103,14 +103,14 @@ export const updateLabCordinatesById = async (
     const response = await publicRequest.post("/graphql", { query, variables });
     return response?.data?.data?.updateLabCoordinates;
   } catch (error) {
-    console.error("Error updating pharmacy cordinates:", error);
+    console.error("Error updating pharmacy coordinates:", error);
     throw error;
   }
 };
 
-export const AddLabTest = async (
+export const addLabTest = async (
   query: string,
-  variables: { data: AddlabtestType },
+  variables: { data: AddLabTestType },
 ) => {
   try {
     const response = await publicRequest.post("/graphql", { query, variables });
@@ -162,7 +162,7 @@ export const FindLabTestById = async (
 
 export const UpdateLabTestById = async (
   query: string,
-  variables: { updateLabTestId: number; data: AddlabtestType },
+  variables: { updateLabTestId: number; data: AddLabTestType },
 ) => {
   try {
     const response = await publicRequest.post("/graphql", { query, variables });

@@ -212,7 +212,7 @@ export interface CreateLabResponse {
   latitude: number;
 }
 
-export interface AddlabtestType {
+export interface AddLabTestType {
   id?: number;
   title: string;
   price: number;
@@ -289,7 +289,7 @@ export interface labAppointmenttype {
   currency?: string | null;
   labTests: labTests[];
 }
-export interface labAppointmenttypecheckout {
+export interface labAppointmentTypeCheckout {
   appointment_date: string | null;
   appointment_time: string | null;
   appointment_weekday: string | null;
@@ -310,7 +310,7 @@ interface LabTestItem {
   labTestId: number;
 }
 
-export interface PatientAppointmentlab {
+export interface PatientLabAppointment {
   id: number;
   appointment_date: string;
   appointment_time: string;
