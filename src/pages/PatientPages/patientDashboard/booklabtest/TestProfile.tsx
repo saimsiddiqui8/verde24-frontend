@@ -25,7 +25,7 @@ const TestProfile = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-  const patientId = useSelector(
+  const patientID = useSelector(
     (state: RootState) => state.user.currentUser?.id,
   );
   useEffect(() => {
@@ -50,7 +50,6 @@ const TestProfile = () => {
   });
 
   const handleaddtocard = async (labTest_id: number) => {
-     localtestingdone
     if (!patientID) return;
     return await addToCard(ADD_TO_CARD, {
       data: { patient_id: patientID, labTest_id },
@@ -64,9 +63,7 @@ const TestProfile = () => {
     onSuccess: () => {
       dispatch(loadingEnd());
       notifySuccess("Item added to cart!");
-       localtestingdone
       queryClient.invalidateQueries(["patientcard", patientID]);
-
     },
     onError: () => {
       dispatch(loadingEnd());
