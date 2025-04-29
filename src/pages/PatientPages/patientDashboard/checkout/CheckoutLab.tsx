@@ -22,6 +22,7 @@ import clock from "../../../../assets/clock.png";
 import calender from "../../../../assets/calendar.png";
 import bar from "../../../../assets/bar.png";
 import { useMutation, useQueryClient } from "react-query";
+
 const CheckoutLab = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [showModal, setShowModal] = useState(false);
@@ -108,7 +109,7 @@ const CheckoutLab = () => {
   };
   const testIds = labTests
     .map((test) => test.id)
-    .filter((id): id is number => id !== null && id !== undefined);
+    .filter((id): id is number => typeof id === "number" && !isNaN(id));
 
   const handleCreateAppointment = async (data: labAppointmentTypeCheckout) => {
     const response = await LabAppointmentBooking(LAB_APPOINTMENT_BOOKING, {

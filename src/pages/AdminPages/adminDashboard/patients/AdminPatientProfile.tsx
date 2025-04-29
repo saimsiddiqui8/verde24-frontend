@@ -48,6 +48,7 @@ mutation UpdatePatient($updatePatientId: Int!, $data: PatientInputUpdate!) {
     is_verified
   }
 }`;
+
 export default function AdminPatientProfile() {
   const [verified, setVerified] = useState(false);
   const { id } = useParams();
