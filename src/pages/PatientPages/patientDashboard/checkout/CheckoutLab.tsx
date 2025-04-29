@@ -109,7 +109,7 @@ const CheckoutLab = () => {
   };
   const testIds = labTests
     .map((test) => test.id)
-    .filter((id: Number): id is number => id !== null && id !== undefined);
+    .filter((id): id is number => typeof id === "number" && !isNaN(id));
 
   const handleCreateAppointment = async (data: labAppointmentTypeCheckout) => {
     const response = await LabAppointmentBooking(LAB_APPOINTMENT_BOOKING, {
