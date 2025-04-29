@@ -5,11 +5,15 @@ import {
   PhoneInputComp,
 } from "../../../../components";
 import { useEffect, useMemo, useState, useRef } from "react";
-import { useForm } from "react-hook-form";
+import { SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { isPhoneValid, notifySuccess } from "../../../../utils/Utils";
-import { useSelector } from "react-redux";
+import {
+  isPhoneValid,
+  notifyFailure,
+  notifySuccess,
+} from "../../../../utils/Utils";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../../redux/store";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { FIND_PHARMACY_QUERY, UPDATED_PHARMACY_QUERY } from "./queries";
@@ -18,6 +22,14 @@ import {
   getPharmacyById,
   updatePharmacyById,
 } from "../../../../api/apiCalls/pharmacyApi";
+import {
+  loadingEnd,
+  loadingStart,
+} from "../../../../redux/slices/loadingSlice";
+import { uploadFileDoctor } from "../../../../api/apiCalls/doctorsApi";
+import { FILE_UPLOAD } from "../../../DoctorPages/doctorDashboard/doctorInputInfo/consultationForm/queries";
+import { UpdatedPharmacyData } from "../../../../api/apiCalls/types";
+import ImageUrl from "../../../../components/Icons/Sidemenu/ImageUrl";
 
 const inputs = [
   {
@@ -48,7 +60,7 @@ const inputs = [
     label: "Registered Email",
     type: "email",
     placeholder: "Enter Registered Email",
-    name: "registered_email",
+    name: "email",
   },
   {
     label: "Phone Number",
@@ -66,8 +78,9 @@ const FormSchema = z
     registration_number: z
       .string()
       .min(1, { message: "Registration Number is required" }),
-    registered_email: z.string().email({ message: "Invalid email address" }),
+    email: z.string().email({ message: "Invalid email address" }),
     phone_number: z.string().min(1, { message: "Phone Number is required" }),
+    logo: z.string().min(1, { message: "Image is required" }),
   })
   .refine((data) => isPhoneValid(data.phone_number), {
     message: "Invalid Phone Number",
@@ -79,16 +92,34 @@ export default function AccountManagement() {
     register,
     handleSubmit,
     reset,
+    setValue,
+    getValues,
     formState: { errors },
-  } = useForm({
+  } = useForm<UpdatedPharmacyData>({
     resolver: zodResolver(FormSchema),
   });
 
   const [edit, setEdit] = useState(false);
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [image, setImage] = useState<string | null>();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const id = useSelector((state: RootState) => state.user.currentUser?.id);
+  const dispatch = useDispatch();
   const queryClient = useQueryClient();
+
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setImage(URL.createObjectURL(file));
+    try {
+      dispatch(loadingStart());
+      const uploadedFileUrl = await uploadFileDoctor(FILE_UPLOAD, file);
+      setValue("logo", uploadedFileUrl);
+      dispatch(loadingEnd());
+    } catch (error) {
+      dispatch(loadingEnd());
+      console.error("File upload failed:", error);
+    }
+  };
 
   const getPharmacy = async () => {
     if (!id) return;
@@ -115,17 +146,15 @@ export default function AccountManagement() {
       email,
       phone_number,
       logo,
-      is_verified,
     } = pharmacyData.data;
     return {
       name,
       pharmacy_name,
       city,
       registration_number,
-      registered_email: email,
+      email,
       phone_number,
       logo,
-      is_verified,
     };
   }, [pharmacyData?.data]);
 
@@ -135,48 +164,50 @@ export default function AccountManagement() {
     }
   }, [pharmacyData?.data, reset]);
 
-  const updatePharmacy = async (data: any) => {
+  const updatePharmacy = async (data: UpdatedPharmacyData) => {
     if (!id) return;
-    return updatePharmacyById(UPDATED_PHARMACY_QUERY, {
+
+    const response = await updatePharmacyById(UPDATED_PHARMACY_QUERY, {
       updatePharmacyId: id,
-      data: {
-        ...data,
-        logo: data.logo || "",
-        is_verified: data.is_verified || false,
-      },
+      data,
     });
+
+    if (!response) {
+      throw new Error("Failed to update Pharmacy!");
+    }
+
+    return response;
   };
 
-  const { data, mutate } = useMutation(updatePharmacy);
+  const { mutate } = useMutation(updatePharmacy, {
+    onMutate: () => {
+      dispatch(loadingStart());
+    },
+    onSuccess: () => {
+      dispatch(loadingEnd());
+      notifySuccess("Profile Updated!");
+      queryClient.invalidateQueries(["pharmacy"]);
+    },
+    onError: (error: Error) => {
+      dispatch(loadingEnd());
+      notifyFailure(error.message || "Something went wrong!");
+    },
+  });
 
-  const onSubmit = (data: any) => {
+  const onSubmit: SubmitHandler<UpdatedPharmacyData> = (
+    data: UpdatedPharmacyData,
+  ) => {
     setEdit(false);
     const updatedData = {
       name: data.name,
       pharmacy_name: data.pharmacy_name,
       city: data.city,
       registration_number: data.registration_number,
-      email: data.registered_email,
+      email: data.email,
       phone_number: data.phone_number,
-      logo: selectedFile ? URL.createObjectURL(selectedFile) : "",
-      is_verified: true,
+      logo: getValues("logo") ?? "",
     };
     mutate(updatedData);
-  };
-
-  useEffect(() => {
-    if (data?.email) {
-      notifySuccess("Profile Updated!");
-      queryClient.invalidateQueries({
-        queryKey: ["pharmacy"],
-      });
-    }
-  }, [data, queryClient]);
-
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      setSelectedFile(e.target.files[0]);
-    }
   };
 
   const handleUploadClick = () => {
@@ -231,8 +262,10 @@ export default function AccountManagement() {
                         placeholder={input.placeholder}
                         type={input.type}
                         disabled={!edit}
-                        properties={{ ...register(input.name) }}
-                        error={errors[input.name]}
+                        properties={{
+                          ...register(input.name as keyof UpdatedPharmacyData),
+                        }}
+                        error={errors[input.name as keyof UpdatedPharmacyData]}
                       />
                     )}
                   </div>
@@ -241,12 +274,14 @@ export default function AccountManagement() {
               <div className="w-full md:w-2/5 flex flex-col items-center">
                 <div className="mt-4 flex flex-col items-center">
                   <span className="inline-block h-32 w-32 rounded-full overflow-hidden bg-gray-100 border-2 border-green-500">
-                    {selectedFile ? (
+                    {image ? (
                       <img
-                        src={URL.createObjectURL(selectedFile)}
+                        src={image}
                         alt="Selected logo"
                         className="h-full w-full object-cover"
                       />
+                    ) : defaultPharmacyData?.logo ? (
+                      <ImageUrl fileKey={defaultPharmacyData.logo} />
                     ) : (
                       <svg
                         className="h-full w-full text-gray-400"
@@ -276,6 +311,11 @@ export default function AccountManagement() {
                         Upload Logo
                       </button>
                     </>
+                  )}
+                  {errors["logo"] && (
+                    <small className="text-red-500 font-medium uppercase">
+                      <>{errors["logo"]?.message}</>
+                    </small>
                   )}
                 </div>
               </div>

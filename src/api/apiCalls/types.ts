@@ -1,5 +1,3 @@
-import { floated } from "@material-tailwind/react/types/components/card";
-
 export interface Doctor {
   first_name: string;
   last_name: string;
@@ -33,6 +31,8 @@ export interface PatientData {
   other_history: string;
 }
 export interface CreatePatientType {
+  latitude: number;
+  longitude: number;
   first_name: string;
   last_name: string;
   email: string;
@@ -48,6 +48,7 @@ export interface ApiResponse<T> {
 export interface UserData {
   first_name: string;
   last_name: string;
+  image?: string;
   gender: string;
   phone_number: string;
   insurance_id: string;
@@ -55,20 +56,20 @@ export interface UserData {
   weight: number;
   blood_group: string;
   other_history: string;
+  patient_name?: string;
+  patient_age?: string;
 }
 
-interface UpdateDoctorData {
+export interface UpdateDoctorData {
+  online?: boolean;
   id?: number;
   first_name?: string;
   last_name?: string;
   email?: string;
   phone_number?: string;
   gender?: string;
-  password?: string;
   is_verified?: boolean;
   form_submitted?: boolean;
-  verification_code?: string;
-  verification_code_expiry?: number;
   image?: string;
   city?: string;
   country?: string;
@@ -77,20 +78,23 @@ interface UpdateDoctorData {
   registration_no?: string;
   qualification?: string;
   consultation_mode?: string;
-  consultation_fee_regular?: floated;
-  consultation_fee_discounted?: floated;
-  booking_lead_time?: string;
+  consultation_fee_regular?: number | undefined;
+  consultation_fee_discounted?: number | undefined;
   payout_method?: string;
   payout_method_id?: string;
   address?: string;
   postal_code?: string;
-  services?: string[];
-  specialization?: string[];
+  services?: string;
+  specialization?: string;
   bibliography?: string;
-}
-
-export interface UpdateDoctorVariables {
-  data: UpdateDoctorData;
+  work?: string;
+  degree?: string;
+  designation?: string;
+  enterSymptom?: string;
+  institute?: string;
+  complete_name?: string;
+  ac_no?: string;
+  upi_id?: string;
 }
 
 export type FindDoctorByIdVariables = {
@@ -172,27 +176,48 @@ export type createDoctorData = {
 };
 
 export interface UpdatedPharmacyData {
-  logo: string;
+  logo?: string;
   name: string;
   pharmacy_name: string;
   city: string;
   registration_number: string;
   email: string;
   phone_number: string;
-  is_verified: boolean;
-  createdAt: string;
+  createdAt?: string;
+}
+
+export interface updatePharmacyCoordinatesFData {
+  latitude: number;
+  longitude: number;
+  placeName: string;
 }
 
 export interface UpdateLabResponse {
   logo?: string;
-  name?: string;
+  name: string;
   lab_name: string;
   city: string;
   registration_number: string;
   email: string;
   phone_number: string;
-  is_verified: boolean;
-  createdAt: string;
+  createdAt?: string;
+}
+
+export interface CreateLabResponse {
+  name: string;
+  email: string;
+  phone_number: string;
+  password: string;
+  longitude: number;
+  latitude: number;
+}
+
+export interface AddLabTestType {
+  id?: number;
+  title: string;
+  price: number;
+  lab_id?: number | null;
+  description: string;
 }
 
 export interface CreateAppointmentType {
@@ -224,4 +249,76 @@ export interface CreateMeetingLink {
     access_token: string;
     refresh_token: string;
   };
+}
+
+export interface hospitalsType {
+  id: string;
+  name: string;
+}
+
+export interface CreateReportType {
+  files: string[];
+  patient_id: number | null;
+}
+export interface NearestLabType {
+  latitude: number;
+  longitude: number;
+  radiusInKm?: number;
+}
+
+export type labTests = {
+  title?: string | null;
+  price?: number | null;
+  description?: string | null;
+  id: number | null;
+};
+
+export interface labAppointmenttype {
+  appointment_date: string | null;
+  appointment_time: string | null;
+  appointment_weekday: string | null;
+  lab_id: number | null;
+  patient_age: number | null;
+  patient_email: string | null;
+  patient_gender: string | null;
+  patient_id: number | null;
+  patient_name: string | null;
+  patient_phone_number: string | null;
+  payment_id?: number | string | null;
+  status?: string | null;
+  currency?: string | null;
+  labTests: labTests[];
+}
+export interface labAppointmentTypeCheckout {
+  appointment_date: string | null;
+  appointment_time: string | null;
+  appointment_weekday: string | null;
+  lab_id: number | null;
+  patient_age: number | null;
+  patient_email: string | null;
+  patient_gender: string | null;
+  patient_id: number | null;
+  patient_name: string | null;
+  patient_phone_number: string | null;
+  payment_id?: number | string | null;
+  status?: string | null;
+  currency?: string | null;
+  labTests: number[];
+}
+
+interface LabTestItem {
+  labTestId: number;
+}
+
+export interface PatientLabAppointment {
+  id: number;
+  appointment_date: string;
+  appointment_time: string;
+  appointment_weekday: string;
+  patient_name: string;
+  labTests: LabTestItem[];
+}
+
+export interface LabTestWrapper {
+  labTest: labTests;
 }

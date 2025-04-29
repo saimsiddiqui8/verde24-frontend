@@ -8,8 +8,9 @@ import {
   loadingEnd,
   loadingStart,
 } from "../../../../redux/slices/loadingSlice";
+import { useQuery } from "react-query";
 import { notifyFailure } from "../../../../utils/Utils";
-import { useEffect, useState } from "react";
+import { Toaster } from "react-hot-toast";
 
 interface Payment {
   id: string;
@@ -27,27 +28,32 @@ const TABLE_HEAD = [
 ];
 
 export default function TransactionHistory() {
-  const [paymentDetails, setPaymentDetails] = useState<Payment[]>([]);
   const id = useSelector((state: RootState) => state.user.currentUser?.id);
   const dispatch = useDispatch();
 
   const getPaymentByPatient = async () => {
-    dispatch(loadingStart());
-    try {
-      const response = await findPaymentByPatient(FIND_PAYMENT_BY_PATIENTID, {
-        findPaymentByPatientId: id,
-      });
-      setPaymentDetails(response);
-      dispatch(loadingEnd());
-    } catch (err: any) {
-      notifyFailure(err.toString());
-      dispatch(loadingEnd());
+    if (!id) return;
+    const response = await findPaymentByPatient(FIND_PAYMENT_BY_PATIENTID, {
+      findPaymentByPatientId: id,
+    });
+    if (!response) {
+      throw new Error("Failed to fetch payment details!");
     }
+    return response;
   };
 
-  useEffect(() => {
-    getPaymentByPatient();
-  }, []);
+  const { data } = useQuery({
+    queryKey: ["getpaymentbypatient", id],
+    queryFn: async () => {
+      dispatch(loadingStart());
+      return getPaymentByPatient();
+    },
+    onSuccess: () => dispatch(loadingEnd()),
+    onError: (err: Error) => {
+      dispatch(loadingEnd());
+      notifyFailure(err.message);
+    },
+  });
 
   return (
     <DashboardSection>
@@ -74,8 +80,8 @@ export default function TransactionHistory() {
             </tr>
           </thead>
           <tbody>
-            {paymentDetails.length > 0 ? (
-              paymentDetails.map(({ id, amount, payment_date, is_paid }) => (
+            {(data ?? [])?.length > 0 ? (
+              data?.map(({ id, amount, payment_date, is_paid }: Payment) => (
                 <tr key={id} className="odd:bg-[#5C89D826]">
                   <td className="p-2 sm:p-4">
                     <Typography variant="small" className="font-normal">
@@ -108,7 +114,7 @@ export default function TransactionHistory() {
               ))
             ) : (
               <tr>
-                <td colSpan={5} className="text-center p-4">
+                <td colSpan={5} className="text-center p-4 text-2xl">
                   No payment found.
                 </td>
               </tr>
@@ -116,6 +122,7 @@ export default function TransactionHistory() {
           </tbody>
         </table>
       </div>
+      <Toaster />
     </DashboardSection>
   );
 }

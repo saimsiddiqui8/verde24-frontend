@@ -2,17 +2,13 @@ export const DOCTOR_UPDATE_QUERY = `
 mutation Mutation($updateDoctorId: Int!, $data: DoctorInputUpdate!) {
   updateDoctor(id: $updateDoctorId, data: $data) {
     id
-    online
     first_name
     last_name
     email
     phone_number
     gender
-    password
     is_verified
     form_submitted
-    verification_code
-    verification_code_expiry
     image
     city
     country
@@ -23,14 +19,19 @@ mutation Mutation($updateDoctorId: Int!, $data: DoctorInputUpdate!) {
     consultation_mode
     consultation_fee_regular
     consultation_fee_discounted
-    booking_lead_time
-    payout_method
     payout_method_id
     address
     postal_code
     services
     specialization
     bibliography
+    work
+    degree
+    designation
+    enterSymptom
+    institute
+    ac_no
+    upi_id
   }
 }
 `;
@@ -40,16 +41,12 @@ query FindDoctorById($findDoctorByIdId: Int!) {
   findDoctorById(id: $findDoctorByIdId) {
     id
     first_name
-    online
     last_name
     email
     phone_number
     gender
-    password
     is_verified
     form_submitted
-    verification_code
-    verification_code_expiry
     image
     city
     country
@@ -60,14 +57,19 @@ query FindDoctorById($findDoctorByIdId: Int!) {
     consultation_mode
     consultation_fee_regular
     consultation_fee_discounted
-    booking_lead_time
-    payout_method
     payout_method_id
     address
     postal_code
     services
     specialization
     bibliography
+    work
+    degree
+    designation
+    enterSymptom
+    institute
+    ac_no
+    upi_id
   }
 }
 `;
@@ -235,3 +237,22 @@ mutation CreateMeeting($data: CreateGoogleMeet!) {
   }
 }
 `;
+
+export const FILE_UPLOAD = `
+mutation Mutation($file: Upload!) {
+ uploadFile(file: $file)
+}`;
+
+export const FIND_LAB_APPOINTMENT_BY_PATIENT_ID = `
+query FindLabAppointmentByPatientId($findLabAppointmentByPatientIdId: Int!) {
+  findLabAppointmentByPatientId(id: $findLabAppointmentByPatientIdId) {
+    id
+    appointment_date
+    appointment_time
+    appointment_weekday
+    status
+    Lab {
+      lab_name
+    }
+  }
+}`;

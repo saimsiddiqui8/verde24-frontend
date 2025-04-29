@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, SyntheticEvent } from "react";
 import {
   DashboardSection,
   InputField,
@@ -74,6 +74,15 @@ const initialValue = {
   gender: "",
 };
 
+interface Inputs {
+  [key: string]: string | string[] | boolean;
+  first_name: string;
+  last_name: string;
+  email: string;
+  phone_number: string;
+  gender: string;
+}
+
 export default function AdminEditPatient() {
   const [inputs, setInputs] = useState(inputsArr);
   const [inputValues, setInputValues] = useState<Inputs>(initialValue);
@@ -83,10 +92,12 @@ export default function AdminEditPatient() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
-  const handleChange = (e: any) => {
-    setInputValues((prev: any) => ({
+  const handleChange = (e: SyntheticEvent) => {
+    const target = e.target as HTMLInputElement;
+
+    setInputValues((prev: Inputs) => ({
       ...prev,
-      [e.target.name]: e.target.value,
+      [target.name]: target.value,
     }));
   };
 
@@ -106,12 +117,12 @@ export default function AdminEditPatient() {
     setInputs(updatedInputs);
   };
 
-  const createPatient = async (data: any) => {
-    const { id, ...other } = data;
+  const createPatient = async (data: Inputs) => {
+    const { id, wallet, ...other } = data;
     return publicRequest
       .post("/graphql", {
         query: UPDATE_PATIENT_QUERY,
-        variables: { id: Number(id), data: other },
+        variables: { updatePatientId: Number(id), data: other },
       })
       .then((response) => response?.data?.data?.updatePatient);
   };
@@ -249,13 +260,4 @@ export default function AdminEditPatient() {
       <Toaster />
     </DashboardSection>
   );
-}
-
-interface Inputs {
-  [key: string]: string | string[] | boolean;
-  first_name: string;
-  last_name: string;
-  email: string;
-  phone_number: string;
-  gender: string;
 }

@@ -23,6 +23,7 @@ import {
 import { notifyFailure } from "../../../../../utils/Utils";
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
+import { useQuery } from "react-query";
 
 const TABLE_HEAD = [
   "Patient Name",
@@ -57,9 +58,6 @@ interface Appointment {
 }
 
 export default function Appointments() {
-  const [doctorAppointments, setDoctorAppointments] = useState<Appointment[]>(
-    [],
-  );
   const [authResponse, setAuthResponse] = useState<string | null>(null);
   const id = useSelector((state: RootState) => state.user.currentUser?.id);
   const dispatch = useDispatch();
@@ -84,20 +82,28 @@ export default function Appointments() {
   }, [location]);
 
   const getDoctorAppointments = async () => {
-    dispatch(loadingStart());
-    try {
-      const response = await findAppointmentByDoctor(
-        GET_APPOINTMENT_BY_DOCTOR_ID,
-        {
-          findAppointmentByDoctorId: id,
-        },
-      );
-      setDoctorAppointments(response);
-      dispatch(loadingEnd());
-    } catch (err: any) {
-      notifyFailure(err.toString());
-    }
+    const response = await findAppointmentByDoctor(
+      GET_APPOINTMENT_BY_DOCTOR_ID,
+      {
+        findAppointmentByDoctorId: id,
+      },
+    );
+    return response;
   };
+
+  const { data } = useQuery({
+    queryKey: ["finddoctorappointment", id],
+    queryFn: async () => {
+      dispatch(loadingStart());
+      const result = await getDoctorAppointments();
+      return result;
+    },
+    onSuccess: () => dispatch(loadingEnd()),
+    onError: (err: Error) => {
+      dispatch(loadingEnd());
+      notifyFailure(err.message);
+    },
+  });
 
   const getAuth = async () => {
     try {
@@ -111,7 +117,6 @@ export default function Appointments() {
     }
   };
   useEffect(() => {
-    getDoctorAppointments();
     getAuth();
   }, []);
 
@@ -202,7 +207,7 @@ export default function Appointments() {
             </tr>
           </thead>
           <tbody>
-            {doctorAppointments?.map(
+            {data?.map(
               ({
                 id,
                 patient_id,
@@ -212,7 +217,7 @@ export default function Appointments() {
                 status,
                 meeting,
                 patient,
-              }) => (
+              }: Appointment) => (
                 <tr key={id} className="odd:bg-[#5C89D826]">
                   <td className="p-2 sm:p-4">
                     <Typography variant="small" className="font-normal">

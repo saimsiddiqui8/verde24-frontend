@@ -6,9 +6,10 @@ export default function RadioInput({
   properties,
   error,
   selected,
+  className,
 }: RadioInputProps) {
   return (
-    <div className="my-3.5">
+    <div className={`${className ?? "my-3.5"}`}>
       {label && (
         <label className="text-xs text-primary duration-300 bg-white px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto start-1">
           {label}
@@ -54,4 +55,5 @@ type RadioInputProps = {
   error?: any;
   properties?: any;
   selected?: string;
+  className?: string;
 };

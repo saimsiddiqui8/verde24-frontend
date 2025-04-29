@@ -1,5 +1,11 @@
 import { DashboardSection } from "../../../components";
-import { FaUserDoctor, FaUser, FaHospital } from "react-icons/fa6";
+import {
+  FaUserDoctor,
+  FaUser,
+  FaHospital,
+  FaCapsules,
+  FaMicroscope,
+} from "react-icons/fa6";
 import { Link } from "react-router-dom";
 
 export default function AdminDashboardHome() {
@@ -31,6 +37,24 @@ export default function AdminDashboardHome() {
           >
             <FaHospital size={50} />
             <h3 className="text-xl font-medium">Hospitals</h3>
+          </Link>
+        </div>
+        <div className="col-span-1 shadow-lg rounded border">
+          <Link
+            to="/admin-dashboard/labs"
+            className="h-full w-full flex flex-col items-center justify-center gap-2 px-2 py-4"
+          >
+            <FaMicroscope size={50} />
+            <h3 className="text-xl font-medium">Labs</h3>
+          </Link>
+        </div>
+        <div className="col-span-1 shadow-lg rounded border">
+          <Link
+            to="/admin-dashboard/pharmacies"
+            className="h-full w-full flex flex-col items-center justify-center gap-2 px-2 py-4"
+          >
+            <FaCapsules size={50} />
+            <h3 className="text-xl font-medium">Pharmacies</h3>
           </Link>
         </div>
       </div>

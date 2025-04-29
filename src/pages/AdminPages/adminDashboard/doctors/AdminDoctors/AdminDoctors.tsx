@@ -5,8 +5,21 @@ import { useQuery } from "react-query";
 import { FaUserCircle } from "react-icons/fa";
 import { MdVerified } from "react-icons/md";
 import { DOCTOR_QUERY } from "./queries";
+import { useDispatch } from "react-redux";
+import {
+  loadingEnd,
+  loadingStart,
+} from "../../../../../redux/slices/loadingSlice";
+
+type Doctor = {
+  id: number;
+  first_name: string;
+  last_name: string;
+  is_verified: boolean;
+};
 
 export default function AdminDoctors() {
+  const dispatch = useDispatch();
   const getDoctors = async () => {
     try {
       const response = await publicRequest.post("/graphql", {
@@ -19,14 +32,15 @@ export default function AdminDoctors() {
     }
   };
 
-  const { data, isLoading } = useQuery({
+  const { data } = useQuery({
     queryKey: ["adminDoctors"],
-    queryFn: getDoctors,
+    queryFn: async () => {
+      dispatch(loadingStart());
+      return getDoctors();
+    },
+    onSuccess: () => dispatch(loadingEnd()),
   });
 
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
   return (
     <DashboardSection title="Doctors">
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 my-2">
@@ -62,10 +76,3 @@ export default function AdminDoctors() {
     </DashboardSection>
   );
 }
-
-type Doctor = {
-  id: number;
-  first_name: string;
-  last_name: string;
-  is_verified: boolean;
-};

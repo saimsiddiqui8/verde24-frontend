@@ -6,6 +6,9 @@ const initialState = {
     token: null,
     email: null,
     role: null,
+    is_verified: null,
+    latitude: null,
+    longitude: null,
   },
 };
 
@@ -22,6 +25,9 @@ export const userSlice = createSlice({
         token: null,
         email: null,
         role: null,
+        is_verified: null,
+        latitude: null,
+        longitude: null,
       };
     },
   },

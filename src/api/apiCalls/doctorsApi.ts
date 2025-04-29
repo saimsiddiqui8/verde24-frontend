@@ -10,8 +10,8 @@ import {
   FindDoctorTimeSlotsVariables,
   OtpVariables,
   PaymentVariables,
+  UpdateDoctorData,
   UpdateDoctorTimeSlotVariables,
-  UpdateDoctorVariables,
   VerifyOtpVariables,
 } from "./types";
 
@@ -67,28 +67,37 @@ export const getDoctorToken = async (
   query: string,
   variables: DoctorAuthVariables,
 ) => {
-  const response = await publicRequest.post("/graphql", {
-    query,
-    variables,
-  });
-  return response.data.data.getDoctorToken;
+  try {
+    const response = await publicRequest.post("/graphql", {
+      query,
+      variables,
+    });
+    return response.data.data.getDoctorToken;
+  } catch (error) {
+    console.error("Error getting doctor token:", error);
+    throw error;
+  }
 };
 
 export const createDoctor = async (
   query: string,
   variables: createDoctorData,
 ) => {
-  return publicRequest
-    .post("/graphql", {
+  try {
+    const response = await publicRequest.post("/graphql", {
       query,
       variables,
-    })
-    .then((response) => response.data.data.createDoctor);
+    });
+    return response.data.data.createDoctor;
+  } catch (error) {
+    console.error("Error creating doctor:", error);
+    throw error;
+  }
 };
 
 export const updateDoctor = async (
   query: string,
-  variables: { updateDoctorId: number | null; data: UpdateDoctorVariables },
+  variables: { updateDoctorId: number | null; data: UpdateDoctorData },
 ) => {
   try {
     const response = await publicRequest.post("/graphql", {
@@ -157,33 +166,45 @@ export const checkDoctorEmail = async (
   query: string,
   variables: EmailVariables,
 ) => {
-  return publicRequest
-    .post("/graphql", {
+  try {
+    const response = await publicRequest.post("/graphql", {
       query,
       variables,
-    })
-    .then((response) => response.data.data.findDoctorByEmail);
+    });
+    return response.data.data.findDoctorByEmail;
+  } catch (error) {
+    console.error("Error checking doctor email:", error);
+    throw error;
+  }
 };
 
 export const sendDoctorOTP = async (query: string, variables: OtpVariables) => {
-  return publicRequest
-    .post("/graphql", {
+  try {
+    const response = await publicRequest.post("/graphql", {
       query,
       variables,
-    })
-    .then((response) => response.data.data.createUserOtp);
+    });
+    return response.data.data.createUserOtp;
+  } catch (error) {
+    console.error("Error sending OTP:", error);
+    throw error;
+  }
 };
 
 export const verifyDoctorOTP = async (
   query: string,
   variables: VerifyOtpVariables,
 ) => {
-  return publicRequest
-    .post("/graphql", {
+  try {
+    const response = await publicRequest.post("/graphql", {
       query,
       variables,
-    })
-    .then((response) => response.data.data.verifyUserOtp);
+    });
+    return response.data.data.verifyUserOtp;
+  } catch (error) {
+    console.error("Error verifying OTP:", error);
+    throw error;
+  }
 };
 
 export const createDoctorTimeSlot = async (
@@ -257,6 +278,40 @@ export const createMeeting = async (query: string, data: CreateMeetingLink) => {
     return response?.data?.data?.createMeeting;
   } catch (error) {
     console.error("Error creating Meeting Link:", error);
+    throw error;
+  }
+};
+
+export const uploadFileDoctor = async (query: string, file: File) => {
+  try {
+    const formData = new FormData();
+    formData.append(
+      "operations",
+      JSON.stringify({ query, variables: { file: null } }),
+    );
+    formData.append("map", JSON.stringify({ "0": ["variables.file"] }));
+    formData.append("0", file);
+    const response = await publicRequest.post("/graphql", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+    return response?.data?.data?.uploadFile;
+  } catch (error) {
+    console.error("Error uploading file:", error);
+    throw error;
+  }
+};
+
+export const getUrl = async (query: string, variables: { fileKey: string }) => {
+  try {
+    const response = await publicRequest.post("/graphql", {
+      query,
+      variables,
+    });
+    return response?.data?.data?.getFileUrl;
+  } catch (error) {
+    console.error("Error getting getFileUrl Link:", error);
     throw error;
   }
 };

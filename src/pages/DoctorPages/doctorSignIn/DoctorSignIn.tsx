@@ -9,7 +9,7 @@ import { notifyFailure, notifySuccess } from "../../../utils/Utils";
 import { users } from "../../CommonPages/forgotPassword/queriesAndUtils";
 import { loadingEnd, loadingStart } from "../../../redux/slices/loadingSlice";
 import { z } from "zod";
-import { useForm } from "react-hook-form";
+import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { getDoctorToken } from "../../../api/apiCalls/doctorsApi";
 import { DOCTOR_TOKEN_QUERY } from "./queries";
@@ -40,7 +40,7 @@ export default function DoctorSignIn() {
     handleSubmit,
     setError,
     formState: { errors },
-  } = useForm({ resolver: zodResolver(FormSchema) });
+  } = useForm<Inputs>({ resolver: zodResolver(FormSchema) });
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -64,7 +64,7 @@ export default function DoctorSignIn() {
     }
   };
 
-  const onSubmit = async (data: any) => {
+  const onSubmit: SubmitHandler<Inputs> = async (data: Inputs) => {
     handleLogin(data);
   };
 
@@ -92,8 +92,8 @@ export default function DoctorSignIn() {
                 name={input.name}
                 type={input.type}
                 placeholder={input.placeholder}
-                properties={{ ...register(input.name) }}
-                error={errors[input.name]}
+                properties={{ ...register(input.name as keyof Inputs) }}
+                error={errors[input.name as keyof Inputs]}
               />
             ))}
             <div className="flex flex-col md:flex-row items-center justify-around my-2">

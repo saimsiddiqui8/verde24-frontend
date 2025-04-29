@@ -3,7 +3,7 @@ let baseURL;
 if (production) {
   baseURL = "https://dev-api.verde24health.com";
 } else {
-  baseURL = "http://localhost:8000";
+  baseURL = "http://localhost:8001";
 }
 
 export const BASE_URL = baseURL;

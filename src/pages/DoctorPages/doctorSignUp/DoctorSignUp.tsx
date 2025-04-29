@@ -288,6 +288,7 @@ export default function DoctorSignUp() {
                 <div key={index} className="col-span-1">
                   {input.type === "radio" ? (
                     <RadioInput
+                      className={"my-0"}
                       label={input?.label}
                       name={input?.name}
                       options={input?.options}
@@ -296,11 +297,13 @@ export default function DoctorSignUp() {
                     />
                   ) : input.type === "number" ? (
                     <PhoneInputComp
+                      className={"my-4"}
                       properties={{ ...register(input?.name) }}
                       error={errors[input?.name]}
                     />
                   ) : (
                     <InputField
+                      className={"my-4"}
                       label={input.label}
                       name={input.name}
                       type={input.type}

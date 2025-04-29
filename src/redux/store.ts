@@ -2,6 +2,7 @@ import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import UserReducer from "../redux/slices/userSlice";
 import LoadingReducer from "../redux/slices/loadingSlice";
 import BookingReducer from "../redux/slices/bookingSlice";
+import LabBookingReducer from "../redux/slices/LabBooking";
 import storage from "redux-persist/lib/storage";
 import { persistReducer, persistStore } from "redux-persist";
 
@@ -15,16 +16,26 @@ const bookingPersistConfig = {
   storage,
 };
 
+const LabBookingPersistConfig = {
+  key: "LabBooking",
+  storage,
+};
+
 const persistedUserReducer = persistReducer(userPersistConfig, UserReducer);
 const persistedBookingReducer = persistReducer(
   bookingPersistConfig,
   BookingReducer,
+);
+const persistedLabBookingReducer = persistReducer(
+  LabBookingPersistConfig,
+  LabBookingReducer,
 );
 
 const rootReducer = combineReducers({
   user: persistedUserReducer,
   loading: LoadingReducer,
   booking: persistedBookingReducer,
+  Labbooking: persistedLabBookingReducer,
 });
 
 export const store = configureStore({

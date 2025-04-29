@@ -1,6 +1,8 @@
-export const FIND_LAB_QUERY = `
+export const LAB_QUERY = `
 query FindLabById($findLabByIdId: Int!) {
   findLabById(id: $findLabByIdId) {
+    id
+    place_name
     logo
     name
     lab_name
@@ -9,22 +11,14 @@ query FindLabById($findLabByIdId: Int!) {
     email
     phone_number
     is_verified
-    createdAt
   }
 }
 `;
 
-export const UPDATED_LAB_QUERY = `
+export const UPDATE_BANNED_LAB = `
 mutation UpdateLab($updateLabId: Int!, $data: LabInputUpdate!) {
   updateLab(id: $updateLabId, data: $data) {
-    logo
-    name
-    lab_name
-    city
-    registration_number
-    email
-    phone_number
+    id
     is_verified
-    createdAt
   }
 }`;

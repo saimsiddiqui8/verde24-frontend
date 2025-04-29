@@ -1,19 +1,13 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  getDownloadURL,
-  getStorage,
-  ref as storageRef,
-  uploadBytesResumable,
-} from "firebase/storage";
-import { KeyboardEvent, useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
-import { IoMdAddCircle } from "react-icons/io";
-import { useMutation, useQuery } from "react-query";
-import { useSelector } from "react-redux";
+import { useMutation, useQuery, useQueryClient } from "react-query";
+import { useDispatch, useSelector } from "react-redux";
 import { z } from "zod";
 import {
   getDoctorById,
   updateDoctor,
+  uploadFileDoctor,
 } from "../../../../../api/apiCalls/doctorsApi";
 import {
   Button,
@@ -24,13 +18,21 @@ import {
   RadioInput,
   TextareaField,
 } from "../../../../../components";
-import { app } from "../../../../../firebase/config";
 import { RootState } from "../../../../../redux/store";
-import { isPhoneValid } from "../../../../../utils/Utils";
+import { isPhoneValid, notifySuccess } from "../../../../../utils/Utils";
 import {
   DOCTOR_UPDATE_QUERY,
+  FILE_UPLOAD,
   GET_DOCTOR_QUERY,
 } from "../consultationForm/queries";
+import {
+  loadingEnd,
+  loadingStart,
+} from "../../../../../redux/slices/loadingSlice";
+import { UpdateDoctorData } from "../../../../../api/apiCalls/types";
+import { Toaster } from "react-hot-toast";
+import ImageUrl from "../../../../../components/Icons/Sidemenu/ImageUrl";
+import CountrySelectComp from "../../../../../components/Countrydropdown";
 
 const inputs = [
   {
@@ -43,7 +45,7 @@ const inputs = [
     label: "Gender",
     type: "dropdown",
     placeholder: "Select Your Gender",
-    name: "Gender",
+    name: "gender",
     options: [
       { label: "Male", value: "male" },
       { label: "Female", value: "female" },
@@ -107,16 +109,10 @@ const inputs = [
 
 const contactDetails = [
   {
-    label: "Address Line 1",
+    label: "Address",
     type: "text",
     placeholder: "Enter Your Address here",
-    name: "address_line_1",
-  },
-  {
-    label: "Address Line 2",
-    type: "text",
-    placeholder: "Enter Your Address here",
-    name: "address_line_2",
+    name: "address",
   },
   {
     label: "Postal Code",
@@ -131,44 +127,47 @@ const Qualification = [
     label: "Institute",
     type: "text",
     placeholder: "Enter Your Institute Name",
-    name: "Institute",
+    name: "institute",
   },
   {
     label: "Degree",
     type: "text",
+    placeholder: "Enter Your Degree",
+    name: "degree",
+  },
+];
+
+const servicesAndSpecializations = [
+  {
+    label: "Services",
+    type: "text",
+    placeholder: "Enter Your Services",
+    name: "services",
+  },
+  {
+    label: "Specialization",
+    type: "text",
     placeholder: "Enter Your Specialization",
-    name: "Degree",
+    name: "specialization",
   },
 ];
 
 const Experience = [
   {
-    label: "Institute",
+    label: "Work",
     type: "text",
-    placeholder: "Enter Your Institute Name",
-    name: "Institute",
+    placeholder: "Enter Your Workplace Name",
+    name: "work",
   },
   {
     label: "Designation",
     type: "text",
     placeholder: "Enter Your Designation",
-    name: "Designation",
-  },
-  {
-    label: "Years of Experience",
-    type: "dropdown",
-    placeholder: "Select Years",
-    name: "YearsofExperience",
-    options: [
-      { label: "One Year", value: "1" },
-      { label: "Two Years", value: "2" },
-      { label: "Three Years", value: "3" },
-      { label: "Four or More Years", value: "4+" },
-    ],
+    name: "designation",
   },
 ];
 
-const options = [{ label: "Video Consultation", value: "male" }];
+const options = [{ label: "Video Consultation", value: "Video Consultation" }];
 
 const consultationFee = [
   {
@@ -185,48 +184,12 @@ const consultationFee = [
   },
 ];
 
-const Offered_Services = [
-  {
-    label: "Select Specialization",
-    type: "dropdown",
-    placeholder: "Select Specialization",
-    name: "Specialization",
-    options: [
-      { label: "Cardiology", value: "cardiology" },
-      { label: "Neurology", value: "neurology" },
-      { label: "Orthopedics", value: "orthopedics" },
-      { label: "Pediatrics", value: "pediatrics" },
-      { label: "General Medicine", value: "general_medicine" },
-    ],
-  },
-  {
-    label: "Select Services",
-    type: "dropdown",
-    placeholder: "Select Services",
-    name: "Department",
-    options: [
-      { label: "Engineering", value: "engineering" },
-      { label: "Marketing", value: "marketing" },
-      { label: "Sales", value: "sales" },
-    ],
-  },
-];
-
 const Symptoms = [
   {
     label: "Enter Symptom",
     type: "text",
     placeholder: "Enter Symptom",
-    name: "EnterSymptom",
-  },
-];
-
-const Registration = [
-  {
-    label: "Registration No.",
-    type: "text",
-    placeholder: "Enter Your Registration No.",
-    name: "EnterYourRegistrationNo",
+    name: "enterSymptom",
   },
 ];
 
@@ -238,11 +201,11 @@ const aboutMe = {
 };
 
 const MAX_FILE_SIZE = 2 * 1024 * 1024;
-const ACCEPTED_IMAGE_TYPES = ["image/jpeg", "image/jpg", "image/png"];
+const ACCEPTED_IMAGE_TYPES = ["image/jpeg", "image/jpg"];
 
 const FormSchema = z
   .object({
-    doctor_image: z.any(),
+    image: z.any(),
     complete_name: z.string().min(1, { message: "Name is required" }),
     email: z.string().min(1, { message: "Email is required" }).email(),
     phone_number: z.string().min(1, { message: "Phone Number is required" }),
@@ -259,41 +222,33 @@ const FormSchema = z
       .string()
       .min(1, { message: "Registration No is required" }),
     qualification: z.string().min(1, { message: "Qualification is required" }),
-    Institute: z.string().min(1, { message: "Institute is required" }),
-    Degree: z.string().min(1, { message: "Degree is required" }),
-    Designation: z.string().min(1, { message: "Designation is required" }),
-    YearsofExperience: z
-      .string()
-      .min(1, { message: "Years of Experience is required" }),
-    Specialization: z
-      .string()
-      .min(1, { message: "Specialization is required" }),
-    Department: z.string().min(1, { message: "Department is required" }),
-    EnterSymptom: z.string().min(1, { message: "Symptom is required" }),
-    EnterYourRegistrationNo: z
-      .string()
-      .min(1, { message: "Registration number is required" }),
+    institute: z.string().min(1, { message: "Institute is required" }),
+    work: z.string().min(1, { message: "Work is required" }),
+    degree: z.string().min(1, { message: "Degree is required" }),
+    designation: z.string().min(1, { message: "Designation is required" }),
+    enterSymptom: z.string().min(1, { message: "Symptom is required" }),
     bibliography: z.string().min(1, { message: "Bibliography is required" }),
     consultation_mode: z
       .string({ invalid_type_error: "Consultation Mode is required" })
       .min(1, { message: "Consultation Mode is required" }),
-    consultation_fee_regular: z.string().min(1, {
-      message: "Regular Consultation Fee is required",
-    }),
-    consultation_fee_discounted: z.string().min(1, {
-      message: "Discounted Consultation Fee is required",
-    }),
-    address_line_1: z.string().min(1, {
+    consultation_fee_regular: z.preprocess(
+      (val) => Number(val),
+      z.number().min(1, { message: "Discounted Consultation Fee is required" }),
+    ),
+    consultation_fee_discounted: z.preprocess(
+      (val) => Number(val),
+      z.number().min(1, { message: "Discounted Consultation Fee is required" }),
+    ),
+    address: z.string().min(1, {
       message: "Address is required",
     }),
-    address_line_2: z.string().optional(),
     postal_code: z.string().min(1, {
       message: "Postal Code is required",
     }),
     services: z.string().min(1, {
       message: "Services is required",
     }),
-    specializations: z.string().min(1, {
+    specialization: z.string().min(1, {
       message: "Specialization is required",
     }),
     payout_method: z.string().min(1, {
@@ -305,7 +260,6 @@ const FormSchema = z
     experience_detail: z.string().optional(),
     membership: z.string().optional(),
     registration: z.string().optional(),
-    lead_time: z.string().min(1, { message: "Lead Time is required" }),
   })
   .refine((data) => isPhoneValid(data.phone_number), {
     message: "Invalid Phone Number",
@@ -329,20 +283,32 @@ const FormSchema = z
       path: ["upi_id"],
     },
   )
-  .refine((data) => data.doctor_image, {
+  .refine((data) => !!data.image, {
     message: "Image is required.",
-    path: ["doctor_image"],
+    path: ["image"],
   })
-  .refine((data) => ACCEPTED_IMAGE_TYPES.includes(data.doctor_image?.type), {
-    message: ".jpg, .jpeg and .png files are accepted.",
-    path: ["doctor_image"],
-  })
-  .refine((data) => data.doctor_image?.size <= MAX_FILE_SIZE, {
-    message: `Max file size is 2MB.`,
-    path: ["doctor_image"],
-  });
+  .refine(
+    (data) => {
+      if (typeof data.image === "string") return true;
+      return ACCEPTED_IMAGE_TYPES.includes(data.image?.type?.toLowerCase());
+    },
+    {
+      message: ".JPG, .JPEG files are accepted.".toUpperCase(),
+      path: ["image"],
+    },
+  )
+  .refine(
+    (data) => {
+      if (typeof data.image === "string") return true;
+      return data.image?.size && data.image.size <= MAX_FILE_SIZE;
+    },
+    {
+      message: `Max file size is 2MB.`,
+      path: ["image"],
+    },
+  );
 
-const disabledFields = ["complete_name", "email", "gender"];
+const disabledFields = ["complete_name", "email", "gender", "phone_number"];
 
 export default function VerifiedProfile() {
   const {
@@ -351,56 +317,29 @@ export default function VerifiedProfile() {
     getValues,
     setValue,
     reset,
+    control,
     formState: { errors },
   } = useForm({ resolver: zodResolver(FormSchema) });
-  const [services, setServices] = useState<string[]>([]);
-  const [specializations, setSpecializations] = useState<string[]>([]);
-  const [image, setImage] = useState();
+  const [image, setImage] = useState<string | null>();
   const [payout, setPayout] = useState("upi");
   const [edit, setEdit] = useState(false);
-
+  const dispatch = useDispatch();
+  const queryClient = useQueryClient();
   const id = useSelector((state: RootState) => state.user.currentUser?.id);
 
-  const imageUpload = async () => {
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setImage(URL.createObjectURL(file));
     try {
-      const storage = getStorage(app);
-      const storageReference = storageRef(
-        storage,
-        `images/${getValues("doctor_image").name}`,
-      );
-      const uploadTask = await uploadBytesResumable(
-        storageReference,
-        getValues("doctor_image"),
-      );
-      const url = await getDownloadURL(uploadTask.ref);
-      return url;
+      dispatch(loadingStart());
+      const uploadedFileUrl = await uploadFileDoctor(FILE_UPLOAD, file);
+      setValue("image", uploadedFileUrl, { shouldValidate: true });
+      dispatch(loadingEnd());
     } catch (error) {
-      console.error(error);
+      dispatch(loadingEnd());
+      console.error("File upload failed:", error);
     }
-  };
-
-  const handleServices = (e: KeyboardEvent) => {
-    if (e.key === "Enter") {
-      e.preventDefault();
-      if (getValues("services")) {
-        setServices((prev) => [...prev, getValues("services")]);
-      }
-    }
-  };
-
-  const handleSpecializations = (e: KeyboardEvent) => {
-    if (e.key === "Enter") {
-      e.preventDefault();
-      if (getValues("specializations")) {
-        setSpecializations((prev) => [...prev, getValues("specializations")]);
-      }
-    }
-  };
-
-  const handleFileChange = (e: any) => {
-    const newImage = e.target.files[0];
-    setImage(newImage);
-    setValue("doctor_image", newImage);
   };
 
   const getDoctor = () => {
@@ -413,7 +352,86 @@ export default function VerifiedProfile() {
     queryFn: getDoctor,
   });
 
-  const updateDoctorId = async (data: any) => {
+  const defaultDoctorData = useMemo(() => {
+    if (doctorData.isLoading || !doctorData.data) {
+      return {};
+    }
+
+    const {
+      id,
+      first_name,
+      last_name,
+      email,
+      phone_number,
+      gender,
+      is_verified,
+      form_submitted,
+      image,
+      city,
+      country,
+      department,
+      experience,
+      registration_no,
+      qualification,
+      consultation_mode,
+      consultation_fee_regular,
+      consultation_fee_discounted,
+      payout_method_id,
+      address,
+      postal_code,
+      work,
+      degree,
+      designation,
+      enterSymptom,
+      institute,
+      ac_no,
+      upi_id,
+      services,
+      specialization,
+      bibliography,
+    } = doctorData.data;
+
+    return {
+      id,
+      complete_name: `${first_name} ${last_name}`,
+      email,
+      phone_number,
+      gender,
+      is_verified,
+      form_submitted,
+      image,
+      city,
+      country,
+      department,
+      experience,
+      registration_no,
+      qualification,
+      consultation_mode,
+      consultation_fee_regular,
+      consultation_fee_discounted,
+      payout_method_id,
+      address,
+      postal_code,
+      work,
+      degree,
+      designation,
+      enterSymptom,
+      institute,
+      ac_no,
+      upi_id,
+      services,
+      specialization,
+      bibliography,
+    };
+  }, [doctorData?.data]);
+
+  useEffect(() => {
+    if (doctorData?.data) {
+      reset(defaultDoctorData);
+    }
+  }, [doctorData?.data, reset]);
+
+  const updateDoctorId = async (data: UpdateDoctorData) => {
     if (!id) return;
     const response = await updateDoctor(DOCTOR_UPDATE_QUERY, {
       updateDoctorId: id,
@@ -422,52 +440,90 @@ export default function VerifiedProfile() {
     return response;
   };
 
-  const { mutate } = useMutation(updateDoctorId);
+  const { data, mutate } = useMutation(updateDoctorId);
 
-  const onSubmit = async (data: any) => {
-    const image_url = await imageUpload();
+  const onSubmit = async (data: UpdateDoctorData) => {
+    setEdit(false);
+    const {
+      work,
+      degree,
+      designation,
+      enterSymptom,
+      institute,
+      complete_name,
+      gender,
+      phone_number,
+      email,
+      city,
+      country,
+      department,
+      experience,
+      registration_no,
+      ac_no,
+      upi_id,
+      qualification,
+      consultation_mode,
+      consultation_fee_regular,
+      consultation_fee_discounted,
+      payout_method,
+      address,
+      postal_code,
+      services,
+      specialization,
+      bibliography,
+    } = data;
+
     const doctorData = {
-      first_name: data?.complete_name.split(" ")[0],
-      last_name: data?.complete_name.split(" ")[1],
-      gender: data?.gender,
-      phone_number: data?.phone_number,
-      email: data?.email,
-      city: data?.city,
-      country: data?.country,
-      image: image_url,
-      department: data?.department,
-      experience: data?.experience,
-      registration_no: data?.registration_no,
-      qualification: data?.qualification,
-      consultation_mode: data?.consultation_mode,
-      consultation_fee_regular: parseFloat(data?.consultation_fee_regular),
-      consultation_fee_discounted: parseFloat(
-        data?.consultation_fee_discounted,
-      ),
-      booking_lead_time: data?.booking_lead_time,
-      payout_method: data?.payout_method,
-      payout_method_id: data?.payout_method_id,
-      address: data?.address,
-      postal_code: data?.postal_code,
-      services: data?.services,
-      specialization: data?.specialization,
-      bibliography: data?.bibliography,
-      form_submitted: true,
+      first_name: complete_name?.split(" ")[0],
+      last_name: complete_name?.split(" ")[1],
+      gender,
+      ac_no,
+      upi_id,
+      phone_number,
+      email,
+      city,
+      country,
+      image: getValues("image"),
+      department,
+      experience,
+      registration_no,
+      qualification,
+      consultation_mode,
+      consultation_fee_regular:
+        consultation_fee_regular !== undefined
+          ? parseFloat(consultation_fee_regular.toString())
+          : 0,
+      consultation_fee_discounted:
+        consultation_fee_discounted !== undefined
+          ? parseFloat(consultation_fee_discounted.toString())
+          : 0,
+      payout_method_id: payout_method,
+      address,
+      postal_code,
+      services,
+      specialization,
+      bibliography,
+      work,
+      degree,
+      designation,
+      enterSymptom,
+      institute,
     };
     mutate(doctorData);
   };
 
   useEffect(() => {
-    reset({
-      complete_name:
-        doctorData?.data?.first_name + " " + doctorData?.data?.last_name,
-      ...doctorData?.data,
-    });
-  }, [doctorData?.data, reset]);
+    if (data?.email) {
+      notifySuccess("Profile Updated!");
+      queryClient.invalidateQueries({
+        queryKey: ["Doctors"],
+      });
+    }
+  }, [data, queryClient]);
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="pb-6 ">
-      <DashboardSection title="Doctor Profile">
+      <DashboardSection title="Basic Information">
         <div className="flex justify-end">
           <div className="flex gap-4">
             <Button
@@ -487,49 +543,53 @@ export default function VerifiedProfile() {
         </div>
         <div className="grid grid-cols-12 mt-6">
           <div className="col-span-4">
-            <input
-              type="file"
-              className="bg-[#D9D9D9] w-40 h-40 rounded-full mx-auto"
-              hidden
-              id="upload-file"
-              onChange={handleFileChange}
-            />
+            {edit && (
+              <input
+                type="file"
+                className="bg-[#D9D9D9] w-40 h-40 rounded-full mx-auto"
+                hidden
+                id="upload-file"
+                onChange={handleFileChange}
+              />
+            )}
             <label
               htmlFor="upload-file"
-              className="bg-[#D9D9D9] w-40 h-40 rounded-full mx-auto block relative overflow-clip"
+              className="bg-[#D9D9D9] w-36 h-36 rounded-full mx-auto block relative overflow-clip mt-16"
             >
               {image ? (
                 <img
                   className="w-full h-full object-cover"
-                  src={URL.createObjectURL(image)}
+                  src={image}
                   alt=""
                 />
+              ) : defaultDoctorData?.image ? (
+                <ImageUrl fileKey={defaultDoctorData.image} />
               ) : (
                 ""
               )}
             </label>
-            {errors["doctor_image"] && (
+            {errors["image"] && (
               <small className="text-red-500 font-medium uppercase">
-                <>{errors["doctor_image"]?.message}</>
+                <>{errors["image"]?.message}</>
               </small>
             )}
             <h5 className="text-base text-primary font-semibold text-center my-2">
               Upload Photo
             </h5>
             <small className="text-xs text-center block text-primary">
-              Allowed JPG, PNG; Max size of 2 MB
+              Allowed JPG JPEG, Max size of 2 MB
             </small>
           </div>
           <div className="col-span-7">
             <div className="grid grid-cols-12 gap-x-4 gap-y-0">
-              {inputs?.map((input) => (
-                <div className="col-span-6 h-20">
+              {inputs?.map((input, index) => (
+                <div key={index} className="col-span-6 h-20">
                   {input?.name === "phone_number" ? (
                     <PhoneInputComp
                       label={input?.label}
                       properties={{ ...register(input?.name) }}
                       error={errors[input?.name]}
-                      disabled={disabledFields?.includes(input?.name)}
+                      disabled={!edit || disabledFields?.includes(input?.name)}
                     />
                   ) : input?.type === "dropdown" ? (
                     <DropdownField
@@ -539,7 +599,14 @@ export default function VerifiedProfile() {
                       placeholder={input?.placeholder}
                       properties={{ ...register(input?.name) }}
                       error={errors[input?.name]}
-                      disabled={disabledFields?.includes(input?.name)}
+                      disabled={!edit || disabledFields?.includes(input?.name)}
+                    />
+                  ) : input?.name === "country" ? (
+                    <CountrySelectComp
+                      name={input?.name}
+                      label={input?.label}
+                      control={control}
+                      setValue={setValue}
                     />
                   ) : (
                     <InputField
@@ -548,19 +615,19 @@ export default function VerifiedProfile() {
                       placeholder={input.placeholder}
                       properties={{ ...register(input?.name) }}
                       error={errors[input?.name]}
-                      disabled={disabledFields?.includes(input?.name)}
+                      disabled={!edit || disabledFields?.includes(input?.name)}
                     />
                   )}
                 </div>
               ))}
             </div>
             <div className="grid grid-cols-12">
-              <h5 className="col-span-2 font-semibold">Note:</h5>
-              <small className="col-span-9">
+              <h5 className="col-span-2 font-semibold mt-4">Note:</h5>
+              <small className="col-span-9 mt-4">
                 Your Email Id will not be shared with anyone. Registration No.
                 will be printed on Prescription. Please specify the complete
                 Registration No. Medical Qualification will be displayed under
-                your name in doctor listing. All fields are requred.
+                your name in doctor listing. All fields are required.
               </small>
             </div>
           </div>
@@ -570,7 +637,6 @@ export default function VerifiedProfile() {
         <>
           <div className="flex gap-2">
             <RadioInput
-              // label={input?.label}
               name="consultation_mode"
               options={options}
               properties={{ ...register("consultation_mode") }}
@@ -591,14 +657,15 @@ export default function VerifiedProfile() {
       <DashboardSection title={"Consultation Fee"}>
         <>
           <div className="grid grid-cols-12 gap-x-4 gap-y-0">
-            {consultationFee?.map((input) => (
-              <div className="col-span-4">
+            {consultationFee?.map((input, index) => (
+              <div key={index} className="col-span-4">
                 <InputField
                   label={input?.label}
                   name={input?.name}
                   type={input?.type}
                   properties={{ ...register(input?.name) }}
                   error={errors[input?.name]}
+                  disabled={!edit}
                 />
               </div>
             ))}
@@ -606,30 +673,6 @@ export default function VerifiedProfile() {
           <p>
             We charge 30% (plus GST) as transaction fee for digital branding and
             platform services.
-          </p>
-        </>
-      </DashboardSection>
-      <DashboardSection title={"Booking Lead Time"}>
-        <>
-          <div className="grid grid-cols-12 gap-x-4 gap-y-0">
-            <div className="col-span-4">
-              <DropdownField
-                label="Lead Time"
-                name="lead_time"
-                placeholder="immediate"
-                options={[
-                  { label: "Option 1", value: "Option 1" },
-                  { label: "Option 2", value: "Option 2" },
-                ]}
-                properties={{ ...register("lead_time") }}
-                error={errors["lead_time"]}
-              />
-            </div>
-          </div>
-          <p>
-            Minimum time in advance for patients to book your appointments. e.g.
-            if you set it to 3 hours, a patient booking at 1 PM will only see
-            slots for 4 pm or later.
           </p>
         </>
       </DashboardSection>
@@ -645,6 +688,7 @@ export default function VerifiedProfile() {
                   placeholder="Enter UPI ID"
                   properties={{ ...register("upi_id") }}
                   error={errors["upi_id"]}
+                  disabled={!edit}
                 />
               ) : payout?.toLowerCase() === "ac" ? (
                 <InputField
@@ -654,6 +698,7 @@ export default function VerifiedProfile() {
                   placeholder="Enter AC NO"
                   properties={{ ...register("ac_no") }}
                   error={errors["upi_id"]}
+                  disabled={!edit}
                 />
               ) : null}
             </div>
@@ -697,14 +742,15 @@ export default function VerifiedProfile() {
       </DashboardSection>
       <DashboardSection title={"Contact Details"}>
         <div className="grid grid-cols-12 gap-x-4 gap-y-0">
-          {contactDetails?.map((input) => (
-            <div className="col-span-4">
+          {contactDetails?.map((input, index) => (
+            <div key={index} className="col-span-4">
               <InputField
                 label={input.label}
                 name={input.name}
                 placeholder={input.placeholder}
                 properties={{ ...register(input?.name) }}
                 error={errors[input?.name]}
+                disabled={!edit}
               />
             </div>
           ))}
@@ -713,40 +759,18 @@ export default function VerifiedProfile() {
       <DashboardSection title={"Services and Specialization"}>
         <>
           <div className="grid grid-cols-12 gap-x-4 gap-y-0">
-            <div className="col-span-4">
-              <InputField
-                label="Services"
-                name="services"
-                placeholder="Enter Your Services"
-                properties={{ ...register("services") }}
-                error={errors["services"]}
-                onKeyDown={handleServices}
-              />
-              <div className="flex gap-2 flex-wrap mb-2">
-                {services?.map((service: string) => (
-                  <span className="py-1 px-2 rounded-md bg-primary text-white text-sm">
-                    {service}
-                  </span>
-                ))}
+            {servicesAndSpecializations.map((input, index) => (
+              <div key={index} className="col-span-4">
+                <InputField
+                  label={input.label}
+                  name={input.name}
+                  placeholder={input.placeholder}
+                  properties={{ ...register(input.name) }}
+                  error={errors[input.name]}
+                  disabled={!edit}
+                />
               </div>
-            </div>
-            <div className="col-span-4">
-              <InputField
-                label="Specialization"
-                name="specializations"
-                placeholder="Enter Your Specialization"
-                properties={{ ...register("specializations") }}
-                error={errors["specializations"]}
-                onKeyDown={handleSpecializations}
-              />
-              <div className="flex gap-2 flex-wrap mb-2">
-                {specializations?.map((specialization: string) => (
-                  <span className="py-1 px-2 rounded-md bg-primary text-white text-sm">
-                    {specialization}
-                  </span>
-                ))}
-              </div>
-            </div>
+            ))}
           </div>
           <p>Type and press to add new Services and Specialization.</p>
         </>
@@ -761,6 +785,7 @@ export default function VerifiedProfile() {
                 placeholder={input.placeholder}
                 properties={{ ...register(input?.name) }}
                 error={errors[input?.name]}
+                disabled={!edit}
               />
             </div>
           ))}
@@ -770,43 +795,13 @@ export default function VerifiedProfile() {
         <div className="grid grid-cols-12 gap-x-4 gap-y-0">
           {Experience?.map((input, index) => (
             <div className="col-span-4" key={index}>
-              {input.type === "dropdown" ? (
-                <DropdownField
-                  label={input.label}
-                  name={input.name}
-                  options={input.options!}
-                  placeholder={input.placeholder}
-                  properties={{ ...register(input.name) }}
-                  error={errors[input.name]}
-                  disabled={disabledFields?.includes(input.name)}
-                />
-              ) : (
-                <InputField
-                  label={input.label}
-                  name={input.name}
-                  placeholder={input.placeholder}
-                  properties={{ ...register(input.name) }}
-                  error={errors[input.name]}
-                  disabled={disabledFields?.includes(input.name)}
-                />
-              )}
-            </div>
-          ))}
-        </div>
-      </DashboardSection>
-      <DashboardSection title={"Offered Services"}>
-        <div className="grid grid-cols-12 gap-x-4 gap-y-0">
-          {Offered_Services.map((input, index) => (
-            <div className="col-span-4">
-              <DropdownField
-                key={index}
-                label={input?.label}
-                name={input?.name}
-                options={input?.options}
-                placeholder={input?.placeholder}
-                properties={{ ...register(input?.name) }}
-                error={errors[input?.name]}
-                disabled={disabledFields?.includes(input?.name)}
+              <InputField
+                label={input.label}
+                name={input.name}
+                placeholder={input.placeholder}
+                properties={{ ...register(input.name) }}
+                error={errors[input.name]}
+                disabled={!edit}
               />
             </div>
           ))}
@@ -814,31 +809,15 @@ export default function VerifiedProfile() {
       </DashboardSection>
       <DashboardSection title={"Symptoms"}>
         <div className="flex items-center gap-2 text-base">
-          {Symptoms?.map((input) => (
-            <div className="col-span-4">
+          {Symptoms?.map((input, index) => (
+            <div key={index} className="col-span-4">
               <InputField
                 label={input.label}
                 name={input.name}
                 placeholder={input.placeholder}
                 properties={{ ...register(input?.name) }}
                 error={errors[input?.name]}
-              />
-            </div>
-          ))}
-          <IoMdAddCircle size={20} />
-          Add Row
-        </div>
-      </DashboardSection>
-      <DashboardSection title={"Registration No."}>
-        <div className="grid grid-cols-12 gap-x-4 gap-y-0">
-          {Registration?.map((input) => (
-            <div className="col-span-4">
-              <InputField
-                label={input.label}
-                name={input.name}
-                placeholder={input.placeholder}
-                properties={{ ...register(input?.name) }}
-                error={errors[input?.name]}
+                disabled={!edit}
               />
             </div>
           ))}
@@ -852,8 +831,10 @@ export default function VerifiedProfile() {
           name={aboutMe?.name}
           error={errors[aboutMe?.name]}
           rows={4}
+          disabled={!edit}
         />
       </DashboardSection>
+      <Toaster />
     </form>
   );
 }

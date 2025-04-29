@@ -1,15 +1,20 @@
 import {
   Button,
   DashboardSection,
+  DropdownField,
   InputField,
   PhoneInputComp,
 } from "../../../../components";
-import { useEffect, useMemo, useState } from "react";
-import { useForm } from "react-hook-form";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { isPhoneValid, notifySuccess } from "../../../../utils/Utils";
-import { useSelector } from "react-redux";
+import {
+  isPhoneValid,
+  notifyFailure,
+  notifySuccess,
+} from "../../../../utils/Utils";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../../redux/store";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { FIND_PATIENT_QUERY, UPDATE_PATIENT_QUERY } from "./queries";
@@ -19,6 +24,13 @@ import {
   updatePatientById,
 } from "../../../../api/apiCalls/patientsApi";
 import { UserData } from "../../../../api/apiCalls/types";
+import ImageUrl from "../../../../components/Icons/Sidemenu/ImageUrl";
+import {
+  loadingEnd,
+  loadingStart,
+} from "../../../../redux/slices/loadingSlice";
+import { uploadFileDoctor } from "../../../../api/apiCalls/doctorsApi";
+import { FILE_UPLOAD } from "../../../DoctorPages/doctorDashboard/doctorInputInfo/consultationForm/queries";
 
 const inputs = [
   {
@@ -41,9 +53,13 @@ const inputs = [
   },
   {
     label: "Gender",
-    type: "text",
-    placeholder: "Enter Your Gender",
+    type: "dropdown",
+    placeholder: "Select Your Gender",
     name: "gender",
+    options: [
+      { label: "Male", value: "male" },
+      { label: "Female", value: "female" },
+    ],
   },
   {
     label: "Weight",
@@ -74,7 +90,13 @@ const inputs = [
 const FormSchema = z
   .object({
     patient_name: z.string().min(1, { message: "Patient Name is required" }),
-    patient_age: z.coerce.number().int({ message: "Age is required" }),
+    patient_age: z.coerce
+      .number({
+        required_error: "Age is required",
+        invalid_type_error: "Age must be a number",
+      })
+      .min(1, { message: "Age is required" })
+      .gt(18, { message: "Age must be greater than 18" }),
     insurance_id: z.string().min(1, { message: "Insurance Id is required" }),
     phone_number: z.string().min(1, { message: "Phone Number is required" }),
     gender: z
@@ -82,9 +104,15 @@ const FormSchema = z
         invalid_type_error: "Gender is required",
       })
       .min(1, { message: "Gender is required" }),
-    weight: z.coerce.number().int({ message: "Weight is required" }),
+    weight: z.coerce
+      .number({
+        required_error: "Weight is required",
+        invalid_type_error: "Weight must be a number",
+      })
+      .min(1, { message: "Weight is required" }),
     blood_group: z.string().min(1, { message: "Blood Group is required" }),
     other_history: z.string().min(1, { message: "Other History is required" }),
+    image: z.string().min(1, { message: "Image is required" }),
   })
   .refine((data) => isPhoneValid(data.phone_number), {
     message: "Invalid Phone Number",
@@ -96,13 +124,33 @@ export default function PatientProfile() {
     register,
     handleSubmit,
     reset,
+    setValue,
+    getValues,
     formState: { errors },
-  } = useForm({
+  } = useForm<UserData>({
     resolver: zodResolver(FormSchema),
   });
   const [edit, setEdit] = useState(false);
+  const [image, setImage] = useState<string | null>();
   const id = useSelector((state: RootState) => state.user.currentUser?.id);
   const queryClient = useQueryClient();
+  const dispatch = useDispatch();
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setImage(URL.createObjectURL(file));
+    try {
+      dispatch(loadingStart());
+      const uploadedFileUrl = await uploadFileDoctor(FILE_UPLOAD, file);
+      setValue("image", uploadedFileUrl, { shouldValidate: true });
+      dispatch(loadingEnd());
+    } catch (error) {
+      dispatch(loadingEnd());
+      console.error("File upload failed:", error);
+    }
+  };
 
   const getPatient = async () => {
     if (!id) return;
@@ -121,6 +169,7 @@ export default function PatientProfile() {
     const {
       first_name,
       last_name,
+      image,
       gender,
       phone_number,
       insurance_id,
@@ -131,11 +180,12 @@ export default function PatientProfile() {
     } = patientData.data;
     return {
       patient_name: `${first_name} ${last_name}`,
-      patient_age: age,
+      patient_age: age === 0 ? null : age,
+      image,
       insurance_id,
       phone_number,
       gender,
-      weight,
+      weight: weight === 0 ? null : weight,
       blood_group,
       other_history,
     };
@@ -147,25 +197,43 @@ export default function PatientProfile() {
     }
   }, [patientData?.data, reset]);
   const updatePatient = async (data: UserData) => {
-    if (!id) return;
-    const updatedId = Number(id);
-    return updatePatientById(UPDATE_PATIENT_QUERY, {
-      updatePatientId: updatedId,
+    if (!id) {
+      return;
+    }
+
+    const response = await updatePatientById(UPDATE_PATIENT_QUERY, {
+      updatePatientId: id,
       data,
     });
+
+    if (!response) {
+      throw new Error("Failed to update patient!");
+    }
+
+    return response;
   };
 
-  const { data, mutate } = useMutation(updatePatient);
+  const { mutate } = useMutation(updatePatient, {
+    onError: (error: Error) => {
+      dispatch(loadingEnd());
+      notifyFailure(error.message || "Something went wrong!");
+    },
+    onSuccess: () => {
+      notifySuccess("Profile Updated!");
+      queryClient.invalidateQueries(["patient"]);
+    },
+  });
 
-  const onSubmit = (data: any) => {
+  const onSubmit: SubmitHandler<UserData> = (data: UserData) => {
     setEdit(false);
-    const userData = {
-      first_name: data?.patient_name.split(" ")[0],
-      last_name: data?.patient_name.split(" ")[1],
+    const userData: UserData = {
+      first_name: data?.patient_name?.split(" ")[0] ?? "",
+      last_name: data?.patient_name?.split(" ")[1] ?? "",
+      image: getValues("image") ?? "",
       gender: data?.gender,
       phone_number: data?.phone_number,
       insurance_id: data?.insurance_id,
-      age: data?.patient_age,
+      age: data?.patient_age ? parseInt(data.patient_age) : 0,
       weight: data?.weight,
       blood_group: data?.blood_group,
       other_history: data?.other_history,
@@ -173,14 +241,11 @@ export default function PatientProfile() {
     mutate(userData);
   };
 
-  useEffect(() => {
-    if (data?.email) {
-      notifySuccess("Profile Updated!");
-      queryClient.invalidateQueries({
-        queryKey: ["patient"],
-      });
+  const handleUploadClick = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
     }
-  }, [data, queryClient]);
+  };
 
   return (
     <>
@@ -201,6 +266,51 @@ export default function PatientProfile() {
                 {edit && <Button title="Save" className="w-20" type="submit" />}
               </div>
             </div>
+            <div className="mt-4 flex flex-col items-start">
+              <span className="inline-block h-32 w-32 rounded-full overflow-hidden bg-gray-100 border-2 border-green-500">
+                {image ? (
+                  <img
+                    src={image}
+                    alt="Selected logo"
+                    className="h-full w-full object-cover"
+                  />
+                ) : defaultPatientData?.image ? (
+                  <ImageUrl fileKey={defaultPatientData.image} />
+                ) : (
+                  <svg
+                    className="h-full w-full text-gray-400"
+                    fill="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path d="M24 24H0V0h24v24z" fill="none" />
+                    <path d="M12 0c-1.65 0-3.22.67-4.38 1.76L0 12h5v7h7v5l6.24-6.24c1.09-1.16 1.76-2.73 1.76-4.38 0-3.31-2.69-6-6-6zm2 13.5v-2h-4v-2h4V7l3 3-3 3.5z" />
+                  </svg>
+                )}
+              </span>
+              {edit && (
+                <>
+                  <input
+                    type="file"
+                    ref={fileInputRef}
+                    accept="image/*"
+                    onChange={handleFileChange}
+                    className="hidden"
+                  />
+                  {errors["image"] && (
+                    <small className="text-red-500 font-medium uppercase">
+                      <>{errors["image"]?.message}</>
+                    </small>
+                  )}
+                  <button
+                    className="mt-2 font-extrabold bg-white rounded-md px-3 py-2 text-sm text-gray-700 hover:bg-gray-50"
+                    type="button"
+                    onClick={handleUploadClick}
+                  >
+                    Upload Image
+                  </button>
+                </>
+              )}
+            </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4">
               {inputs.map((input) => (
                 <div key={input.name} className="mb-6 h-16">
@@ -211,6 +321,18 @@ export default function PatientProfile() {
                       error={errors[input.name]}
                       disabled={!edit}
                     />
+                  ) : input?.type === "dropdown" ? (
+                    <DropdownField
+                      label={input?.label}
+                      name={input?.name}
+                      options={input?.options!}
+                      placeholder={input?.placeholder}
+                      properties={{
+                        ...register(input?.name as keyof UserData),
+                      }}
+                      error={errors[input?.name as keyof UserData]?.message}
+                      disabled={!edit}
+                    />
                   ) : (
                     <InputField
                       label={input.label}
@@ -218,8 +340,8 @@ export default function PatientProfile() {
                       placeholder={input.placeholder}
                       type={input.type}
                       disabled={!edit}
-                      properties={{ ...register(input.name) }}
-                      error={errors[input.name]}
+                      properties={{ ...register(input.name as keyof UserData) }}
+                      error={errors[input.name as keyof UserData]?.message}
                     />
                   )}
                 </div>

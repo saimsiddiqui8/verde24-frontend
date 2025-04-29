@@ -13,13 +13,14 @@ export default function Eld({
   error,
   disabled,
   className,
+  onFocus,
 }: eldProps) {
   const [showPassword, setShowPassword] = useState(false);
 
   const togglePasswordVisibility = () => setShowPassword(!showPassword);
 
   return (
-    <div className={`relative my-6 ${className}`}>
+    <div className={`relative ${className ?? "my-6"}`}>
       <input
         id={name}
         type={type === "password" ? (showPassword ? "text" : "password") : type}
@@ -27,6 +28,7 @@ export default function Eld({
         name={name}
         value={value}
         onChange={onChange || (() => {})}
+        onFocus={onFocus || (() => {})}
         onKeyDown={onKeyDown}
         disabled={disabled}
         {...properties}
@@ -65,6 +67,7 @@ interface eldProps {
   placeholder?: string;
   value?: string;
   onChange?: (e: SyntheticEvent) => void;
+  onFocus?: (e: SyntheticEvent) => void;
   onKeyDown?: (e: KeyboardEvent<HTMLInputElement>) => void;
   properties?: any;
   error?: any;

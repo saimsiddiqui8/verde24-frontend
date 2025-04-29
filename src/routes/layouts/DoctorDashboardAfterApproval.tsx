@@ -10,6 +10,13 @@ import reports from "../../assets/sidemenu/doctor/reports.png";
 import activities from "../../assets/sidemenu/doctor/activities.png";
 import feedback from "../../assets/sidemenu/doctor/feedback.png";
 import dashboard from "../../assets/sidemenu/doctor/dashboard.png";
+import ImageUrl from "../../components/Icons/Sidemenu/ImageUrl";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../../redux/store";
+import { getDoctorById } from "../../api/apiCalls/doctorsApi";
+import { GET_DOCTOR_QUERY } from "../../pages/DoctorPages/doctorDashboard/doctorInputInfo/consultationForm/queries";
+import { useQuery } from "react-query";
+import { loadingEnd, loadingStart } from "../../redux/slices/loadingSlice";
 
 const links = [
   { title: "My Profile", href: "/", icon: Profile },
@@ -33,6 +40,27 @@ const BASE_URL = "/doctor-dashboard";
 export default function DoctorDashboardAfterApproval() {
   const [collapsed, setCollapsed] = useState(false);
   const { pathname } = useLocation();
+  const id = useSelector((state: RootState) => state.user.currentUser?.id);
+  const dispatch = useDispatch();
+
+  const getDoctor = async () => {
+    if (!id) return;
+    return await getDoctorById(GET_DOCTOR_QUERY, {
+      findDoctorByIdId: id,
+    });
+  };
+
+  const { data } = useQuery({
+    queryKey: ["Doctors", id],
+    queryFn: getDoctor,
+  });
+
+  if (data?.isLoading) {
+    dispatch(loadingStart());
+    return null;
+  } else {
+    dispatch(loadingEnd());
+  }
 
   const handleToggle = (linkTitle: string) => {
     setCollapsed(linkTitle === "My Patients");
@@ -46,14 +74,25 @@ export default function DoctorDashboardAfterApproval() {
         } pt-10 pb-5 h-fit border border-primary rounded-md`}
       >
         <div className="py-1 px-4">
-          <img
-            src={doctorImg}
-            alt="Doctor"
-            className="w-16 h-16 md:w-24 md:h-24 lg:w-36 lg:h-36 rounded-full block mx-auto"
-          />
-          <p className="text-[#5C89D8] text-xs md:text-sm lg:text-base text-center font-semibold my-1">
-            Doctor Name
-          </p>
+          {data && (
+            <div>
+              <div className="py-1 px-4 my-5">
+                {data?.image ? (
+                  <ImageUrl fileKey={data?.image} />
+                ) : (
+                  <img
+                    src={doctorImg}
+                    alt="Doctor"
+                    className="w-36 h-36 rounded-full block mx-auto"
+                  />
+                )}
+
+                <p className="text-[#5C89D8] text-sm text-center font-semibold my-4">
+                  {`${data?.first_name} ${data?.last_name}`}
+                </p>
+              </div>
+            </div>
+          )}
         </div>
         <div className="mt-5 flex flex-col items-center w-full">
           {links.map((link, index) => {

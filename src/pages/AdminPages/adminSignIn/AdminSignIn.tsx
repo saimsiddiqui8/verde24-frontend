@@ -10,7 +10,7 @@ import { notifyFailure, notifySuccess } from "../../../utils/Utils";
 import { users } from "../../CommonPages/forgotPassword/queriesAndUtils";
 import { loadingEnd, loadingStart } from "../../../redux/slices/loadingSlice";
 import { z } from "zod";
-import { useForm } from "react-hook-form";
+import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 const inputs = [
@@ -51,11 +51,11 @@ export default function AdminSignIn() {
     handleSubmit,
     setError,
     formState: { errors },
-  } = useForm({ resolver: zodResolver(FormSchema) });
+  } = useForm<Inputs>({ resolver: zodResolver(FormSchema) });
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const getAdminToken = async (data: any) => {
+  const getAdminToken = async (data: Inputs) => {
     const response = await publicRequest.post("/graphql", {
       query: ADMIN_QUERY,
       variables: data,
@@ -63,7 +63,7 @@ export default function AdminSignIn() {
     return response.data.data.getAdminToken;
   };
 
-  const handleLogin = async (data: any) => {
+  const handleLogin = async (data: Inputs) => {
     dispatch(loadingStart());
     const tokenRes = await getAdminToken(data);
     dispatch(loadingEnd());
@@ -83,7 +83,7 @@ export default function AdminSignIn() {
     }
   };
 
-  const onSubmit = async (data: any) => {
+  const onSubmit: SubmitHandler<Inputs> = async (data: Inputs) => {
     handleLogin(data);
   };
 
@@ -104,8 +104,8 @@ export default function AdminSignIn() {
                 name={input.name}
                 type={input.type}
                 placeholder={input.placeholder}
-                properties={{ ...register(input.name) }}
-                error={errors[input.name]}
+                properties={{ ...register(input.name as keyof Inputs) }}
+                error={errors[input.name as keyof Inputs]}
               />
             ))}
             <div className="flex items-start justify-around my-2">
@@ -138,4 +138,9 @@ export default function AdminSignIn() {
       <Toaster />
     </main>
   );
+}
+
+interface Inputs {
+  email: string;
+  password: string;
 }

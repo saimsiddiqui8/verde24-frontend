@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { DashboardSection, InputField } from "../../../../../components";
-import { useState } from "react";
+import { SyntheticEvent, useState } from "react";
 import { publicRequest } from "../../../../../api/requestMethods";
 import { useMutation, useQueryClient } from "react-query";
 import {
@@ -10,6 +10,12 @@ import {
 } from "../../../../../utils/Utils";
 import { Toaster } from "react-hot-toast";
 import { HOSPITAL_QUERY } from "./queries";
+
+type InputValues = {
+  name: string;
+  location: string;
+  phone_number: string;
+};
 
 const inputs = [
   {
@@ -33,11 +39,16 @@ const inputs = [
 ];
 
 export default function AdminNewHospital() {
-  const [inputValues, setInputValues] = useState({});
+  const [inputValues, setInputValues] = useState<InputValues>({
+    name: "",
+    location: "",
+    phone_number: "",
+  });
+
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
-  const createHospital = async (data: any) => {
+  const createHospital = async (data: InputValues) => {
     try {
       const response = await publicRequest.post("/graphql", {
         query: HOSPITAL_QUERY,
@@ -50,19 +61,23 @@ export default function AdminNewHospital() {
     }
   };
 
-  const { mutate } = useMutation(createHospital);
+  const { mutate } = useMutation({
+    mutationFn: createHospital,
+  });
 
-  const handleChange = (e: any) => {
-    setInputValues((prev: any) => ({
+  const handleChange = (e: SyntheticEvent) => {
+    const target = e.target as HTMLInputElement;
+
+    setInputValues((prev: InputValues) => ({
       ...prev,
-      [e.target.name]: e.target.value,
+      [target.name]: target.value,
     }));
   };
 
-  const handleSubmit = (e: any) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (
-      Object.keys(inputValues)?.length === inputs?.length &&
+      Object.keys(inputValues).length === inputs.length &&
       areAllValuesTruthy(inputValues)
     ) {
       mutate(inputValues, {
@@ -73,7 +88,6 @@ export default function AdminNewHospital() {
       notifyFailure("Please fill all the fields!");
     }
   };
-
   function mutateSuccess() {
     notifySuccess("New Hospital Created! Redirecting...");
     queryClient.invalidateQueries({ queryKey: ["adminHospitals"] });

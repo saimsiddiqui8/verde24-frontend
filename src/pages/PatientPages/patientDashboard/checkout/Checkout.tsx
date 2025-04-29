@@ -18,12 +18,14 @@ import {
   CREATE_PAYMENT,
   CREATE_APPOINTMENT,
 } from "../../../DoctorPages/doctorDashboard/doctorInputInfo/consultationForm/queries";
-import { notifyFailure } from "../../../../utils/Utils";
-import { createAppointment } from "../../../../api/apiCalls/patientsApi";
+import { notifyFailure, notifySuccess } from "../../../../utils/Utils";
 import { deleteBooking } from "../../../../redux/slices/bookingSlice";
 import clock from "../../../../assets/clock.png";
 import calender from "../../../../assets/calendar.png";
 import bar from "../../../../assets/bar.png";
+import { Toaster } from "react-hot-toast";
+import { createAppointmentDoctor } from "../../../../api/apiCalls/patientsApi";
+import { useMutation } from "react-query";
 
 const Checkout = () => {
   const [doctor, setDoctor] = useState<Doctor | null>(null);
@@ -89,31 +91,14 @@ const Checkout = () => {
     },
   };
 
-  const handleCreateAppointment = async (payId?: string) => {
-    const appointmentData: CreateAppointmentType = {
-      appointment_date: selectedDate?.fullDate,
-      appointment_time: selectedTime,
-      patient_id: patientId,
-      doctor_id: id,
-      duration: 60,
-    };
+  const handleCreateAppointment = async (data: CreateAppointmentType) => {
+    const response = await createAppointmentDoctor(CREATE_APPOINTMENT, {
+      data,
+    });
 
-    if (payId) {
-      appointmentData.payment_id = parseInt(payId);
-    }
+    setShowModal(true);
 
-    try {
-      await createAppointment(CREATE_APPOINTMENT, {
-        data: appointmentData,
-      });
-
-      setShowModal(true);
-    } catch (error) {
-      console.error("Error creating appointment:", error);
-      throw error;
-    } finally {
-      setIsLoading(false);
-    }
+    return response;
   };
 
   const handleCreatePayment = async (paymentMethodId: string) => {
@@ -129,12 +114,27 @@ const Checkout = () => {
       const response = await stripePayment(CREATE_PAYMENT, {
         data: paymentData,
       });
-      if (response?.message == "Amount has been deducted from wallet!") {
+      if (response?.message === "Amount has been deducted from wallet!") {
         setPaymentId(response?.message);
-        await handleCreateAppointment();
+        const appointmentData: CreateAppointmentType = {
+          appointment_date: selectedDate?.fullDate,
+          appointment_time: selectedTime,
+          patient_id: patientId,
+          doctor_id: id,
+          duration: 60,
+        };
+        appointmentMutate(appointmentData);
       } else if (response?.payment?.id) {
         setPaymentId(response.payment.id);
-        await handleCreateAppointment(response?.payment?.id);
+        const appointmentData: CreateAppointmentType = {
+          appointment_date: selectedDate?.fullDate,
+          appointment_time: selectedTime,
+          patient_id: patientId,
+          doctor_id: id,
+          duration: 60,
+          payment_id: parseInt(response?.payment?.id),
+        };
+        appointmentMutate(appointmentData);
       } else {
         throw new Error("Payment processing failed");
       }
@@ -145,6 +145,31 @@ const Checkout = () => {
     }
   };
 
+  const { mutate } = useMutation(handleCreatePayment, {
+    onError: (error: Error) => {
+      notifyFailure(error.message || "Payment processing failed");
+    },
+    onSuccess: () => {
+      notifySuccess("Payment successful!");
+    },
+  });
+
+  const { mutate: appointmentMutate } = useMutation({
+    mutationFn: handleCreateAppointment,
+    onMutate: () => {
+      setIsLoading(true);
+    },
+    onSuccess: () => {
+      notifySuccess("Appointment successful!");
+    },
+    onError: (error: Error) => {
+      notifyFailure(error.message || "Appointment processing failed");
+      console.error("Appointment error:", error);
+    },
+    onSettled: () => {
+      setIsLoading(false);
+    },
+  });
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
@@ -164,9 +189,7 @@ const Checkout = () => {
     }
 
     if (paymentMethod) {
-      console.log("pay", paymentMethod.id);
-
-      await handleCreatePayment(paymentMethod.id);
+      mutate(paymentMethod.id);
     }
   };
 
@@ -271,7 +294,6 @@ const Checkout = () => {
               <CardElement options={cardElementOptions} />
             </div>
 
-            {/* Pay Now Button with Spinner */}
             {isLoading ? (
               <div className="flex justify-center">
                 <svg
@@ -307,7 +329,6 @@ const Checkout = () => {
             )}
           </form>
 
-          {/* Success Modal */}
           {showModal && (
             <Modal
               title="PAYMENT"
@@ -334,6 +355,7 @@ const Checkout = () => {
           )}
         </div>
       </div>
+      <Toaster />
     </DashboardSection>
   );
 };

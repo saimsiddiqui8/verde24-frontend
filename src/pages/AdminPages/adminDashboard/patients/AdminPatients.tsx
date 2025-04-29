@@ -3,8 +3,14 @@ import { publicRequest } from "../../../../api/requestMethods";
 import { DashboardSection } from "../../../../components";
 import { FaUserCircle } from "react-icons/fa";
 import { Link } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import {
+  loadingEnd,
+  loadingStart,
+} from "../../../../redux/slices/loadingSlice";
 
 export default function AdminPatients() {
+  const dispatch = useDispatch();
   const PATIENT_QUERY = `
   query {
     patients {
@@ -14,6 +20,12 @@ export default function AdminPatients() {
     }
   }
 `;
+
+  type Patient = {
+    id: number;
+    first_name: string;
+    last_name: string;
+  };
 
   const getPatients = async () => {
     return publicRequest
@@ -25,7 +37,11 @@ export default function AdminPatients() {
 
   const { data } = useQuery({
     queryKey: ["adminPatients"],
-    queryFn: getPatients,
+    queryFn: async () => {
+      dispatch(loadingStart());
+      return getPatients();
+    },
+    onSuccess: () => dispatch(loadingEnd()),
   });
   return (
     <DashboardSection title="Patients">
@@ -52,9 +68,3 @@ export default function AdminPatients() {
     </DashboardSection>
   );
 }
-
-type Patient = {
-  id: number;
-  first_name: string;
-  last_name: string;
-};
