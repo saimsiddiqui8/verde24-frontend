@@ -1,5 +1,5 @@
 import { CardElement, useElements, useStripe } from "@stripe/react-stripe-js";
-import { Button, DashboardSection, Modal } from "../../../../components";
+import { DashboardSection, Modal } from "../../../../components";
 import { useNavigate } from "react-router-dom";
 import { CreateAppointmentType, Doctor } from "../../../../api/apiCalls/types";
 import { useEffect, useState } from "react";
@@ -199,6 +199,16 @@ const Checkout = () => {
     navigate("/patient-dashboard/treatment-plans");
   };
 
+  useEffect(() => {
+    if (showModal) {
+      const timer = setTimeout(() => {
+        handleModalClose();
+      }, 3000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [showModal]);
+
   return (
     <DashboardSection>
       <div className="checkout-container flex flex-col justify-center items-center">
@@ -345,11 +355,9 @@ const Checkout = () => {
                 <p className="text-lg font-bold text-green-600 mb-6">
                   {paymentId}
                 </p>
-                <Button
-                  className="w-full"
-                  title="Continue"
-                  onClick={() => handleModalClose()}
-                />
+                <p className="text-lg font-bold text-green-600 mb-6">
+                  Redirecting...
+                </p>
               </div>
             </Modal>
           )}

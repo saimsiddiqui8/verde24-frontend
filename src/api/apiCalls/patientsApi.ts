@@ -343,7 +343,7 @@ export const searchLabTest = async (
       query,
       variables,
     });
-    return response?.data?.data?.searchlabTests;
+    return response?.data?.data?.searchLabTests;
   } catch (error) {
     console.error("Error searchlabTests:", error);
     throw error;

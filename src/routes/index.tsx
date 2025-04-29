@@ -94,7 +94,13 @@ import AdminPharmacies from "../pages/AdminPages/adminDashboard/pharmacies/Admin
 import AdminPharmaciesProfile from "../pages/AdminPages/adminDashboard/pharmacies/AdminPharmaciesProfile/AdminPharmaciesProfile.tsx";
 import BannedAccountNotice from "../components/BannedAccountNotice.tsx";
 import PatientGoogleAuth from "../pages/PatientPages/patientSignIn/Patientgoogleauth.tsx";
-import { RequireAuth, RequireBannedLab, RequireBannedPatient, RequireBannedPharmacy, RequireVerification } from "./RequireAuth.tsx";
+import {
+  RequireAuth,
+  RequireBannedLab,
+  RequireBannedPatient,
+  RequireBannedPharmacy,
+  RequireVerification,
+} from "./RequireAuth.tsx";
 
 const AppLayout = () => {
   return (
@@ -105,16 +111,13 @@ const AppLayout = () => {
   );
 };
 
-
-
-
 export const router = createBrowserRouter(
   createRoutesFromElements(
     <>
       <Route element={<AppLayout />}>
         <Route element={<PublicRoutes />}>
           <Route index element={<Homepage />} />
-          <Route path="auth" element={<PatientGoogleAuth  />} />
+          <Route path="auth" element={<PatientGoogleAuth />} />
           <Route path="patient/sign-in" element={<PatientSignIn />} />
           <Route path="patient/sign-up" element={<PatientSignUp />} />
           <Route path="doctor/sign-in" element={<DoctorSignIn />} />

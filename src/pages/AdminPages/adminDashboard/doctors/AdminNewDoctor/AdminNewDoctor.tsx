@@ -80,7 +80,6 @@ interface Inputs {
   password: string;
 }
 
-
 const UserSchema = z
   .object({
     first_name: z.string().min(1, { message: "First Name is required" }),
@@ -199,4 +198,3 @@ export default function AdminNewDoctor() {
     </DashboardSection>
   );
 }
-

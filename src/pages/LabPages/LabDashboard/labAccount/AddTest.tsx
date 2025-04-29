@@ -242,7 +242,7 @@ const AddTest = () => {
 
   const updatelabtest = async (data: AddLabTestType) => {
     if (!labid) return;
-    
+
     const response = await UpdateLabTestById(UPDATE_LAB_TEST_BY_ID, {
       updateLabTestId: Number(labid),
       data,

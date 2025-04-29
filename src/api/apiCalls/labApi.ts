@@ -179,7 +179,7 @@ export const FindAppointmentByStatus = async (
 ) => {
   try {
     const response = await publicRequest.post("/graphql", { query, variables });
-    return response?.data?.data?.findLabAppointmentStatusByLabId;
+    return response?.data?.data?.findLabAppointmentstatusByLabId;
   } catch (error) {
     console.error("Error find Appointment By Status:", error);
     throw error;

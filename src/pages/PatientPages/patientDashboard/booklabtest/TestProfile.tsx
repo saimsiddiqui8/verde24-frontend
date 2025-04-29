@@ -50,9 +50,9 @@ const TestProfile = () => {
   });
 
   const handleaddtocard = async (labTest_id: number) => {
-    if (!Patienid) return;
+    if (!patientID) return;
     return await addToCard(ADD_TO_CARD, {
-      data: { patient_id: Patienid, labTest_id },
+      data: { patient_id: patientID, labTest_id },
     });
   };
 
@@ -63,7 +63,7 @@ const TestProfile = () => {
     onSuccess: () => {
       dispatch(loadingEnd());
       notifySuccess("Item added to cart!");
-      queryClient.invalidateQueries(["patientcard", Patienid]);
+      queryClient.invalidateQueries(["patientcard", patientID]);
     },
     onError: () => {
       dispatch(loadingEnd());
@@ -82,7 +82,7 @@ const TestProfile = () => {
         <>
           <div className="w-full text-end">
             <Button
-              onClick={handleback}
+              onClick={handleBack}
               title="Go back"
               secondary={true}
               className="rounded-xl w-24"

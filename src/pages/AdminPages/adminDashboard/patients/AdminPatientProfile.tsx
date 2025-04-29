@@ -108,7 +108,7 @@ export default function AdminPatientProfile() {
   const updatePatient = async (data: { is_verified: boolean }) => {
     try {
       const response = await publicRequest.post("/graphql", {
-        query: updatebanned,
+        query: updateBanned,
         variables: { updatePatientId: Number(id), data },
       });
       return response?.data?.data?.updatePatient;

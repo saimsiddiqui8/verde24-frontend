@@ -103,14 +103,14 @@ mutation UpdateLabTest($updateLabTestId: Int!, $data: LabTestInputUpdate!) {
 }`;
 
 export const FIND_APPOINTMENT_BY_STATUS = `
-query FindLabAppointmentStatusByLabId($labId: Int!, $status: LabAppointmentStatus!) {
-  findLabAppointmentStatusByLabId(lab_id: $labId, status: $status) {
+query FindLabAppointmentstatusByLabId($labId: Int!, $status: LabAppointmentStatus!) {
+  findLabAppointmentstatusByLabId(lab_id: $labId, status: $status) {
     id
     appointment_date
     appointment_time
     appointment_weekday
     patient_name
-    labTests {
+     labTests {
       labTestId
     }
   }

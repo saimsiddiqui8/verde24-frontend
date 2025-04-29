@@ -98,7 +98,7 @@ export default function TreatmentPlans() {
         <table className="w-full min-w-max table-auto text-left">
           <thead>
             <tr>
-             {TABLE_HEAD.map((head) => (
+              {TABLE_HEAD.map((head) => (
                 <th key={head} className="bg-white p-2 sm:p-4">
                   <Typography
                     variant="small"

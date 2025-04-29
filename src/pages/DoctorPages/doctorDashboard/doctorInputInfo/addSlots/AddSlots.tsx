@@ -109,7 +109,7 @@ export default function AddSlots() {
       }),
     );
   };
-  const deleteAllSlots= () => {
+  const deleteAllSlots = () => {
     setWeekdays((prev) =>
       prev?.map((day) => {
         return { ...day, slots: [] };
@@ -205,7 +205,7 @@ export default function AddSlots() {
       await fetchData();
       notifySuccess("Time Slots added!");
       dispatch(loadingEnd());
-      deleteSlotsall();
+      deleteAllSlots();
     } catch (error) {
       console.error("Error fetching data:", error);
     }

@@ -109,7 +109,7 @@ export default function FindDoctorProfile() {
           <p>Satisfied with diagnosis and treatment</p>
           <p>PA & Staff was helpful</p>
           <p>Hospital / Clinic environment was well-maintained</p>
-         <p>Review shared on Verde feedback call - 20 hours ago</p>
+          <p>Review shared on Verde feedback call - 20 hours ago</p>
         </div>
       </ContentSection>
       <h2 className="text-2xl font-semibold">More Reviews</h2>

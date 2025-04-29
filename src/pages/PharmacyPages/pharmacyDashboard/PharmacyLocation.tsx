@@ -15,7 +15,7 @@ import {
 } from "../../../api/apiCalls/pharmacyApi";
 import {
   FIND_PHARMACY_QUERY,
-  UPDATED_PHARMACY_COORDINATES ,
+  UPDATED_PHARMACY_COORDINATES,
 } from "./accountManagement/queries";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { updatePharmacyCoordinatesFData } from "../../../api/apiCalls/types";
@@ -114,7 +114,7 @@ const PharmacyLocation = () => {
     data: updatePharmacyCoordinatesFData,
   ) => {
     if (!id) return;
-    return updatePharmacyCoordinatesById(UPDATED_PHARMACY_COORDINATES , {
+    return updatePharmacyCoordinatesById(UPDATED_PHARMACY_COORDINATES, {
       updatePharmacyCoordinatesId: id,
       latitude: data?.latitude,
       longitude: data?.longitude,

@@ -1,5 +1,5 @@
 import { CardElement, useElements, useStripe } from "@stripe/react-stripe-js";
-import { Button, DashboardSection, Modal } from "../../../../components";
+import { DashboardSection, Modal } from "../../../../components";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { RootState } from "../../../../redux/store";
@@ -43,7 +43,7 @@ const CheckoutLab = () => {
     patient_id,
     patient_name,
     patient_phone_number,
-  } = Labbooking;
+  } = labBooking;
   const queryClient = useQueryClient();
   const [skipValidation, setSkipValidation] = useState(false);
 
@@ -225,6 +225,16 @@ const CheckoutLab = () => {
     }
   };
 
+  useEffect(() => {
+    if (showModal) {
+      const timer = setTimeout(() => {
+        handleModalClose();
+      }, 3000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [showModal]);
+
   const handleModalClose = async () => {
     setSkipValidation(true);
     setShowModal(false);
@@ -367,11 +377,9 @@ const CheckoutLab = () => {
                 <p className="text-lg font-bold text-green-600 mb-6">
                   {paymentId}
                 </p>
-                <Button
-                  className="w-full"
-                  title="Continue"
-                  onClick={() => handleModalClose()}
-                />
+                <p className="text-lg font-bold text-green-600 mb-6">
+                  Redirecting...
+                </p>
               </div>
             </Modal>
           )}

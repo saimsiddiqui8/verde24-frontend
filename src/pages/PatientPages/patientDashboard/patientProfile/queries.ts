@@ -90,8 +90,8 @@ query SearchLabs($labName: String!) {
 }`;
 
 export const SEARCH_LABS_TEST = `
-query SearchlabTests($labTestName: String!) {
-  searchlabTests(labTest_name: $labTestName) {
+query SearchLabTests($labTestName: String!) {
+  searchLabTests(labTest_name: $labTestName) {
     lab_id
     title
   }
