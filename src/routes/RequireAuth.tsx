@@ -12,8 +12,6 @@ export const RequireAuth = ({ role }: Role) => {
   return <>{user?.role === role ? <Outlet /> : <Unauthorized />}</>;
 };
 
-
-
 export const RequireVerification = () => {
   const is_verified = useSelector(
     (state: RootState) => state.user.currentUser?.is_verified,

@@ -46,7 +46,7 @@ const Card = () => {
     return response;
   };
 
-  const handleDeleteCard  = async (deleteItemFromCartId: number) => {
+  const handleDeleteCard = async (deleteItemFromCartId: number) => {
     if (!id) return;
     const response = await DeleteCard(DELETE_CARD, { deleteItemFromCartId });
     if (!response) {
@@ -69,7 +69,7 @@ const Card = () => {
     },
   });
 
-  const { mutate } = useMutation(handleDeleteCard , {
+  const { mutate } = useMutation(handleDeleteCard, {
     onMutate: () => {
       dispatch(loadingStart());
     },

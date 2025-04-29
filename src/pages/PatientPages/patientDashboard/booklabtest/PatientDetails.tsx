@@ -200,7 +200,7 @@ const PatientDetails: React.FC<StepProps> = ({ nextStep, data, id }) => {
         <div className="flex flex-wrap justify-center lg:justify-between gap-4 sm:gap-8 mt-5">
           <Button
             type="button"
-            onClick={handleback}
+            onClick={handleBack}
             title="Go Back"
             secondary={true}
             className="rounded-xl w-40 sm:w-44 text-lg sm:text-xl p-3 lg:ms-4"

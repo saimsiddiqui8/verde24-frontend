@@ -10,7 +10,7 @@ const Stepper = () => {
   const navigate = useNavigate();
   const [step, setStep] = useState(1);
   const labBooking = useSelector((state: RootState) => state.Labbooking);
-  const { labTests, lab_id } = Labbooking;
+  const { labTests, lab_id } = labBooking;
   useEffect(() => {
     if (labTests?.length === 0) {
       navigate(-1);

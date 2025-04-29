@@ -11,13 +11,11 @@ import {
 } from "../../../../../redux/slices/loadingSlice";
 import { GET_ALL_LABS } from "./queries";
 
-
 type Lab = {
   id: number;
   lab_name: string;
   is_verified: boolean;
 };
-
 
 export default function AdminLabs() {
   const dispatch = useDispatch();

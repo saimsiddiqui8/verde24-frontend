@@ -21,12 +21,11 @@ export default function AdminPatients() {
   }
 `;
 
-type Patient = {
-  id: number;
-  first_name: string;
-  last_name: string;
-};
-
+  type Patient = {
+    id: number;
+    first_name: string;
+    last_name: string;
+  };
 
   const getPatients = async () => {
     return publicRequest
@@ -69,4 +68,3 @@ type Patient = {
     </DashboardSection>
   );
 }
-

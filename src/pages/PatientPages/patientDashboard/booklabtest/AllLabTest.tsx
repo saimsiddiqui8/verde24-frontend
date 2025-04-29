@@ -74,10 +74,10 @@ const AllLabTest = () => {
   });
 
   const handleaddtocard = async (labTest_id: number) => {
-    if (!Patienid) return;
+    if (!patientID) return;
 
     const response = await addToCard(ADD_TO_CARD, {
-      data: { patient_id: Patienid, labTest_id },
+      data: { patient_id: patientID, labTest_id },
     });
     return response;
   };
@@ -89,7 +89,7 @@ const AllLabTest = () => {
     onSuccess: () => {
       dispatch(loadingEnd());
       notifySuccess("Item added to cart!");
-      queryClient.invalidateQueries(["patientcard", Patienid]);
+      queryClient.invalidateQueries(["patientcard", patientID]);
     },
     onError: (error: Error) => {
       dispatch(loadingEnd());
@@ -110,7 +110,7 @@ const AllLabTest = () => {
     dispatch(
       addLabDetail({
         lab_id: Number(id),
-        patient_id: Patienid,
+        patient_id: patientID,
         currency: "usd",
       }),
     );
@@ -187,7 +187,7 @@ const AllLabTest = () => {
             </div>
             <div className="w-full sm:w-1/3 p-2 rounded-lg flex flex-col gap-2 justify-center items-center">
               <Button
-                onClick={handleback}
+                onClick={handleBack}
                 className="w-36"
                 title="Go back"
                 secondary

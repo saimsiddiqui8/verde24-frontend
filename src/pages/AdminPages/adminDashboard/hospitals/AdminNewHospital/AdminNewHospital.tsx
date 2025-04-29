@@ -65,9 +65,9 @@ export default function AdminNewHospital() {
     mutationFn: createHospital,
   });
 
- const handleChange = (e: SyntheticEvent) => {
+  const handleChange = (e: SyntheticEvent) => {
     const target = e.target as HTMLInputElement;
-    
+
     setInputValues((prev: InputValues) => ({
       ...prev,
       [target.name]: target.value,

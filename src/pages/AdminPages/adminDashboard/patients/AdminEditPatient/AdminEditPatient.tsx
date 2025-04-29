@@ -74,7 +74,6 @@ const initialValue = {
   gender: "",
 };
 
-
 interface Inputs {
   [key: string]: string | string[] | boolean;
   first_name: string;
@@ -83,7 +82,6 @@ interface Inputs {
   phone_number: string;
   gender: string;
 }
-
 
 export default function AdminEditPatient() {
   const [inputs, setInputs] = useState(inputsArr);
@@ -96,7 +94,7 @@ export default function AdminEditPatient() {
 
   const handleChange = (e: SyntheticEvent) => {
     const target = e.target as HTMLInputElement;
-    
+
     setInputValues((prev: Inputs) => ({
       ...prev,
       [target.name]: target.value,

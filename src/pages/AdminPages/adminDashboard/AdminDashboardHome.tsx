@@ -54,7 +54,7 @@ export default function AdminDashboardHome() {
             className="h-full w-full flex flex-col items-center justify-center gap-2 px-2 py-4"
           >
             <FaCapsules size={50} />
-          <h3 className="text-xl font-medium">Pharmacies</h3>
+            <h3 className="text-xl font-medium">Pharmacies</h3>
           </Link>
         </div>
       </div>

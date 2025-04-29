@@ -11,7 +11,6 @@ import {
 } from "../../../../../redux/slices/loadingSlice";
 import { GET_ALL_PHARMACY } from "./queries";
 
-
 type Pharmacies = {
   id: number;
   pharmacy_name: string;
@@ -74,4 +73,3 @@ export default function AdminPharmacies() {
     </DashboardSection>
   );
 }
-
