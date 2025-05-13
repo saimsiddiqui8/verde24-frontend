@@ -23,7 +23,6 @@ import {
   CompletedProcedures,
   Files,
   FindDoctor,
-  FindDoctorAppointment,
   FindDoctorProfile,
   OnlineAppointment,
   PatientProfile,
@@ -161,17 +160,13 @@ export const router = createBrowserRouter(
                 <Route index element={<PatientProfile />} />
                 <Route path="find-doctor">
                   <Route index element={<FindDoctor />} />
-                  <Route
-                    path="appointment/:id"
-                    element={<FindDoctorAppointment />}
-                  />
                   <Route path="select-slot/:id" element={<SelectSlot />} />
                   <Route path="book-slot/:id" element={<BookSlot />} />
                   <Route path="checkout" element={<Checkout />} />
                   <Route path="profile/:id" element={<FindDoctorProfile />} />
                 </Route>
-                <Route path="treatment-plans" element={<TreatmentPlans />} />
-                <Route path="treatment-labs" element={<TreatmentLabs />} />
+                <Route path="consultation-doctors" element={<TreatmentPlans />} />
+                <Route path="consultation-labs" element={<TreatmentLabs />} />
                 <Route path="wallet" element={<Wallet />} />
                 <Route
                   path="transaction-history"
@@ -187,7 +182,7 @@ export const router = createBrowserRouter(
                   element={<FileViewer />}
                 />
                 <Route path="prescriptions" element={<Prescriptions />} />
-                <Route path="online-appointment">
+                <Route path="hospital-appointment">
                   <Route index element={<OnlineAppointment />} />
                   <Route
                     path="online-hospital-profile/:id"

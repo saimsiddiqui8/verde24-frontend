@@ -3,6 +3,7 @@ import { RootState } from "../../../../redux/store";
 import { getPatientById } from "../../../../api/apiCalls/patientsApi";
 import { FIND_PATIENT_QUERY } from "../patientProfile/queries";
 import { useQuery } from "react-query";
+import { Link } from "react-router-dom";
 
 const Wallet = () => {
   const id = useSelector((state: RootState) => state.user.currentUser?.id);
@@ -26,9 +27,9 @@ const Wallet = () => {
             {" "}
             {`$ ${patientData?.data?.wallet == undefined ? "0" : patientData?.data?.wallet}`}
           </p>
-          <a href="#" className="text-sm text-blue-600 mt-2 block">
+          <Link to={"/patient-dashboard/transaction-history"} className="text-sm text-blue-600 mt-2 block">
             View Transactions
-          </a>
+          </Link>
         </div>
       </div>
 

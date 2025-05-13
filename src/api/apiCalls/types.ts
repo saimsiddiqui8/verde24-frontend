@@ -1,8 +1,17 @@
 export interface Doctor {
+  id: number;
   first_name: string;
   last_name: string;
-  id: number;
+  image?: string;
+  online?: boolean;
+  qualification?: string;
+  specialization?: string;
+  experience?: number;
+  consultation_mode?: string;
+  consultation_fee_regular?: number;
+  consultation_fee_discounted?: number;
 }
+
 
 type Slot = {
   id: number;

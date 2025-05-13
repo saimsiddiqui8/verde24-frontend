@@ -196,7 +196,7 @@ const Checkout = () => {
   const handleModalClose = () => {
     setShowModal(false);
     dispatch(deleteBooking());
-    navigate("/patient-dashboard/treatment-plans");
+    navigate("/patient-dashboard/consultation-doctors");
   };
 
   useEffect(() => {

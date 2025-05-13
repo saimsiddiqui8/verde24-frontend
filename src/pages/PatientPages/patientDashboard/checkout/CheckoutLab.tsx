@@ -244,7 +244,7 @@ const CheckoutLab = () => {
       queryClient.invalidateQueries(["patientcard", patientId]);
     }
     dispatch(deleteLabBooking());
-    navigate("/patient-dashboard/treatment-labs");
+    navigate("/patient-dashboard/consultation-labs");
   };
 
   const handlecancel = () => {

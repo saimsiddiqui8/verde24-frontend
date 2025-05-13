@@ -112,7 +112,6 @@ const FormSchema = z
       .min(1, { message: "Weight is required" }),
     blood_group: z.string().min(1, { message: "Blood Group is required" }),
     other_history: z.string().min(1, { message: "Other History is required" }),
-    image: z.string().min(1, { message: "Image is required" }),
   })
   .refine((data) => isPhoneValid(data.phone_number), {
     message: "Invalid Phone Number",

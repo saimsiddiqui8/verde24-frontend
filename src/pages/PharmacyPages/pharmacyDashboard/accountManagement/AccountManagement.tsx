@@ -80,7 +80,6 @@ const FormSchema = z
       .min(1, { message: "Registration Number is required" }),
     email: z.string().email({ message: "Invalid email address" }),
     phone_number: z.string().min(1, { message: "Phone Number is required" }),
-    logo: z.string().min(1, { message: "Image is required" }),
   })
   .refine((data) => isPhoneValid(data.phone_number), {
     message: "Invalid Phone Number",

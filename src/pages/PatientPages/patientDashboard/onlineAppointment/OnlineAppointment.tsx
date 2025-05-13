@@ -68,7 +68,7 @@ export default function OnlineAppointment() {
         hospitals.map((hospital: hospitalsType) => (
           <div key={hospital?.id} className="flex flex-col gap-4">
             <Link
-              to={`/patient-dashboard/online-appointment/online-hospital-profile/${hospital?.id}`}
+              to={`/patient-dashboard/hospital-appointment/online-hospital-profile/${hospital?.id}`}
             >
               <div className="border-primary border rounded-lg p-3 cursor-pointer">
                 <div className="flex flex-col md:flex-row justify-between gap-2 my-2">

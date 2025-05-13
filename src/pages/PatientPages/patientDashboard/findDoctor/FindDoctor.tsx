@@ -270,7 +270,7 @@ export default function FindDoctor() {
               ?.map((doctor: UpdateDoctorData) => {
                 return (
                   <Link
-                    to={`/patient-dashboard/find-doctor/appointment/${doctor?.id}`}
+                    to={`/patient-dashboard/find-doctor/select-slot/${doctor?.id}`}
                     key={doctor?.id}
                   >
                     <div className="border-primary border rounded-lg p-3 cursor-pointer">

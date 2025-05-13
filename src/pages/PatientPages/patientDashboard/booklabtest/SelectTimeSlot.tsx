@@ -118,47 +118,78 @@ const SelectTimeSlot: React.FC<StepProps> = ({ prevStep, data }) => {
             </div>
           </div>
 
-          {(data ?? [])?.map((item: labTests, index: number) => (
-            <div
-              key={index}
-              className="w-full lg:w-3/6 bg-white p-6 md:p-8 border-2 border-[#3FB946] rounded-3xl mt-6 lg:mt-16 h-full flex flex-col justify-center"
-            >
-              <h3 className="text-2xl font-bold text-[#3FB946] mb-4">
-                Your Cart &nbsp;
-                <span className="text-lg text-[#3FB946]">{index + 1} Test</span>
-              </h3>
+         {data?.[0] && (
+  <div
+    key={0}
+    className="w-full lg:w-3/6 bg-white p-6 md:p-8 border-2 border-[#3FB946] rounded-3xl mt-6 lg:mt-16 h-full flex flex-col justify-center"
+  >
+    <h3 className="text-2xl font-bold text-[#3FB946] mb-4">
+      Your Cart &nbsp;
+      <span className="text-lg text-[#3FB946]">1 Test</span>
+    </h3>
 
-              <div className="pb-2 mb-4">
-                <div className="flex justify-between border-y border-y-gray-500 py-3">
-                  <span>{item.title}</span>
-                  <span>${item.price}</span>
-                </div>
-                <p className="text-primary text-gray-600 mt-4">Preparation</p>
-                <p className="text-primary text-gray-600 leading-5">
-                  {item.description}
-                </p>
-              </div>
+    <div className="pb-2 mb-4">
+      <div className="flex justify-between border-y border-y-gray-500 py-3">
+        <span>{data[0].title}</span>
+        <span>${data[0].price}</span>
+      </div>
+      <p className="text-primary text-gray-600 mt-4">Preparation</p>
+      <p className="text-primary text-gray-600 leading-5">
+        {data[0].description}
+      </p>
+    </div>
 
-              <div className="flex justify-around py-3 mt-6 font-bold text-lg border-2 border-[#3FB946] rounded-xl">
-                <span className="text-[#3FB946]">Total</span>
-                <span className="text-[#3FB946]">${item.price}</span>
-              </div>
-            </div>
-          ))}
+    <div className="flex justify-around py-3 mt-6 font-bold text-lg border-2 border-[#3FB946] rounded-xl">
+      <span className="text-[#3FB946]">Total</span>
+      <span className="text-[#3FB946]">${data[0].price}</span>
+    </div>
+  </div>
+)}
         </div>
+        {(data ?? []).length > 1 && 
+          <div className="flex flex-wrap gap-4">
+            {data && data?.slice(1).map((item: labTests, index: number) => (
+              <div
+                key={index}
+                className="flex-1 min-w-[280px] max-w-[450px] bg-white p-6 md:p-8 border-2 border-[#3FB946] rounded-3xl mt-6 lg:mt-16 h-full flex flex-col justify-center"
+              >
+                <h3 className="text-2xl font-bold text-[#3FB946] mb-4">
+                  Your Cart &nbsp;
+                  <span className="text-lg text-[#3FB946]">{index + 2} Test</span> 
+                </h3>
+        
+                <div className="pb-2 mb-4">
+                  <div className="flex justify-between border-y border-y-gray-500 py-3">
+                    <span>{item.title}</span>
+                    <span>${item.price}</span>
+                  </div>
+                  <p className="text-primary text-gray-600 mt-4">Preparation</p>
+                  <p className="text-primary text-gray-600 leading-5">
+                    {item.description}
+                  </p>
+                </div>
+        
+                <div className="flex justify-around py-3 mt-6 font-bold text-lg border-2 border-[#3FB946] rounded-xl">
+                  <span className="text-[#3FB946]">Total</span>
+                  <span className="text-[#3FB946]">${item.price}</span>
+                </div>
+              </div>
+            ))}
+          </div>}
+
         <div className="flex flex-wrap justify-center lg:justify-between gap-4 sm:gap-8 mt-5">
           <Button
-            type="button"
-            onClick={handleBack}
-            title="Go Back"
-            secondary={true}
-            className="rounded-xl w-40 sm:w-44 text-lg sm:text-xl p-3 lg:ms-4"
-          />
-          <Button
-            title="continue"
-            secondary={true}
-            className="rounded-xl w-40 sm:w-44 text-lg sm:text-xl p-3 lg:mr-24"
-          />
+                     type="button"
+                     onClick={handleBack}
+                     title="Go Back"
+                     secondary={true}
+                     className="rounded-xl w-28 text-lg sm:text-xl p-3 lg:ms-4"
+                   />
+                   <Button
+                     title="continue"
+                     secondary={true}
+                     className="rounded-xl w-28 text-lg sm:text-xl p-3 lg:mr-4"
+                   />
         </div>
         <Toaster />
       </form>
