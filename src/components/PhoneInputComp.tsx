@@ -13,7 +13,7 @@ export default function PhoneInputComp({
   return (
     <div className="relative">
       <PhoneInput
-        defaultCountry="ng"
+        defaultCountry={value ? undefined : "ng"}
         value={value}
         {...properties}
         disabled={disabled}

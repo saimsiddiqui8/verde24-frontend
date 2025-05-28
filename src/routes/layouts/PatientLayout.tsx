@@ -1,5 +1,5 @@
 import { Link, Outlet, useLocation } from "react-router-dom";
-import doctorImg from "../../assets/nigeria_patient.jpeg";
+import doctorImg from "../../assets/patient-avater.png";
 import ProfileIcon from "../../assets/sidemenu/patient/Profile.svg";
 import FindDoctorIcon from "../../assets/sidemenu/patient/FindDoctor.svg";
 import { useDispatch, useSelector } from "react-redux";

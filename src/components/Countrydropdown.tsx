@@ -8,6 +8,7 @@ interface CountrySelectProps<T extends object> {
   label?: string;
   name: Path<T>;
   control: Control<T>;
+   disabled?: boolean;
   setValue: UseFormSetValue<T>;
 }
 
@@ -28,6 +29,7 @@ export default function CountrySelectComp<T extends object>({
   name,
   control,
   setValue,
+   disabled,
 }: CountrySelectProps<T>) {
   useEffect(() => {
     setValue(name, "" as PathValue<T, Path<T>>);
@@ -56,6 +58,8 @@ export default function CountrySelectComp<T extends object>({
                 {option.label}
               </div>
             )}
+            isSearchable={!disabled}
+            menuIsOpen={disabled ? false : undefined}
             className="flex w-full my-6 px-2.5 pt-2 pb-0.5 text-sm text-primary bg-transparent rounded-lg border border-primary focus:outline-none"
             styles={{
               control: (provided) => ({
