@@ -100,6 +100,17 @@ import {
   RequireBannedPharmacy,
   RequireVerification,
 } from "./RequireAuth.tsx";
+import AdminSignUp from "../pages/AdminPages/adminSignUp/AdminSignUp.tsx";
+import SinglePatientProfile from "../pages/DoctorPages/doctorDashboard/doctorInputInfo/singlepatientprofile/SinglePatientProfile.tsx";
+import AllPatients from "../pages/DoctorPages/doctorDashboard/doctorInputInfo/allpatients/AllPatients.tsx";
+import RecentlyVisited from "../pages/DoctorPages/doctorDashboard/doctorInputInfo/recentlyvisited/RecentlyVisited.tsx";
+import RecentlyAdded from "../pages/DoctorPages/doctorDashboard/doctorInputInfo/recentlyadded/RecentlyAdded.tsx";
+import PatientGroups from "../pages/DoctorPages/doctorDashboard/doctorInputInfo/patientgroups/PatientGroups.tsx";
+import Memberships from "../pages/DoctorPages/doctorDashboard/doctorInputInfo/memberships/Memberships.tsx";
+import FemalePatients from "../pages/DoctorPages/doctorDashboard/doctorInputInfo/femalepatients/FemalePatients.tsx";
+import MalePatients from "../pages/DoctorPages/doctorDashboard/doctorInputInfo/malepatients/MalePatients.tsx";
+import SingleAppointments from "../pages/DoctorPages/doctorDashboard/doctorInputInfo/singleappointments/SingleAppointments.tsx";
+import SinglePatientData from "../pages/DoctorPages/doctorDashboard/doctorInputInfo/singlepatientprofile/SinglePatientData.tsx";
 
 const AppLayout = () => {
   return (
@@ -126,6 +137,7 @@ export const router = createBrowserRouter(
           <Route path="lab/sign-in" element={<LabSignIn />} />
           <Route path="lab/sign-up" element={<LabSignUp />} />
           <Route path="admin/sign-in" element={<AdminSignIn />} />
+          <Route path="admin/sign-up" element={<AdminSignUp />} />
           <Route path="forgot-password">
             <Route path="1" element={<ForgotPasswordEmail />} />
             <Route path="2" element={<ForgotPasswordCode />} />
@@ -142,7 +154,21 @@ export const router = createBrowserRouter(
                 <Route index element={<VerifiedProfile />} />
                 <Route path="calendar" element={<Calendar />} />
                 <Route path="appointments" element={<Appointments />} />
-                <Route path="mypatients" element={<MyPatientsSection />} />
+                <Route path="my-patient" element={<MyPatientsSection />}  >
+                 <Route index element={<AllPatients />} />
+                <Route path="recently-visited" element={<RecentlyVisited />} />
+                <Route path="recently-added" element={<RecentlyAdded />} />
+                <Route path="groups" element={<PatientGroups />} />
+                <Route path="memberships" element={<Memberships />} />
+                <Route path="female-over-30" element={<FemalePatients />} />
+                <Route path="male-over-30" element={<MalePatients />} />
+
+                </Route>
+              <Route path="my-patient/:id" element={<SinglePatientProfile />}>
+  <Route index element={<SinglePatientData />} />
+  <Route path="appointments" element={<SingleAppointments />} />
+</Route>
+
                 <Route path="schedule" element={<AddSlots />} />
               </Route>
             </Route>

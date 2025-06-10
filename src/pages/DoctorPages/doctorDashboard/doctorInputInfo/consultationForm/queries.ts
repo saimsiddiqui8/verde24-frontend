@@ -166,6 +166,9 @@ query FindAppointmentByDoctor($findAppointmentByDoctorId: Int!) {
     patient {
       first_name
       last_name
+      image
+        age
+        gender
     }
   }
 }`;

@@ -6,6 +6,7 @@ import {
   CreateReportType,
   labAppointmentTypeCheckout,
   NearestLabType,
+  PatientAuthData,
   UserData,
 } from "./types";
 
@@ -346,6 +347,42 @@ export const searchLabTest = async (
     return response?.data?.data?.searchLabTests;
   } catch (error) {
     console.error("Error searchlabTests:", error);
+    throw error;
+  }
+};
+export const createPatientWithGoogle = async (
+  query: string,
+  variables: { data: PatientAuthData },
+) => {
+  try {
+    const response = await publicRequest.post("/graphql", {
+      query,
+      variables,
+    });
+     if (response?.data?.errors && response.data.errors.length > 0) {
+      throw new Error(response.data.errors[0].message);
+    }
+    return response?.data?.data?.createPatientWithGoogle;
+  } catch (error) {
+    console.error("Error createPatientWithGoogle:", error);
+    throw error;
+  }
+};
+export const loginPatientWithGoogle = async (
+  query: string,
+  variables: { data: string },
+) => {
+  try {
+    const response = await publicRequest.post("/graphql", {
+      query,
+      variables,
+    });
+     if (response?.data?.errors && response.data.errors.length > 0) {
+      throw new Error(response.data.errors[0].message);
+    }
+    return response?.data?.data?.loginPatientWithGoogle;
+  } catch (error) {
+    console.error("Error loginPatientWithGoogle:", error);
     throw error;
   }
 };

@@ -267,24 +267,33 @@ export default function PatientProfile() {
             </div>
             <div className="mt-4 flex flex-col items-start">
               <span className="inline-block h-32 w-32 rounded-full overflow-hidden bg-gray-100 border-2 border-green-500">
-                {image ? (
-                  <img
-                    src={image}
-                    alt="Selected logo"
-                    className="h-full w-full object-cover"
-                  />
-                ) : defaultPatientData?.image ? (
-                  <ImageUrl fileKey={defaultPatientData.image} />
-                ) : (
-                  <svg
-                    className="h-full w-full text-gray-400"
-                    fill="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path d="M24 24H0V0h24v24z" fill="none" />
-                    <path d="M12 0c-1.65 0-3.22.67-4.38 1.76L0 12h5v7h7v5l6.24-6.24c1.09-1.16 1.76-2.73 1.76-4.38 0-3.31-2.69-6-6-6zm2 13.5v-2h-4v-2h4V7l3 3-3 3.5z" />
-                  </svg>
-                )}
+           {image ? (
+  <img
+    src={image}
+    alt="Selected logo"
+    className="h-full w-full object-cover"
+  />
+) : defaultPatientData?.image ? (
+  defaultPatientData?.image.includes("googleusercontent.com") ? (
+    <img
+      src={defaultPatientData?.image}
+      alt="Default Patient Logo"
+      className="h-full w-full object-cover"
+    />
+  ) : (
+    <ImageUrl fileKey={defaultPatientData.image} />
+  )
+) : (
+  <svg
+    className="h-full w-full text-gray-400"
+    fill="currentColor"
+    viewBox="0 0 24 24"
+  >
+    <path d="M24 24H0V0h24v24z" fill="none" />
+    <path d="M12 0c-1.65 0-3.22.67-4.38 1.76L0 12h5v7h7v5l6.24-6.24c1.09-1.16 1.76-2.73 1.76-4.38 0-3.31-2.69-6-6-6zm2 13.5v-2h-4v-2h4V7l3 3-3 3.5z" />
+  </svg>
+)}
+
               </span>
               {edit && (
                 <>

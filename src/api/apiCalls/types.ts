@@ -331,3 +331,12 @@ export interface PatientLabAppointment {
 export interface LabTestWrapper {
   labTest: labTests;
 }
+
+
+export type PatientAuthData = {
+  phone_number: string;
+  longitude: number;
+  latitude: number;
+  idToken: string;
+  gender: String;
+};

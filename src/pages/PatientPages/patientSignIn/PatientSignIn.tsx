@@ -1,8 +1,7 @@
 import image from "../../../assets/sign-in.png";
-import { GoogleButton, InputField } from "../../../components";
+import {  InputField } from "../../../components";
 import { Link, useNavigate } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
-import { googleSignIn } from "../../../firebase/utils";
 import { useDispatch } from "react-redux";
 import { setUser } from "../../../redux/slices/userSlice";
 import { USER_ROLES } from "../../../api/roles";
@@ -14,6 +13,7 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { getPatientToken } from "../../../api/apiCalls/patientsApi";
 import { PATIENT_TOKEN_QUERY } from "./queries";
+import PatientGoogleAuth from "./Patientgoogleauth";
 
 const inputs = [
   {
@@ -107,28 +107,6 @@ export default function PatientSignIn() {
     handleLogin(formData);
   };
 
-  const handleUser = (userData: any) => {
-    if (userData?.accessToken) {
-      const user = {
-        email: userData?.email || "",
-        password: userData?.uid || "",
-        accessToken: userData?.accessToken,
-        uid: userData?.uid,
-      };
-      handleLogin(user);
-    } else {
-      notifyFailure("Login Failed!");
-    }
-  };
-
-  const handleGoogleSignIn = async () => {
-    try {
-      const userData = await googleSignIn();
-      handleUser(userData);
-    } catch (err) {
-      notifyFailure("Google Sign in Error!");
-    }
-  };
 
   return (
     <main className="grid grid-cols-12 items-center gap-8 mb-6 px-4 md:px-8">
@@ -185,10 +163,7 @@ export default function PatientSignIn() {
             <small>Or</small>
             <div className="w-1/2 md:w-[45%] h-[1px] bg-[#E0E0E0]"></div>
           </div>
-          <GoogleButton
-            label="Sign in with Google"
-            onClick={handleGoogleSignIn}
-          />
+          <PatientGoogleAuth/>
           <small className="block my-1 text-primary text-center">
             Do not have an account?{" "}
             <Link to="/patient/sign-up" className="font-bold">

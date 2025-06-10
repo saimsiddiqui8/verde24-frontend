@@ -30,6 +30,7 @@ export default function Navbar() {
     if (user?.role === USER_ROLES.admin) {
       navigate("/admin/sign-in");
     } else if (user?.role === USER_ROLES.doctor) {
+        localStorage.removeItem("recentPatients");
       navigate("/doctor/sign-in");
     } else if (user?.role === USER_ROLES.pharmacy) {
       navigate("/pharmacy/sign-in");

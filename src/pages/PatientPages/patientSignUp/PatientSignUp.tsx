@@ -2,7 +2,6 @@ import image from "../../../assets/sign-up.png";
 import { useState, useEffect } from "react";
 import {
   Button,
-  GoogleButton,
   InputField,
   Modal,
   PhoneInputComp,
@@ -11,7 +10,6 @@ import {
 import { Link, useNavigate } from "react-router-dom";
 import { useMutation, useQuery } from "react-query";
 import { Toaster } from "react-hot-toast";
-import { googleSignIn } from "../../../firebase/utils";
 import {
   isPhoneValid,
   notifyFailure,
@@ -36,6 +34,7 @@ import {
   verifyPatientOTP,
 } from "../../../api/apiCalls/patientsApi";
 import { CreatePatientType } from "../../../api/apiCalls/types";
+import PatientGoogleSignup from "./PatientGoogleSignup";
 
 const inputs = [
   {
@@ -284,28 +283,7 @@ export default function () {
     }
   }, [data, dispatch, navigate, reset]);
 
-  const handleUser = (userData: any) => {
-    const user = {
-      first_name: userData?.displayName?.split(" ")[0],
-      last_name: userData?.displayName?.split(" ")[1],
-      email: userData?.email,
-      password: userData?.uid,
-    };
-    setValue("first_name", user?.first_name);
-    setValue("last_name", user?.last_name);
-    setValue("email", user?.email);
-    setValue("password", user?.password);
-    setshowSignUpModal(true);
-  };
 
-  const handleGoogleSignIn = async () => {
-    try {
-      const userData = await googleSignIn();
-      handleUser(userData);
-    } catch (err) {
-      notifyFailure("Google Sign up Error!");
-    }
-  };
 
   const handleModalSubmit = async () => {
     handleValidation();
@@ -351,18 +329,11 @@ export default function () {
                       error={errors[input?.name]}
                     />
                   ) : input.type === "number" ? (
-                    <Controller
-  name={input?.name}
-  control={control}
-  render={({ field }) => (
-    <PhoneInputComp
-      className="my-4"
-      value={field.value}
-      onChange={field.onChange}
-      error={errors[input?.name]}
-    />
-  )}
-/>
+                   <PhoneInputComp
+                      className={"my-4"}
+                      properties={{ ...register(input?.name) }}
+                      error={errors[input?.name]}
+                    />
                   ) : (
                     <InputField
                       className={"my-4"}
@@ -408,12 +379,7 @@ export default function () {
             <small>Or</small>
             <div className="w-[45%] h-[1px] bg-[#E0E0E0]"></div>
           </div>
-          <div className="flex flex-col md:flex-row gap-4">
-            <GoogleButton
-              label="Sign Up with Google"
-              onClick={handleGoogleSignIn}
-            />
-          </div>
+           <PatientGoogleSignup/>
           <small className="block my-1 text-primary text-center">
             Already have an account?{" "}
             <Link to="/patient/sign-in" className="font-bold">

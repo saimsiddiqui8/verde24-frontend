@@ -28,3 +28,21 @@ query ($email: String!,$role: String!, $code: String!) {
 verifyUserOtp(email: $email,role: $role,code: $code)
 }
 `;
+
+export const CREATE_PATIENT_WITH_GOOGLE = `
+mutation CreatePatientWithGoogle($data: PatientGoogleSignUpInput!) {
+  createPatientWithGoogle(data: $data) {
+    email
+    error
+  }
+}`
+export const LOGIN_PATIENT_WITH_GOOGLE = `
+mutation LoginPatientWithGoogle($data: String!) {
+  loginPatientWithGoogle(data: $data) {
+    id
+    token
+    email
+    is_verified
+    error
+  }
+}`
