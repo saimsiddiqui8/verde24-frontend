@@ -53,7 +53,7 @@ query FindAppointmentByPatient($findAppointmentByPatientId: Int!) {
       googleMeetUrl
       appointmentsId
     }
-    doctor {
+    patient {
       first_name
       last_name
     }

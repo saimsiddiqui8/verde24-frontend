@@ -7,6 +7,31 @@ import { loadingEnd, loadingStart } from "../../../../../redux/slices/loadingSli
 import { notifyFailure } from "../../../../../utils/Utils";
 import { RootState } from "../../../../../redux/store";
 import { useMemo } from "react";
+import { DashboardSection } from "../../../../../components";
+
+
+interface Meeting {
+  id: number;
+  startTime: string;
+  googleMeetUrl: string;
+  appointmentsId: number;
+}
+
+interface Appointment {
+  appointment_date: string;
+  appointment_time: string;
+  doctor_id: number;
+  duration: number;
+  id: number;
+  patient_id: number;
+  payment_id: number;
+  status: string;
+  meeting?: Meeting;
+  patient: {
+    first_name: string;
+    last_name: string;
+  };
+}
 
 const SingleAppointments = () => {
      const {id} = useParams();
@@ -38,44 +63,64 @@ const SingleAppointments = () => {
        });
 
        const filteredAppointments = useMemo(() => {
-  return data?.filter((item: any) => item.doctor_id === doctorId) || [];
+  return data?.filter((item: Appointment) => item.doctor_id === doctorId) || [];
 }, [data, doctorId]);
+   
 
-       console.log("dataaaaaa" , data);
-       
   return (
-    <div className="space-y-4">
-      <h2 className="text-xl font-semibold text-[#5C89D8]">Appointments</h2>
+ <DashboardSection>
+  <div className="flex flex-col sm:flex-row justify-between my-4">
+    <h2 className="text-2xl sm:text-3xl font-semibold text-primary">Appointments</h2>
+  </div>
 
-      {filteredAppointments.length === 0 ? (
-        <p className="text-gray-500">No appointments found for this doctor.</p>
-      ) : (
-        filteredAppointments.map((item:any, index:number) => (
-          <div key={index} className="border p-4 rounded-md shadow-sm bg-white">
-            <div className="flex justify-between text-sm text-gray-700">
-              <span className="font-medium">Date:</span>
-              <span>{item.appointment_date}</span>
-            </div>
-            <div className="flex justify-between text-sm text-gray-700">
-              <span className="font-medium">Time:</span>
-              <span>{item.appointment_time}</span>
-            </div>
-            <div className="flex justify-between text-sm text-gray-700">
-              <span className="font-medium">Doctor:</span>
-              <span>{item.doctor?.first_name} {item.doctor?.last_name}</span>
-            </div>
-            <div className="flex justify-between text-sm text-gray-700">
-              <span className="font-medium">Duration:</span>
-              <span>{item.duration} min</span>
-            </div>
-            <div className="flex justify-between text-sm text-gray-700">
-              <span className="font-medium">Status:</span>
-              <span>{item.status}</span>
-            </div>
-          </div>
-        ))
-      )}
-    </div>
+  <div className="overflow-x-auto">
+    <table className="w-full min-w-max table-auto text-left">
+      <thead>
+        <tr>
+          <th className="bg-white p-2 sm:p-4 text-sm font-medium text-primary">Patient Name</th>
+          <th className="bg-white p-2 sm:p-4 text-sm font-medium text-primary">Appointment No</th>
+          <th className="bg-white p-2 sm:p-4 text-sm font-medium text-primary">Appointment Date & Time</th>
+          <th className="bg-white p-2 sm:p-4 text-sm font-medium text-primary">Status</th>
+          <th className="bg-white p-2 sm:p-4 text-sm font-medium text-primary">Action</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        {filteredAppointments.length === 0 ? (
+          <tr>
+            <td colSpan={5} className="p-4 text-center text-primary">
+              No appointments found for this patient.
+            </td>
+          </tr>
+        ) : (
+          filteredAppointments.map((item: Appointment, index: number) => (
+            <tr key={index} className="odd:bg-[#5C89D826]">
+              <td className="p-2 sm:p-4 text-sm text-primary">
+                {item.patient?.first_name} {item.patient?.last_name}
+              </td>
+              <td className="p-2 sm:p-4 text-sm text-primary text-center">{item.id}</td>
+              <td className="p-2 sm:p-4 text-sm text-primary">
+                {item.appointment_date} {item.appointment_time}
+              </td>
+              <td className="p-2 sm:p-4">
+                <span className="font-bold text-xs bg-[#EBF9F1] border border-[#41BC63] text-[#41BC63] px-4 py-1 rounded-[15px] inline-block">
+                  {item.status}
+                </span>
+              </td>
+              <td className="p-2 sm:p-4">
+                <span className="font-bold text-xs bg-[#EBF9F1] border border-[#41BC63] text-[#41BC63] px-4 py-1 rounded-[15px] inline-block">
+                  Submitted
+                </span>
+              </td>
+            </tr>
+          ))
+        )}
+      </tbody>
+    </table>
+  </div>
+</DashboardSection>
+
+
   )
 }
 

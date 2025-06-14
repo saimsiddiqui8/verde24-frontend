@@ -92,14 +92,6 @@ const SinglePatientData = () => {
     <Button title="Save" className="text-[10px] px-2 py-2 w-20" />
   </div>
 
-  {/* Patient UI Icon Placeholder */}
-  <div className="flex justify-center mt-4">
-    {/* <img
-      src={patientui}
-      alt="Patient Icon"
-      className="w-24 h-24 object-contain"
-    /> */}
-  </div>
 </div>
 
     </div>

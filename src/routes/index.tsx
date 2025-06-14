@@ -111,6 +111,7 @@ import FemalePatients from "../pages/DoctorPages/doctorDashboard/doctorInputInfo
 import MalePatients from "../pages/DoctorPages/doctorDashboard/doctorInputInfo/malepatients/MalePatients.tsx";
 import SingleAppointments from "../pages/DoctorPages/doctorDashboard/doctorInputInfo/singleappointments/SingleAppointments.tsx";
 import SinglePatientData from "../pages/DoctorPages/doctorDashboard/doctorInputInfo/singlepatientprofile/SinglePatientData.tsx";
+import Communication from "../pages/DoctorPages/doctorDashboard/doctorInputInfo/communication/Communication.tsx";
 
 const AppLayout = () => {
   return (
@@ -168,6 +169,7 @@ export const router = createBrowserRouter(
   <Route index element={<SinglePatientData />} />
   <Route path="appointments" element={<SingleAppointments />} />
 </Route>
+  <Route path="my-patient/:id/communication" element={<Communication />} />
 
                 <Route path="schedule" element={<AddSlots />} />
               </Route>
