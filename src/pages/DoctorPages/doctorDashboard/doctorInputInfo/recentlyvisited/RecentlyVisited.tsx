@@ -61,43 +61,61 @@ const RecentlyVisited = () => {
     .filter(Boolean) as Appointment[];
 
   return (
-    <div>
-      <h2 className="text-xl font-semibold mb-4">Recently Visited Patients</h2>
+   <div>
+  <h2 className="text-xl font-semibold mb-4">Recently Visited Patients</h2>
 
-      {recentPatients.length === 0 ? (
-        <div className="text-center text-primary font-semibold text-lg">No recent visits found.</div>
-      ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {recentPatients.map((data) => (
-            <Link
-              key={data.patient_id}
-              to={`${BASE_URL}/${data.patient_id}`}
-            >
-              <div className="flex flex-col items-center justify-start py-1 px-2 cursor-pointer">
-                {data.patient.image ? (
+  {recentPatients.length === 0 ? (
+    <div className="text-center text-primary font-semibold text-lg">
+      No recent visits found.
+    </div>
+  ) : (
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      {recentPatients.map((data) => (
+        <Link
+          key={data.patient_id}
+          to={`${BASE_URL}/${data.patient_id}`}
+          className="flex justify-center"
+        >
+          <div className="flex flex-col items-center py-3 px-2 cursor-pointer w-full max-w-[140px]">
+            <div className="w-24 h-24 rounded-lg overflow-hidden">
+              {data?.patient?.image ? (
+                data.patient.image.includes("googleusercontent.com") ? (
+                  <img
+                    src={data.patient.image}
+                    alt="Patient"
+                    onError={(e) => {
+                      const target = e.target as HTMLImageElement;
+                      target.onerror = null;
+                      target.src = patientui;
+                    }}
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
                   <ImageUrl
                     fileKey={data.patient.image}
                     className="w-24 h-24 rounded-lg object-cover"
                   />
-                ) : (
-                  <img
-                    src={patientui}
-                    alt="Patient Icon"
-                    className="w-24 h-24 rounded-lg object-cover"
-                  />
-                )}
-                <span className="text-xs truncate mt-1" style={{ color: "#5C89D8" }}>
-                  {data.patient.first_name + " " + data.patient.last_name}
-                </span>
-                <span className="text-xs" style={{ color: "#5C89D8" }}>
-                  {`PAT-${String(data.patient_id).padStart(3, "0")}`}
-                </span>
-              </div>
-            </Link>
-          ))}
-        </div>
-      )}
+                )
+              ) : (
+                <img
+                  src={patientui}
+                  alt="Patient Icon"
+                  className="w-full h-full object-cover"
+                />
+              )}
+            </div>
+
+            <span className="text-xs truncate mt-2 text-[#5C89D8] text-center w-full">
+              {data.patient.first_name + " " + data.patient.last_name}
+            </span>
+            <span className="text-xs text-[#5C89D8]">{`PAT-${String(data.patient_id).padStart(3, "0")}`}</span>
+          </div>
+        </Link>
+      ))}
     </div>
+  )}
+</div>
+
   );
 };
 

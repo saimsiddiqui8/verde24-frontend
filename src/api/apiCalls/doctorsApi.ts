@@ -3,6 +3,7 @@ import {
   AppointmentUpdateStatus,
   createDoctorData,
   CreateMeetingLink,
+  CreatePrescriptionData,
   CreateTimeSlotVariables,
   DoctorAuthVariables,
   EmailVariables,
@@ -312,6 +313,45 @@ export const getUrl = async (query: string, variables: { fileKey: string }) => {
     return response?.data?.data?.getFileUrl;
   } catch (error) {
     console.error("Error getting getFileUrl Link:", error);
+    throw error;
+  }
+};
+
+
+export const createPrescription = async (query: string, variables: { data: CreatePrescriptionData }) => {
+  try {
+    const response = await publicRequest.post("/graphql", {
+      query,
+      variables,
+    });
+    return response?.data?.data?.createPrescription;
+  } catch (error) {
+    console.error("Error creating createPrescription Link:", error);
+    throw error;
+  }
+};
+
+export const getAllPrescription = async (query: string,variables: { patientId: number }) => {
+  try {
+    const response = await publicRequest.post("/graphql", {
+      query,
+         variables,
+    });
+    return response?.data?.data?.getAllPrescriptionByPatientId;
+  } catch (error) {
+    console.error("Error getting getAllPrescriptionByPatientId Link:", error);
+    throw error;
+  }
+};
+export const getReportByPatientDoctorId = async (query: string,variables: { patientId: number , doctorId:number }) => {
+  try {
+    const response = await publicRequest.post("/graphql", {
+      query,
+         variables,
+    });
+    return response?.data?.data?.getReportByDoctorAndPatientId;
+  } catch (error) {
+    console.error("Error getting getReportByDoctorAndPatientId Link:", error);
     throw error;
   }
 };

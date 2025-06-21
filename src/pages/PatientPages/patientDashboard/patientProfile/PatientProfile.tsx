@@ -274,11 +274,16 @@ export default function PatientProfile() {
     className="h-full w-full object-cover"
   />
 ) : defaultPatientData?.image ? (
-  defaultPatientData?.image.includes("googleusercontent.com") ? (
+ defaultPatientData.image.includes("googleusercontent.com") ? (
     <img
-      src={defaultPatientData?.image}
+      src={defaultPatientData.image}
       alt="Default Patient Logo"
       className="h-full w-full object-cover"
+      onError={(e) => {
+        const target = e.target as HTMLImageElement;
+        target.onerror = null;
+        target.src = "/fallback-image.png"; 
+      }}
     />
   ) : (
     <ImageUrl fileKey={defaultPatientData.image} />

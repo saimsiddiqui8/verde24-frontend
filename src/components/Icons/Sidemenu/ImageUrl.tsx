@@ -4,6 +4,8 @@ import { useQuery } from "react-query";
 import pdfIcon from "../../../assets/pdfIcon.png";
 import jpgIcon from "../../../assets/jpgicon.jpg";
 import { useNavigate } from "react-router-dom";
+import { RootState } from "../../../redux/store";
+import { useSelector } from "react-redux";
 
 const GET_IMG_URL = `
   query Query($fileKey: String!) {
@@ -28,11 +30,19 @@ const ImageUrl: React.FC<ImageComponentProp> = ({
     enabled: !!fileKey,
   });
   const navigate = useNavigate();
-  const handleOpenFile = (fileType: string) => {
-    navigate("/patient-dashboard/files/view-file", {
-      state: { fileUrl: data, fileType },
-    });
-  };
+  const user = useSelector((state: RootState) => state.user.currentUser);
+  
+
+ const handleOpenFile = (fileType: string) => {
+  const path =
+    user?.role === "7964"
+      ? "/doctor-dashboard/files/view-file"
+      : "/patient-dashboard/files/view-file";
+
+  navigate(path, {
+    state: { fileUrl: data, fileType },
+  });
+};
 
   if (isLoading)
     return (

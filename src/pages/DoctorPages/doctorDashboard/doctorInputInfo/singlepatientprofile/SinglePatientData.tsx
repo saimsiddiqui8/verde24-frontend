@@ -64,18 +64,32 @@ const SinglePatientData = () => {
 
           {/* Image */}
           <div className="flex justify-center items-start pt-2 ms-8">
-            {data?.image ? (
-              <ImageUrl
-                fileKey={data?.image}
-                className="w-24 h-24 rounded-lg object-cover"
-              />
-            ) : (
-              <img
-                src={patientui}
-                alt="Patient Icon"
-                className="w-24 h-24 rounded-lg object-cover"
-              />
-            )}
+           {data?.image ? (
+  data.image.includes("googleusercontent.com") ? (
+    <img
+      src={data.image}
+      alt="Patient"
+      onError={(e) => {
+        const target = e.target as HTMLImageElement;
+        target.onerror = null;
+        target.src = patientui; // fallback if Google image fails
+      }}
+      className="w-24 h-24 rounded-lg object-cover"
+    />
+  ) : (
+    <ImageUrl
+      fileKey={data.image}
+      className="w-24 h-24 rounded-lg object-cover"
+    />
+  )
+) : (
+  <img
+    src={patientui}
+    alt="Patient Icon"
+    className="w-24 h-24 rounded-lg object-cover"
+  />
+)}
+
           </div>
         </div>
 

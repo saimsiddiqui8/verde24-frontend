@@ -25,12 +25,12 @@ const SECTIONS = [
     links: [
       { title: "Vital Signs", href: "/vitalsigns", icon: vitals },
       { title: "Clinical Notes", href: "/clinicalnotes", icon: clinic },
-      { title: "Treatment Plans", href: "/treatmentplans", icon: treatment },
-      {
-        title: "Completed Procedures",
-        href: "/procedures",
-        icon: completeprocedure,
-      },
+      // { title: "Treatment Plans", href: "/treatmentplans", icon: treatment },
+      // {
+      //   title: "Completed Procedures",
+      //   href: "/procedures",
+      //   icon: completeprocedure,
+      // },
       { title: "Files", href: "/files", icon: files },
       { title: "Prescriptions", href: "/prescriptions", icon: prescription },
     ],

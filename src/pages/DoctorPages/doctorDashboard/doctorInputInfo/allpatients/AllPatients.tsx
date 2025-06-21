@@ -103,18 +103,33 @@ const AllPatients = () => {
     localStorage.setItem("recentPatients", JSON.stringify(recentPatients.slice(0, 10)));
   }}>
       <div className="flex flex-col items-center justify-start py-1 px-2 cursor-pointer">
+       
        {data?.patient?.image ? (
-  <ImageUrl
-    fileKey={data?.patient?.image}
-    className="w-24 h-24 rounded-lg object-cover" 
-  />
+  data.patient.image.includes("googleusercontent.com") ? (
+    <img
+      src={data.patient.image}
+      alt="Patient"
+      onError={(e) => {
+        const target = e.target as HTMLImageElement;
+        target.onerror = null;
+        target.src = patientui; 
+      }}
+      className="w-24 h-24 rounded-lg object-cove"
+    />
+  ) : (
+    <ImageUrl
+      fileKey={data.patient.image}
+      className="w-24 h-24 rounded-lg object-cover"
+    />
+  )
 ) : (
   <img
     src={patientui}
     alt="Patient Icon"
-    className="w-24 h-24 rounded-lg object-cover" 
+    className="w-24 h-24 rounded-lg object-cover"
   />
 )}
+
 
       
         <span className="text-xs truncate mt-1" style={{ color: "#5C89D8" }}>

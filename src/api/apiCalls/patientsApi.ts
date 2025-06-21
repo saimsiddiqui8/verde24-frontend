@@ -1,6 +1,7 @@
 import { VERIFIED_DOCTOR_QUERY } from "../../pages/PatientPages/patientDashboard/findDoctor/queries";
 import { publicRequest } from "../requestMethods";
 import {
+  assigntodoctorauth,
   CreateAppointmentData,
   CreatePatientType,
   CreateReportType,
@@ -383,6 +384,25 @@ export const loginPatientWithGoogle = async (
     return response?.data?.data?.loginPatientWithGoogle;
   } catch (error) {
     console.error("Error loginPatientWithGoogle:", error);
+    throw error;
+  }
+};
+
+export const assignToDoctor = async (
+  query: string,
+  variables: { data:assigntodoctorauth },
+) => {
+  try {
+    const response = await publicRequest.post("/graphql", {
+      query,
+      variables,
+    });
+     if (response?.data?.errors && response.data.errors.length > 0) {
+      throw new Error(response.data.errors[0].message);
+    }
+    return response?.data?.data?.assignReportToDoctor;
+  } catch (error) {
+    console.error("Error assignReportToDoctor:", error);
     throw error;
   }
 };

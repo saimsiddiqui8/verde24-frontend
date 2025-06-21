@@ -57,6 +57,10 @@ query FindAppointmentByPatient($findAppointmentByPatientId: Int!) {
       first_name
       last_name
     }
+    doctor {
+      first_name
+      last_name
+    }
   }
 }`;
 export const GET_NEAREST_LABS = `

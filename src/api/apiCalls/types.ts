@@ -340,3 +340,23 @@ export type PatientAuthData = {
   idToken: string;
   gender: String;
 };
+
+
+export type CreatePrescriptionData = {
+  patientId: number; 
+  doctorId: number;
+  prescriptionUrl: string;
+  specialInstructions: string[];
+  observation: string[];
+  history: string[];
+  complaints: string[];
+  labTests: string[];
+  diagnosis: string[];
+};
+
+
+export interface assigntodoctorauth  {
+   patient_id:number;
+    doctor_id:number;
+    files:string[];
+}

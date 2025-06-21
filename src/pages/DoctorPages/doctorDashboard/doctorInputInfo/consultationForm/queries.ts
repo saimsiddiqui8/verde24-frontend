@@ -259,3 +259,47 @@ query FindLabAppointmentByPatientId($findLabAppointmentByPatientIdId: Int!) {
     }
   }
 }`;
+
+
+
+export const CREATE_PRESCRIPTION = `
+mutation CreatePrescription($data: PrescriptionInput!) {
+  createPrescription(data: $data) {
+    id
+    complaints
+    labTests
+    diagnosis
+    observation
+    specialInstructions
+    prescriptionUrl
+    history
+    createdAt
+    updatedAt
+  }
+}`;
+
+export const GET_ALL_PRESCRIPTION = `
+query GetAllPrescriptionByPatientId($patientId: Int!) {
+  getAllPrescriptionByPatientId(patient_id: $patientId) {
+    id
+    complaints
+    labTests
+    diagnosis
+    observation
+    specialInstructions
+    prescriptionUrl
+    history
+    createdAt
+    updatedAt
+  }
+}`;
+
+export const GET_REPORT_BY_PATIENTDOCTOR_ID = `
+query GetReportByDoctorAndPatientId($doctorId: Int!, $patientId: Int!) {
+  getReportByDoctorAndPatientId(doctor_id: $doctorId, patient_id: $patientId) {
+    id
+    files
+    patient_id
+    doctor_id
+  }
+}`;

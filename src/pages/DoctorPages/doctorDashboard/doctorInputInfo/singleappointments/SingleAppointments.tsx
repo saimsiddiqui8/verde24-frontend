@@ -66,7 +66,6 @@ const SingleAppointments = () => {
   return data?.filter((item: Appointment) => item.doctor_id === doctorId) || [];
 }, [data, doctorId]);
    
-
   return (
  <DashboardSection>
   <div className="flex flex-col sm:flex-row justify-between my-4">
@@ -81,7 +80,6 @@ const SingleAppointments = () => {
           <th className="bg-white p-2 sm:p-4 text-sm font-medium text-primary">Appointment No</th>
           <th className="bg-white p-2 sm:p-4 text-sm font-medium text-primary">Appointment Date & Time</th>
           <th className="bg-white p-2 sm:p-4 text-sm font-medium text-primary">Status</th>
-          <th className="bg-white p-2 sm:p-4 text-sm font-medium text-primary">Action</th>
         </tr>
       </thead>
 
@@ -105,11 +103,6 @@ const SingleAppointments = () => {
               <td className="p-2 sm:p-4">
                 <span className="font-bold text-xs bg-[#EBF9F1] border border-[#41BC63] text-[#41BC63] px-4 py-1 rounded-[15px] inline-block">
                   {item.status}
-                </span>
-              </td>
-              <td className="p-2 sm:p-4">
-                <span className="font-bold text-xs bg-[#EBF9F1] border border-[#41BC63] text-[#41BC63] px-4 py-1 rounded-[15px] inline-block">
-                  Submitted
                 </span>
               </td>
             </tr>
