@@ -1,4 +1,4 @@
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { getAllPrescription } from "../../../../../api/apiCalls/doctorsApi";
 import { GET_ALL_PRESCRIPTION } from "../consultationForm/queries";
@@ -6,6 +6,7 @@ import { useQuery } from "react-query";
 import { loadingEnd, loadingStart } from "../../../../../redux/slices/loadingSlice";
 import { notifyFailure } from "../../../../../utils/Utils";
 import ImageUrl from "../../../../../components/Icons/Sidemenu/ImageUrl";
+import { RootState } from "../../../../../redux/store";
 
 
 type Prescription = {
@@ -14,6 +15,7 @@ type Prescription = {
   specialInstructions: string[];
   prescriptionUrl: string;
   createdAt: string;
+  doctorId?: number;
   doctor?:{
     first_name:string;
       last_name:string;
@@ -24,6 +26,7 @@ type Prescription = {
 const PatientPrescription = () => {
   const { id } = useParams();
   const dispatch = useDispatch();
+  const doctorId = useSelector((state: RootState) => state.user.currentUser?.id);
   const handleGetPrescription = async () => {
     if (!id) return;
 
@@ -53,15 +56,17 @@ const PatientPrescription = () => {
     enabled: !!id,
   });
 
+   const filteredData = data?.filter((item: Prescription) => item?.doctorId === doctorId);
+  
   return (
    <div className="p-6">
   <h2 className="text-xl font-semibold text-primary mb-4">
     View Prescriptions
   </h2>
 
-  {data && data.length > 0 ? (
+  {filteredData && filteredData.length > 0 ? (
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-      {data.map((prescription: Prescription) => (
+      {filteredData.map((prescription: Prescription) => (
         <div
           key={prescription.id}
           className="rounded overflow-hidden shadow border hover:shadow-lg transition bg-white flex flex-col items-center text-center"

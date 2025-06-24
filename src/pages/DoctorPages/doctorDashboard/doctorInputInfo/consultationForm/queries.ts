@@ -291,6 +291,7 @@ query GetAllPrescriptionByPatientId($patientId: Int!) {
     history
     createdAt
     updatedAt
+    doctorId
   }
 }`;
 

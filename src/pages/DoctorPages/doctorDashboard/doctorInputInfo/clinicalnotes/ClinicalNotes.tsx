@@ -1,6 +1,5 @@
 import { useParams } from "react-router-dom";
-import { Button } from "../../../../../components";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useQuery } from "react-query";
 import {
   loadingStart,
@@ -9,6 +8,7 @@ import {
 import { notifyFailure } from "../../../../../utils/Utils";
 import { getAllPrescription } from "../../../../../api/apiCalls/doctorsApi";
 import { GET_ALL_PRESCRIPTION } from "../consultationForm/queries";
+import { RootState } from "../../../../../redux/store";
 
 type Prescription = {
   id: number;
@@ -21,11 +21,13 @@ type Prescription = {
   history: string[];
   createdAt: string;
   updatedAt: string;
+  doctorId?:number;
 };
 
 const ClinicalNotes = () => {
   const { id } = useParams();
   const dispatch = useDispatch();
+    const doctorId = useSelector((state: RootState) => state.user.currentUser?.id);
 
   const handleGetPrescription = async () => {
     if (!id) return;
@@ -54,7 +56,10 @@ const ClinicalNotes = () => {
     },
   });
 
-  const prescriptions: Prescription[] = data ?? [];
+  
+  const filteredData = data?.filter((item: Prescription) => item?.doctorId === doctorId);
+  
+  const prescriptions: Prescription[] = filteredData ?? [];
 
   return (
     <div className="p-6">

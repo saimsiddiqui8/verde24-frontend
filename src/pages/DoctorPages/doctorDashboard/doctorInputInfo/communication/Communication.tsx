@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Button, DashboardSection, DropdownField, InputField } from "../../../../../components";
-import { useForm } from "react-hook-form";
+import { SubmitHandler, useForm } from "react-hook-form";
 import prescriptionimg from '../../../../../assets/prescriptionimg.jpg'
 import { generateImageBasedPDF } from "../../../../../components/Prescription";
 import { useNavigate, useParams } from "react-router-dom";
@@ -141,7 +141,7 @@ const {
   handleSubmit: handleSubmit1,
   reset: reset1,
   formState: { errors: errors1 },
-} = useForm({
+} = useForm<ClinicalFormData>({   
   resolver: zodResolver(schema1),
 });
 
@@ -151,7 +151,7 @@ const {
   handleSubmit: handleSubmit2,
   reset: reset2,
   formState: { errors: errors2 },
-} = useForm({
+} = useForm<PrescriptionFormData>({
   resolver: zodResolver(schema2),
 });
 
@@ -239,13 +239,10 @@ const handleFinalSubmit = async () => {
       observation: fieldValues.observation || [],
     };
 
-    // 1. Generate PDF Blob
     const blob = await generateImageBasedPDF(staticData, prescriptionimg);
 
-    // 2. Convert blob to File (required by AWS uploader)
     const file = new File([blob], "prescription.pdf", { type: "application/pdf" });
 
-    // 3. Upload to AWS
     const uploadedUrl = await uploadFileDoctor(FILE_UPLOAD, file);
     const payload: CreatePrescriptionData = {
   patientId: Number(data?.patient?.id), 
@@ -260,18 +257,26 @@ const handleFinalSubmit = async () => {
 };
 
     mutate(payload)
-
-    // (Optional) download to user too
-
-    // const downloadUrl = URL.createObjectURL(blob);
-    // const a = document.createElement("a");
-    // a.href = downloadUrl;
-    // a.download = "prescription.pdf";
-    // a.click();
-    // URL.revokeObjectURL(downloadUrl);
-
 };
-const onSubmit1 = (data: any) => {
+
+type ClinicalFormData = {
+  history: string;
+  complaints: string;
+  daignosis: string;
+  observation: string;
+  lab_test: string;
+};
+
+type PrescriptionFormData = {
+  medicine_name: string;
+  dosage: string;
+  frequency: string;
+  days: string;
+  special_instruction: string;
+};
+
+
+const onSubmit1 : SubmitHandler<ClinicalFormData> = (data: ClinicalFormData) => {
   const updated = { ...fieldValues };
 
   Object.entries(data).forEach(([key, value]) => {
@@ -284,7 +289,8 @@ const onSubmit1 = (data: any) => {
   reset1()
 };
 
-const onSubmit2 = (data: any) => {
+const onSubmit2 : SubmitHandler<PrescriptionFormData> = (data: PrescriptionFormData) => {
+
   const updated = { ...fieldValues };
 
   Object.entries(data).forEach(([key, value]) => {
@@ -312,65 +318,8 @@ const isReadyToGenerate =
 
   {/* Main Flex Grid */}
   <div className="flex flex-col lg:flex-row gap-6">
-
-    {/* LEFT COLUMN - Details Form */}
-    <form onSubmit={handleSubmit1(onSubmit1)} className="w-full lg:w-[25%] space-y-2">
-      <h3 className="text-2xl font-extrabold text-[#3FB946] mb-4">Details</h3>
-      {inputs1.map((input, index) => (
-        <div key={index}>
-          {input.type === "select" ? (
-            <DropdownField
-              label={input.label}
-              name={input.name}
-              options={input.options!}
-              properties={{ ...register1(input.name) }}
-              error={errors1[input.name]}
-            />
-          ) : (
-            <InputField
-              label={input.label}
-              name={input.name}
-              type="text"
-              placeholder={input.placeholder}
-              properties={{ ...register1(input.name) }}
-              error={errors1[input.name]}
-            />
-          )}
-        </div>
-      ))}
-      <Button title="Add details" className="text-xs w-28 h-9 mt-2" />
-    </form>
-
-    {/* MIDDLE COLUMN - Medication Form */}
-    <form onSubmit={handleSubmit2(onSubmit2)} className="w-full lg:w-[25%] space-y-2">
-      <h3 className="text-2xl font-extrabold text-[#3FB946] mb-4">Medication</h3>
-      {inputs2.map((input, index) => (
-        <div key={index}>
-          {input.type === "select" ? (
-            <DropdownField
-              label={input.label}
-              name={input.name}
-              options={input.options!}
-              properties={{ ...register2(input.name) }}
-              error={errors2[input.name]}
-            />
-          ) : (
-            <InputField
-              label={input.label}
-              name={input.name}
-              type="text"
-              placeholder={input.placeholder}
-              properties={{ ...register2(input.name) }}
-              error={errors2[input.name]}
-            />
-          )}
-        </div>
-      ))}
-      <Button title="Add medication" className="text-xs w-32 h-9 mt-2" />
-    </form>
-
-    {/* RIGHT COLUMN - Prescription Template Preview */}
-    <div className="w-full lg:w-[50%] p-4 rounded-md bg-blue-800">
+    {/* RIGHT COLUMN - Prescription Template Preview (comes first on mobile) */}
+    <div className="w-full order-1 lg:order-3 lg:w-[50%] p-4 rounded-md bg-blue-800">
       <div
         className="relative w-full h-[700px] rounded shadow border bg-white"
         style={{
@@ -461,23 +410,87 @@ const isReadyToGenerate =
             ))}
           </ul>
         </div>
-    {isReadyToGenerate && (
-  <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2">
-    <Button
-      onClick={handleFinalSubmit}
-      type="button"
-      title="Generate PDF"
-      className="text-xs w-40 h-9"
-    />
-  </div>
-)}
 
-
+        {/* Generate Button */}
+        {isReadyToGenerate && (
+          <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2">
+            <Button
+              onClick={handleFinalSubmit}
+              type="button"
+              title="Generate PDF"
+              className="text-xs w-40 h-9"
+            />
+          </div>
+        )}
       </div>
     </div>
+
+    {/* LEFT COLUMN - Details Form */}
+    <form
+      onSubmit={handleSubmit1(onSubmit1)}
+      className="w-full order-2 lg:order-1 lg:w-[25%] space-y-2"
+    >
+      <h3 className="text-2xl font-extrabold text-[#3FB946] mb-4">Details</h3>
+      {inputs1.map((input, index) => (
+        <div key={index}>
+          {input.type === "select" ? (
+            <DropdownField
+              label={input.label}
+              name={input.name}
+              options={input.options!}
+              properties={{ ...register1(input.name as keyof ClinicalFormData) }}
+              error={errors1[input.name as keyof ClinicalFormData]}
+            />
+          ) : (
+            <InputField
+              label={input.label}
+              name={input.name}
+              type="text"
+              placeholder={input.placeholder}
+              properties={{ ...register1(input.name as keyof ClinicalFormData) }}
+              error={errors1[input.name as keyof ClinicalFormData]?.message}
+            />
+          )}
+        </div>
+      ))}
+      <Button title="Add details" className="text-xs w-28 h-9 mt-2" />
+    </form>
+
+    {/* MIDDLE COLUMN - Medication Form */}
+    <form
+      onSubmit={handleSubmit2(onSubmit2)}
+      className="w-full order-3 lg:order-2 lg:w-[25%] space-y-2"
+    >
+      <h3 className="text-2xl font-extrabold text-[#3FB946] mb-4">Medication</h3>
+      {inputs2.map((input, index) => (
+        <div key={index}>
+          {input.type === "select" ? (
+            <DropdownField
+              label={input.label}
+              name={input.name}
+              options={input.options!}
+              properties={{ ...register2(input.name as keyof PrescriptionFormData) }}
+              error={errors2[input.name as keyof PrescriptionFormData]?.message}
+            />
+          ) : (
+            <InputField
+              label={input.label}
+              name={input.name}
+              type="text"
+              placeholder={input.placeholder}
+              properties={{ ...register2(input.name as keyof PrescriptionFormData) }}
+              error={errors2[input.name as keyof PrescriptionFormData]?.message}
+            />
+          )}
+        </div>
+      ))}
+      <Button title="Add medication" className="text-xs w-32 h-9 mt-2" />
+    </form>
   </div>
-  <Toaster/>
+
+  <Toaster />
 </DashboardSection>
+
 
   );
 };
