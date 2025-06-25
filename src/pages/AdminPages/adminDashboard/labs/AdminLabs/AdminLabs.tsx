@@ -49,13 +49,15 @@ export default function AdminLabs() {
   });
 
   const filteredLabs = data?.filter((lab: Lab) =>
-    lab?.lab_name?.toLowerCase().includes(search.toLowerCase())
+    lab?.lab_name?.toLowerCase().includes(search.toLowerCase()),
   );
 
   return (
-   <DashboardSection title="Labs">
+    <DashboardSection title="Labs">
       {data?.length === 0 ? (
-        <p className="text-center text-primary my-6 text-2xl">No labs available</p>
+        <p className="text-center text-primary my-6 text-2xl">
+          No labs available
+        </p>
       ) : (
         <>
           <InputField
@@ -87,7 +89,11 @@ export default function AdminLabs() {
                     </Link>
                   </div>
                   <div className="absolute top-2 right-2">
-                    {lab?.is_verified ? <MdLock size={25} /> : <MdLockOpen size={25} />}
+                    {lab?.is_verified ? (
+                      <MdLock size={25} />
+                    ) : (
+                      <MdLockOpen size={25} />
+                    )}
                   </div>
                 </div>
               ))}

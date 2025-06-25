@@ -52,13 +52,15 @@ export default function AdminDoctors() {
   const filteredDoctors = data?.filter((doctor: Doctor) =>
     (doctor.first_name + " " + doctor.last_name)
       .toLowerCase()
-      .includes(search.toLowerCase())
+      .includes(search.toLowerCase()),
   );
 
   return (
     <DashboardSection title="Doctors">
       {data?.length === 0 ? (
-        <p className="text-center text-primary my-6 text-2xl">No doctors available</p>
+        <p className="text-center text-primary my-6 text-2xl">
+          No doctors available
+        </p>
       ) : (
         <>
           <InputField
@@ -114,4 +116,3 @@ export default function AdminDoctors() {
     </DashboardSection>
   );
 }
-

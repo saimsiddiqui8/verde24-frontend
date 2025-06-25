@@ -119,12 +119,12 @@ export default function Files() {
     setCheckedFiles((prev) =>
       prev.includes(fileKey)
         ? prev.filter((key) => key !== fileKey)
-        : [...prev, fileKey]
+        : [...prev, fileKey],
     );
   };
 
   const handleFileChange = async (
-    event: React.ChangeEvent<HTMLInputElement>
+    event: React.ChangeEvent<HTMLInputElement>,
   ) => {
     const file = event.target.files?.[0];
     if (!file || !["application/pdf", "image/jpeg"].includes(file.type)) {
@@ -158,7 +158,7 @@ export default function Files() {
     return response;
   };
 
-  const handlassignereportdoctor = async (data:assigntodoctorauth) => {
+  const handlassignereportdoctor = async (data: assigntodoctorauth) => {
     const response = await assignToDoctor(ASSIGN_TO_DOCTOR, { data });
     if (!response) {
       throw new Error("Report send failed!");
@@ -181,13 +181,13 @@ export default function Files() {
     },
   });
 
-  const { mutate :assignmutate} = useMutation(handlassignereportdoctor, {
+  const { mutate: assignmutate } = useMutation(handlassignereportdoctor, {
     onMutate: () => dispatch(loadingStart()),
     onSuccess: () => {
-       notifySuccess("Files sent to doctor successfully.");
-    setShowDoctorModal(false);
-    setSelectedDoctor(null);
-    setCheckedFiles([]);
+      notifySuccess("Files sent to doctor successfully.");
+      setShowDoctorModal(false);
+      setSelectedDoctor(null);
+      setCheckedFiles([]);
       dispatch(loadingEnd());
     },
     onError: (error: Error) => {
@@ -222,7 +222,6 @@ export default function Files() {
     },
   });
 
-
   const { pathname } = useLocation();
 
   const handleSendToDoctor = () => {
@@ -233,18 +232,18 @@ export default function Files() {
     setShowDoctorModal(true);
   };
 
-
   const handleDoctorSubmit = async () => {
     if (!selectedDoctor || !id) {
       notifyFailure("Please select a doctor.");
       return;
     }
     const data = {
-      patient_id: id, doctor_id: Number(selectedDoctor), files: checkedFiles
-    }
+      patient_id: id,
+      doctor_id: Number(selectedDoctor),
+      files: checkedFiles,
+    };
     assignmutate(data);
   };
-
 
   return (
     <DashboardSection>
@@ -289,8 +288,9 @@ export default function Files() {
               <Link
                 key={index}
                 to={BASE_URL + link?.href}
-                className={`flex py-0.5 px-4 border-b border-[#125DB94D] ${pathname === BASE_URL + link?.href && "text-[#3FB946]"
-                  }`}
+                className={`flex py-0.5 px-4 border-b border-[#125DB94D] ${
+                  pathname === BASE_URL + link?.href && "text-[#3FB946]"
+                }`}
               >
                 {link?.title}
               </Link>
@@ -347,10 +347,11 @@ export default function Files() {
                 ))}
             </div>
           ) : (
-            <p className="text-primary text-lg text-center w-full">No report Found</p>
+            <p className="text-primary text-lg text-center w-full">
+              No report Found
+            </p>
           )}
         </div>
-
       </div>
 
       <Modal
@@ -360,10 +361,15 @@ export default function Files() {
       >
         <div className="flex flex-col gap-4">
           {uniqueDoctors?.length === 0 ? (
-            <p className="text-center text-lg text-primary font-extrabold">No doctor available to send</p>
+            <p className="text-center text-lg text-primary font-extrabold">
+              No doctor available to send
+            </p>
           ) : (
             uniqueDoctors.map((doc) => (
-              <label key={doc.id} className="flex items-center gap-2 cursor-pointer">
+              <label
+                key={doc.id}
+                className="flex items-center gap-2 cursor-pointer"
+              >
                 <input
                   type="radio"
                   name="selectedDoctor"
@@ -377,7 +383,6 @@ export default function Files() {
               </label>
             ))
           )}
-
 
           <Button
             title="Submit"

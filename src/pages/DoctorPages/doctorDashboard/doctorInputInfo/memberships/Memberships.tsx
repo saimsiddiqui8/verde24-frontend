@@ -1,8 +1,5 @@
-
 const Memberships = () => {
-  return (
-    <div>Memberships</div>
-  )
-}
+  return <div>Memberships</div>;
+};
 
-export default Memberships
+export default Memberships;

@@ -12,7 +12,6 @@ export interface Doctor {
   consultation_fee_discounted?: number;
 }
 
-
 type Slot = {
   id: number;
   doctorTimeSlotId: number;
@@ -332,18 +331,16 @@ export interface LabTestWrapper {
   labTest: labTests;
 }
 
-
 export type PatientAuthData = {
   phone_number: string;
   longitude: number;
   latitude: number;
   idToken: string;
-  gender: String;
+  gender: string;
 };
 
-
 export type CreatePrescriptionData = {
-  patientId: number; 
+  patientId: number;
   doctorId: number;
   prescriptionUrl: string;
   specialInstructions: string[];
@@ -354,9 +351,8 @@ export type CreatePrescriptionData = {
   diagnosis: string[];
 };
 
-
-export interface assigntodoctorauth  {
-   patient_id:number;
-    doctor_id:number;
-    files:string[];
+export interface assigntodoctorauth {
+  patient_id: number;
+  doctor_id: number;
+  files: string[];
 }

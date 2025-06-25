@@ -51,7 +51,10 @@ const PatientGroups = () => {
                 alt="Patient Icon"
                 className="w-full object-contain"
               />
-              <span className="text-xs truncate mt-1" style={{ color: "#5C89D8" }}>
+              <span
+                className="text-xs truncate mt-1"
+                style={{ color: "#5C89D8" }}
+              >
                 {data.first_name + " " + data.last_name}
               </span>
               <span className="text-xs" style={{ color: "#5C89D8" }}>

@@ -35,7 +35,7 @@ mutation CreatePatientWithGoogle($data: PatientGoogleSignUpInput!) {
     email
     error
   }
-}`
+}`;
 export const LOGIN_PATIENT_WITH_GOOGLE = `
 mutation LoginPatientWithGoogle($data: String!) {
   loginPatientWithGoogle(data: $data) {
@@ -45,4 +45,4 @@ mutation LoginPatientWithGoogle($data: String!) {
     is_verified
     error
   }
-}`
+}`;

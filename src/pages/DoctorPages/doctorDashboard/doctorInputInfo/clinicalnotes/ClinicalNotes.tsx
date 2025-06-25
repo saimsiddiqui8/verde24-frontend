@@ -13,7 +13,7 @@ import { RootState } from "../../../../../redux/store";
 type Prescription = {
   id: number;
   complaints: string[];
-  labTests?: string[]; 
+  labTests?: string[];
   diagnosis: string[];
   observation: string[];
   specialInstructions: string[];
@@ -21,13 +21,15 @@ type Prescription = {
   history: string[];
   createdAt: string;
   updatedAt: string;
-  doctorId?:number;
+  doctorId?: number;
 };
 
 const ClinicalNotes = () => {
   const { id } = useParams();
   const dispatch = useDispatch();
-    const doctorId = useSelector((state: RootState) => state.user.currentUser?.id);
+  const doctorId = useSelector(
+    (state: RootState) => state.user.currentUser?.id,
+  );
 
   const handleGetPrescription = async () => {
     if (!id) return;
@@ -56,16 +58,19 @@ const ClinicalNotes = () => {
     },
   });
 
-  
-  const filteredData = data?.filter((item: Prescription) => item?.doctorId === doctorId);
-  
+  const filteredData = data?.filter(
+    (item: Prescription) => item?.doctorId === doctorId,
+  );
+
   const prescriptions: Prescription[] = filteredData ?? [];
 
   return (
     <div className="p-6">
       {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between my-4 items-center">
-        <h2 className="text-xl sm:text-2xl font-semibold text-primary">Clinical Notes</h2>
+        <h2 className="text-xl sm:text-2xl font-semibold text-primary">
+          Clinical Notes
+        </h2>
         <div className="flex gap-2 mt-2 sm:mt-0">
           {/* <Button title="Edit Medical Hostry Vitals" className="text-sm px-3 py-1 w-fit" />
           <Button title="Cancel" className="text-sm px-3 py-2 w-fit" />
@@ -88,8 +93,11 @@ const ClinicalNotes = () => {
               { label: "Complaints", values: prescription.complaints },
               { label: "Observation", values: prescription.observation },
               { label: "Diagnoses", values: prescription.diagnosis },
-              { label: "Lab Tests", values: prescription.labTests || [] }, 
-              { label: "Special Instructions", values: prescription.specialInstructions },
+              { label: "Lab Tests", values: prescription.labTests || [] },
+              {
+                label: "Special Instructions",
+                values: prescription.specialInstructions,
+              },
             ].map(
               (section, sIdx) =>
                 section.values?.length > 0 && (
@@ -106,7 +114,7 @@ const ClinicalNotes = () => {
                       </div>
                     ))}
                   </div>
-                )
+                ),
             )}
           </div>
         ))}

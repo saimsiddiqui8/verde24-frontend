@@ -23,10 +23,9 @@ const PatientGoogleAuth = () => {
   const navigate = useNavigate();
 
   const createPatient = async (data: string) => {
-    const response = await loginPatientWithGoogle(
-      LOGIN_PATIENT_WITH_GOOGLE,
-      { data }
-    );
+    const response = await loginPatientWithGoogle(LOGIN_PATIENT_WITH_GOOGLE, {
+      data,
+    });
     return response;
   };
 
@@ -65,9 +64,9 @@ const PatientGoogleAuth = () => {
       (error) => {
         notifyFailure(
           "Location access denied. Please enable it in browser settings. " +
-            error.message
+            error.message,
         );
-      }
+      },
     );
   }, []);
 

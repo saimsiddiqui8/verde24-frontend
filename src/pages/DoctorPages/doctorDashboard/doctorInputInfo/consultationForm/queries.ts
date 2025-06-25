@@ -260,8 +260,6 @@ query FindLabAppointmentByPatientId($findLabAppointmentByPatientIdId: Int!) {
   }
 }`;
 
-
-
 export const CREATE_PRESCRIPTION = `
 mutation CreatePrescription($data: PrescriptionInput!) {
   createPrescription(data: $data) {

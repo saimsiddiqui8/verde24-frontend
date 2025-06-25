@@ -17,8 +17,16 @@ const FILTERS = [
     links: [
       { title: "Groups", href: "/groups", icon: communication },
       { title: "Memberships", href: "/memberships", icon: communication },
-      { title: "Female Patients Over 30", href: "/female-over-30", icon: communication },
-      { title: "Male Patients Over 30", href: "/male-over-30", icon: communication },
+      {
+        title: "Female Patients Over 30",
+        href: "/female-over-30",
+        icon: communication,
+      },
+      {
+        title: "Male Patients Over 30",
+        href: "/male-over-30",
+        icon: communication,
+      },
     ],
   },
 ];
@@ -71,8 +79,7 @@ export default function MyPatientsSection() {
         </div>
 
         <div className="w-full lg:w-5/12">
-
-            <Outlet />
+          <Outlet />
         </div>
       </div>
     </DashboardSection>

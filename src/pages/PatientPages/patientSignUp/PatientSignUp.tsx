@@ -283,8 +283,6 @@ export default function () {
     }
   }, [data, dispatch, navigate, reset]);
 
-
-
   const handleModalSubmit = async () => {
     handleValidation();
   };
@@ -329,7 +327,7 @@ export default function () {
                       error={errors[input?.name]}
                     />
                   ) : input.type === "number" ? (
-                   <PhoneInputComp
+                    <PhoneInputComp
                       className={"my-4"}
                       properties={{ ...register(input?.name) }}
                       error={errors[input?.name]}
@@ -379,7 +377,7 @@ export default function () {
             <small>Or</small>
             <div className="w-[45%] h-[1px] bg-[#E0E0E0]"></div>
           </div>
-           <PatientGoogleSignup/>
+          <PatientGoogleSignup />
           <small className="block my-1 text-primary text-center">
             Already have an account?{" "}
             <Link to="/patient/sign-in" className="font-bold">

@@ -15,110 +15,175 @@ import { UpdateDoctorData } from "../../../../api/apiCalls/types";
 import ImageUrl from "../../../../components/Icons/Sidemenu/ImageUrl";
 
 const specializationOptions = [
-  { label: 'Internal Medicine', value: 'Internal Medicine' },
-  { label: 'General Surgery', value: 'General Surgery' },
-  { label: 'Pediatrics', value: 'Pediatrics' },
-  { label: 'Obstetrics and Gynecology (OB/GYN)', value: 'Obstetrics and Gynecology (OB/GYN)' },
-  { label: 'Family Medicine / General Practice', value: 'Family Medicine / General Practice' },
-  { label: 'Psychiatry', value: 'Psychiatry' },
-  { label: 'Anesthesiology', value: 'Anesthesiology' },
-  { label: 'Emergency Medicine', value: 'Emergency Medicine' },
-  { label: 'Radiology', value: 'Radiology' },
-  { label: 'Pathology', value: 'Pathology' },
-  { label: 'General Psychiatry', value: 'General Psychiatry' },
-  { label: 'Child and Adolescent Psychiatry', value: 'Child and Adolescent Psychiatry' },
-  { label: 'Addiction Psychiatry', value: 'Addiction Psychiatry' },
-  { label: 'Geriatric Psychiatry', value: 'Geriatric Psychiatry' },
-  { label: 'Forensic Psychiatry', value: 'Forensic Psychiatry' },
-  { label: 'Neuropsychiatry', value: 'Neuropsychiatry' },
-  { label: 'Clinical Psychology (Allied)', value: 'Clinical Psychology (Allied)' },
-  { label: 'Mental Health Nursing (Advanced Practice)', value: 'Mental Health Nursing (Advanced Practice)' },
-  { label: 'Cardiology', value: 'Cardiology' },
-  { label: 'Gastroenterology', value: 'Gastroenterology' },
-  { label: 'Endocrinology', value: 'Endocrinology' },
-  { label: 'Rheumatology', value: 'Rheumatology' },
-  { label: 'Pulmonology', value: 'Pulmonology' },
-  { label: 'Nephrology', value: 'Nephrology' },
-  { label: 'Hematology', value: 'Hematology' },
-  { label: 'Oncology', value: 'Oncology' },
-  { label: 'Geriatrics', value: 'Geriatrics' },
-  { label: 'Infectious Diseases', value: 'Infectious Diseases' },
-  { label: 'Sleep Medicine', value: 'Sleep Medicine' },
-  { label: 'Clinical Pharmacology', value: 'Clinical Pharmacology' },
-  { label: 'Hospital Medicine', value: 'Hospital Medicine' },
-  { label: 'Allergy & Immunology', value: 'Allergy & Immunology' },
-  { label: 'Cardiothoracic Surgery', value: 'Cardiothoracic Surgery' },
-  { label: 'Neurosurgery', value: 'Neurosurgery' },
-  { label: 'Vascular Surgery', value: 'Vascular Surgery' },
-  { label: 'Orthopedic Surgery', value: 'Orthopedic Surgery' },
-  { label: 'Urology', value: 'Urology' },
-  { label: 'Pediatric Surgery', value: 'Pediatric Surgery' },
-  { label: 'Colorectal Surgery', value: 'Colorectal Surgery' },
-  { label: 'Surgical Oncology', value: 'Surgical Oncology' },
-  { label: 'Trauma Surgery', value: 'Trauma Surgery' },
-  { label: 'Transplant Surgery', value: 'Transplant Surgery' },
-  { label: 'Otolaryngology (ENT)', value: 'Otolaryngology (ENT)' },
-  { label: 'Oral & Maxillofacial Surgery', value: 'Oral & Maxillofacial Surgery' },
-  { label: 'Plastic, Reconstructive & Cosmetic Surgery', value: 'Plastic, Reconstructive & Cosmetic Surgery' },
-  { label: 'Aesthetic Surgery (subspecialty of plastic surgery or standalone in some countries)', value: 'Aesthetic Surgery (subspecialty of plastic surgery or standalone in some countries)' },
-  { label: 'Hair Transplant Surgery (emerging subspecialty)', value: 'Hair Transplant Surgery (emerging subspecialty)' },
-  { label: 'Minimally Invasive / Laparoscopic Surgery', value: 'Minimally Invasive / Laparoscopic Surgery' },
-  { label: 'Maternal-Fetal Medicine', value: 'Maternal-Fetal Medicine' },
-  { label: 'Gynecologic Oncology', value: 'Gynecologic Oncology' },
-  { label: 'Reproductive Endocrinology & Infertility', value: 'Reproductive Endocrinology & Infertility' },
-  { label: 'Urogynecology', value: 'Urogynecology' },
-  { label: 'Family Planning', value: 'Family Planning' },
-  { label: 'Neonatology', value: 'Neonatology' },
-  { label: 'Pediatric Cardiology', value: 'Pediatric Cardiology' },
-  { label: 'Pediatric Neurology', value: 'Pediatric Neurology' },
-  { label: 'Pediatric Oncology', value: 'Pediatric Oncology' },
-  { label: 'Pediatric Gastroenterology', value: 'Pediatric Gastroenterology' },
-  { label: 'Pediatric Infectious Disease', value: 'Pediatric Infectious Disease' },
-  { label: 'Pediatric Endocrinology', value: 'Pediatric Endocrinology' },
-  { label: 'Pediatric Nephrology', value: 'Pediatric Nephrology' },
-  { label: 'Developmental Pediatrics', value: 'Developmental Pediatrics' },
-  { label: 'Aesthetic Medicine (Non-surgical beauty & anti-aging: botox, fillers, lasers)', value: 'Aesthetic Medicine (Non-surgical beauty & anti-aging: botox, fillers, lasers)' },
-  { label: 'Cosmetic Dermatology', value: 'Cosmetic Dermatology' },
-  { label: 'Cosmetic Surgery (Focused on elective procedures for appearance)', value: 'Cosmetic Surgery (Focused on elective procedures for appearance)' },
-  { label: 'Laser Medicine', value: 'Laser Medicine' },
-  { label: 'Hair Restoration Medicine', value: 'Hair Restoration Medicine' },
-  { label: 'Medical Spa / Anti-Aging Medicine (e.g., IV therapy, hormonal therapy)', value: 'Medical Spa / Anti-Aging Medicine (e.g., IV therapy, hormonal therapy)' },
-  { label: 'Regenerative Aesthetic Medicine (PRP, stem cells, etc.)', value: 'Regenerative Aesthetic Medicine (PRP, stem cells, etc.)' },
-  { label: 'Ophthalmology', value: 'Ophthalmology' },
-  { label: 'Dermatology', value: 'Dermatology' },
-  { label: 'Audiology (Allied)', value: 'Audiology (Allied)' },
-  { label: 'Diagnostic Radiology', value: 'Diagnostic Radiology' },
-  { label: 'Interventional Radiology', value: 'Interventional Radiology' },
-  { label: 'Nuclear Medicine', value: 'Nuclear Medicine' },
-  { label: 'Radiation Oncology', value: 'Radiation Oncology' },
-  { label: 'Anatomical Pathology', value: 'Anatomical Pathology' },
-  { label: 'Clinical Pathology', value: 'Clinical Pathology' },
-  { label: 'Forensic Pathology', value: 'Forensic Pathology' },
-  { label: 'Hematopathology', value: 'Hematopathology' },
-  { label: 'Medical Microbiology', value: 'Medical Microbiology' },
-  { label: 'Molecular Pathology', value: 'Molecular Pathology' },
-  { label: 'Cytopathology', value: 'Cytopathology' },
-  { label: 'Public Health Medicine', value: 'Public Health Medicine' },
-  { label: 'Preventive Medicine', value: 'Preventive Medicine' },
-  { label: 'Occupational Medicine', value: 'Occupational Medicine' },
-  { label: 'Environmental Medicine', value: 'Environmental Medicine' },
-  { label: 'Aerospace Medicine', value: 'Aerospace Medicine' },
-  { label: 'Tropical Medicine', value: 'Tropical Medicine' },
-  { label: 'Epidemiology', value: 'Epidemiology' },
-  { label: 'Disaster Medicine', value: 'Disaster Medicine' },
-  { label: 'Travel Medicine', value: 'Travel Medicine' },
-  { label: 'Health Policy & Management', value: 'Health Policy & Management' },
-  { label: 'Neurology', value: 'Neurology' },
-  { label: 'Neurophysiology', value: 'Neurophysiology' },
-  { label: 'Neurocritical Care', value: 'Neurocritical Care' },
-  { label: 'Clinical Neuropsychology (Allied)', value: 'Clinical Neuropsychology (Allied)' },
-  { label: 'Physical Medicine & Rehabilitation (PM&R)', value: 'Physical Medicine & Rehabilitation (PM&R)' },
-  { label: 'Pain Medicine', value: 'Pain Medicine' },
-  { label: 'Palliative Medicine', value: 'Palliative Medicine' },
-  { label: 'Speech & Language Therapy (Allied)', value: 'Speech & Language Therapy (Allied)' },
-  { label: 'Occupational Therapy (Allied)', value: 'Occupational Therapy (Allied)' }
+  { label: "Internal Medicine", value: "Internal Medicine" },
+  { label: "General Surgery", value: "General Surgery" },
+  { label: "Pediatrics", value: "Pediatrics" },
+  {
+    label: "Obstetrics and Gynecology (OB/GYN)",
+    value: "Obstetrics and Gynecology (OB/GYN)",
+  },
+  {
+    label: "Family Medicine / General Practice",
+    value: "Family Medicine / General Practice",
+  },
+  { label: "Psychiatry", value: "Psychiatry" },
+  { label: "Anesthesiology", value: "Anesthesiology" },
+  { label: "Emergency Medicine", value: "Emergency Medicine" },
+  { label: "Radiology", value: "Radiology" },
+  { label: "Pathology", value: "Pathology" },
+  { label: "General Psychiatry", value: "General Psychiatry" },
+  {
+    label: "Child and Adolescent Psychiatry",
+    value: "Child and Adolescent Psychiatry",
+  },
+  { label: "Addiction Psychiatry", value: "Addiction Psychiatry" },
+  { label: "Geriatric Psychiatry", value: "Geriatric Psychiatry" },
+  { label: "Forensic Psychiatry", value: "Forensic Psychiatry" },
+  { label: "Neuropsychiatry", value: "Neuropsychiatry" },
+  {
+    label: "Clinical Psychology (Allied)",
+    value: "Clinical Psychology (Allied)",
+  },
+  {
+    label: "Mental Health Nursing (Advanced Practice)",
+    value: "Mental Health Nursing (Advanced Practice)",
+  },
+  { label: "Cardiology", value: "Cardiology" },
+  { label: "Gastroenterology", value: "Gastroenterology" },
+  { label: "Endocrinology", value: "Endocrinology" },
+  { label: "Rheumatology", value: "Rheumatology" },
+  { label: "Pulmonology", value: "Pulmonology" },
+  { label: "Nephrology", value: "Nephrology" },
+  { label: "Hematology", value: "Hematology" },
+  { label: "Oncology", value: "Oncology" },
+  { label: "Geriatrics", value: "Geriatrics" },
+  { label: "Infectious Diseases", value: "Infectious Diseases" },
+  { label: "Sleep Medicine", value: "Sleep Medicine" },
+  { label: "Clinical Pharmacology", value: "Clinical Pharmacology" },
+  { label: "Hospital Medicine", value: "Hospital Medicine" },
+  { label: "Allergy & Immunology", value: "Allergy & Immunology" },
+  { label: "Cardiothoracic Surgery", value: "Cardiothoracic Surgery" },
+  { label: "Neurosurgery", value: "Neurosurgery" },
+  { label: "Vascular Surgery", value: "Vascular Surgery" },
+  { label: "Orthopedic Surgery", value: "Orthopedic Surgery" },
+  { label: "Urology", value: "Urology" },
+  { label: "Pediatric Surgery", value: "Pediatric Surgery" },
+  { label: "Colorectal Surgery", value: "Colorectal Surgery" },
+  { label: "Surgical Oncology", value: "Surgical Oncology" },
+  { label: "Trauma Surgery", value: "Trauma Surgery" },
+  { label: "Transplant Surgery", value: "Transplant Surgery" },
+  { label: "Otolaryngology (ENT)", value: "Otolaryngology (ENT)" },
+  {
+    label: "Oral & Maxillofacial Surgery",
+    value: "Oral & Maxillofacial Surgery",
+  },
+  {
+    label: "Plastic, Reconstructive & Cosmetic Surgery",
+    value: "Plastic, Reconstructive & Cosmetic Surgery",
+  },
+  {
+    label:
+      "Aesthetic Surgery (subspecialty of plastic surgery or standalone in some countries)",
+    value:
+      "Aesthetic Surgery (subspecialty of plastic surgery or standalone in some countries)",
+  },
+  {
+    label: "Hair Transplant Surgery (emerging subspecialty)",
+    value: "Hair Transplant Surgery (emerging subspecialty)",
+  },
+  {
+    label: "Minimally Invasive / Laparoscopic Surgery",
+    value: "Minimally Invasive / Laparoscopic Surgery",
+  },
+  { label: "Maternal-Fetal Medicine", value: "Maternal-Fetal Medicine" },
+  { label: "Gynecologic Oncology", value: "Gynecologic Oncology" },
+  {
+    label: "Reproductive Endocrinology & Infertility",
+    value: "Reproductive Endocrinology & Infertility",
+  },
+  { label: "Urogynecology", value: "Urogynecology" },
+  { label: "Family Planning", value: "Family Planning" },
+  { label: "Neonatology", value: "Neonatology" },
+  { label: "Pediatric Cardiology", value: "Pediatric Cardiology" },
+  { label: "Pediatric Neurology", value: "Pediatric Neurology" },
+  { label: "Pediatric Oncology", value: "Pediatric Oncology" },
+  { label: "Pediatric Gastroenterology", value: "Pediatric Gastroenterology" },
+  {
+    label: "Pediatric Infectious Disease",
+    value: "Pediatric Infectious Disease",
+  },
+  { label: "Pediatric Endocrinology", value: "Pediatric Endocrinology" },
+  { label: "Pediatric Nephrology", value: "Pediatric Nephrology" },
+  { label: "Developmental Pediatrics", value: "Developmental Pediatrics" },
+  {
+    label:
+      "Aesthetic Medicine (Non-surgical beauty & anti-aging: botox, fillers, lasers)",
+    value:
+      "Aesthetic Medicine (Non-surgical beauty & anti-aging: botox, fillers, lasers)",
+  },
+  { label: "Cosmetic Dermatology", value: "Cosmetic Dermatology" },
+  {
+    label: "Cosmetic Surgery (Focused on elective procedures for appearance)",
+    value: "Cosmetic Surgery (Focused on elective procedures for appearance)",
+  },
+  { label: "Laser Medicine", value: "Laser Medicine" },
+  { label: "Hair Restoration Medicine", value: "Hair Restoration Medicine" },
+  {
+    label:
+      "Medical Spa / Anti-Aging Medicine (e.g., IV therapy, hormonal therapy)",
+    value:
+      "Medical Spa / Anti-Aging Medicine (e.g., IV therapy, hormonal therapy)",
+  },
+  {
+    label: "Regenerative Aesthetic Medicine (PRP, stem cells, etc.)",
+    value: "Regenerative Aesthetic Medicine (PRP, stem cells, etc.)",
+  },
+  { label: "Ophthalmology", value: "Ophthalmology" },
+  { label: "Dermatology", value: "Dermatology" },
+  { label: "Audiology (Allied)", value: "Audiology (Allied)" },
+  { label: "Diagnostic Radiology", value: "Diagnostic Radiology" },
+  { label: "Interventional Radiology", value: "Interventional Radiology" },
+  { label: "Nuclear Medicine", value: "Nuclear Medicine" },
+  { label: "Radiation Oncology", value: "Radiation Oncology" },
+  { label: "Anatomical Pathology", value: "Anatomical Pathology" },
+  { label: "Clinical Pathology", value: "Clinical Pathology" },
+  { label: "Forensic Pathology", value: "Forensic Pathology" },
+  { label: "Hematopathology", value: "Hematopathology" },
+  { label: "Medical Microbiology", value: "Medical Microbiology" },
+  { label: "Molecular Pathology", value: "Molecular Pathology" },
+  { label: "Cytopathology", value: "Cytopathology" },
+  { label: "Public Health Medicine", value: "Public Health Medicine" },
+  { label: "Preventive Medicine", value: "Preventive Medicine" },
+  { label: "Occupational Medicine", value: "Occupational Medicine" },
+  { label: "Environmental Medicine", value: "Environmental Medicine" },
+  { label: "Aerospace Medicine", value: "Aerospace Medicine" },
+  { label: "Tropical Medicine", value: "Tropical Medicine" },
+  { label: "Epidemiology", value: "Epidemiology" },
+  { label: "Disaster Medicine", value: "Disaster Medicine" },
+  { label: "Travel Medicine", value: "Travel Medicine" },
+  { label: "Health Policy & Management", value: "Health Policy & Management" },
+  { label: "Neurology", value: "Neurology" },
+  { label: "Neurophysiology", value: "Neurophysiology" },
+  { label: "Neurocritical Care", value: "Neurocritical Care" },
+  {
+    label: "Clinical Neuropsychology (Allied)",
+    value: "Clinical Neuropsychology (Allied)",
+  },
+  {
+    label: "Physical Medicine & Rehabilitation (PM&R)",
+    value: "Physical Medicine & Rehabilitation (PM&R)",
+  },
+  { label: "Pain Medicine", value: "Pain Medicine" },
+  { label: "Palliative Medicine", value: "Palliative Medicine" },
+  {
+    label: "Speech & Language Therapy (Allied)",
+    value: "Speech & Language Therapy (Allied)",
+  },
+  {
+    label: "Occupational Therapy (Allied)",
+    value: "Occupational Therapy (Allied)",
+  },
 ];
-
 
 const options = [
   { label: "One Year", value: "1" },
@@ -127,9 +192,6 @@ const options = [
   { label: "Four or More Years", value: "4+" },
   { label: "Clear filter", value: "" },
 ];
-
-
-
 
 export default function FindDoctor() {
   const [doctors, setDoctors] = useState<UpdateDoctorData[]>([]);
@@ -145,9 +207,8 @@ export default function FindDoctor() {
   const doctorDropdownRef = useRef<HTMLDivElement>(null);
   const availabilityDropdownRef = useRef<HTMLDivElement>(null);
   const selectedOption = options.find(
-  (opt) => opt.value === searchDoctor && opt.value !== ""
-);
-
+    (opt) => opt.value === searchDoctor && opt.value !== "",
+  );
 
   useEffect(() => {
     dispatch(loadingStart());
@@ -162,7 +223,6 @@ export default function FindDoctor() {
   }, [dispatch]);
 
   // console.log("ddddddd" , doctors);
-  
 
   useEffect(() => {
     const socket = io(BASE_URL);
@@ -199,9 +259,9 @@ export default function FindDoctor() {
     setDoctorDropdownOpen(false);
   };
 
-   const handleDoctorSpecialityChange = (doctor: string) => {
-     setSelectedSpeciality(doctor);
-            setSpecialityDropdownOpen(false);
+  const handleDoctorSpecialityChange = (doctor: string) => {
+    setSelectedSpeciality(doctor);
+    setSpecialityDropdownOpen(false);
   };
 
   const handleClickOutside = (event: MouseEvent) => {
@@ -244,97 +304,105 @@ export default function FindDoctor() {
               className="w-fit"
               secondary={true}
             />
-            <Button onClick={() => {
-    setSearchDoctor("");
-    setSelectedSpeciality("");
-    setAvailability(null);
-  }} title="Reset" className="w-fit" secondary={true} />
+            <Button
+              onClick={() => {
+                setSearchDoctor("");
+                setSelectedSpeciality("");
+                setAvailability(null);
+              }}
+              title="Reset"
+              className="w-fit"
+              secondary={true}
+            />
           </div>
         </div>
         <div className="flex gap-4 items-center my-4 flex-wrap">
-         <div className="w-full sm:w-auto mt-2 sm:mt-0 relative" ref={specialityDropdownRef}>
-  <button
-    onClick={() => setSpecialityDropdownOpen(!specialityDropdownOpen)}
-    style={{ width: "14rem" }}
-    className="mt-1 py-3.5 px-4 border border-indigo-500 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 sm:text-sm relative flex justify-between items-center"
-  >
-    {selectedSpeciality || "Search By Speciality"}
-    <svg
-      className={`bg-indigo-500 w-4 h-4 ml-2 transition-transform duration-200 ${specialityDropdownOpen ? "rotate-180" : "rotate-0"}`}
-      fill="none"
-      stroke="white"
-      viewBox="0 0 24 24"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth="2"
-        d="M19 9l-7 7-7-7"
-      ></path>
-    </svg>
-  </button>
+          <div
+            className="w-full sm:w-auto mt-2 sm:mt-0 relative"
+            ref={specialityDropdownRef}
+          >
+            <button
+              onClick={() => setSpecialityDropdownOpen(!specialityDropdownOpen)}
+              style={{ width: "14rem" }}
+              className="mt-1 py-3.5 px-4 border border-indigo-500 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 sm:text-sm relative flex justify-between items-center"
+            >
+              {selectedSpeciality || "Search By Speciality"}
+              <svg
+                className={`bg-indigo-500 w-4 h-4 ml-2 transition-transform duration-200 ${specialityDropdownOpen ? "rotate-180" : "rotate-0"}`}
+                fill="none"
+                stroke="white"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M19 9l-7 7-7-7"
+                ></path>
+              </svg>
+            </button>
 
-  {specialityDropdownOpen && (
-    <ul className="absolute z-10 w-full max-h-60 overflow-y-auto mt-1 bg-white border border-gray-300 rounded-md shadow-lg text-sm">
-      {specializationOptions.map((option, index) => (
-        <li
-          key={index}
-          onClick={() => {
-            handleDoctorSpecialityChange(option?.label)
-          }}
-          className="px-4 py-2 hover:bg-indigo-100 cursor-pointer"
-        >
-          {option.label}
-        </li>
-      ))}
-    </ul>
-  )}
-</div>
-<div
-  className="w-full sm:w-auto mt-2 sm:mt-0 relative"
-  ref={doctorDropdownRef}
->
-  <button
-    onClick={() => setDoctorDropdownOpen(!doctorDropdownOpen)}
-    style={{ width: "14rem" }}
-    className="mt-1 py-3.5 px-4 border border-indigo-500 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 sm:text-sm relative flex justify-between items-center"
-  >
-    {selectedOption?.label || "Search By Experience"}
-    <svg
-      className={`bg-indigo-500 w-4 h-4 ml-2 transition-transform duration-200 ${
-        doctorDropdownOpen ? "rotate-180" : "rotate-0"
-      }`}
-      fill="none"
-      stroke="white"
-      viewBox="0 0 24 24"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth="2"
-        d="M19 9l-7 7-7-7"
-      ></path>
-    </svg>
-  </button>
+            {specialityDropdownOpen && (
+              <ul className="absolute z-10 w-full max-h-60 overflow-y-auto mt-1 bg-white border border-gray-300 rounded-md shadow-lg text-sm">
+                {specializationOptions.map((option, index) => (
+                  <li
+                    key={index}
+                    onClick={() => {
+                      handleDoctorSpecialityChange(option?.label);
+                    }}
+                    className="px-4 py-2 hover:bg-indigo-100 cursor-pointer"
+                  >
+                    {option.label}
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+          <div
+            className="w-full sm:w-auto mt-2 sm:mt-0 relative"
+            ref={doctorDropdownRef}
+          >
+            <button
+              onClick={() => setDoctorDropdownOpen(!doctorDropdownOpen)}
+              style={{ width: "14rem" }}
+              className="mt-1 py-3.5 px-4 border border-indigo-500 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 sm:text-sm relative flex justify-between items-center"
+            >
+              {selectedOption?.label || "Search By Experience"}
+              <svg
+                className={`bg-indigo-500 w-4 h-4 ml-2 transition-transform duration-200 ${
+                  doctorDropdownOpen ? "rotate-180" : "rotate-0"
+                }`}
+                fill="none"
+                stroke="white"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M19 9l-7 7-7-7"
+                ></path>
+              </svg>
+            </button>
 
-  {doctorDropdownOpen && (
-    <div className="absolute left-20 w-55 bg-white border border-indigo-500 rounded-md shadow-lg z-10">
-      {options.map((option, index) => (
-        <div
-          key={index}
-          className={`py-2 px-4 hover:bg-gray-100 cursor-pointer ${
-            option.value !== "" ? "border-b border-indigo-500" : ""
-          }`}
-          onClick={() => handleDoctorChange(option.value)}
-        >
-          {option.label}
-        </div>
-      ))}
-    </div>
-  )}
-</div>
+            {doctorDropdownOpen && (
+              <div className="absolute left-20 w-55 bg-white border border-indigo-500 rounded-md shadow-lg z-10">
+                {options.map((option, index) => (
+                  <div
+                    key={index}
+                    className={`py-2 px-4 hover:bg-gray-100 cursor-pointer ${
+                      option.value !== "" ? "border-b border-indigo-500" : ""
+                    }`}
+                    onClick={() => handleDoctorChange(option.value)}
+                  >
+                    {option.label}
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
           <div
             className="w-full sm:w-auto mt-2 sm:mt-0 relative"
             ref={availabilityDropdownRef}
@@ -394,16 +462,20 @@ export default function FindDoctor() {
           {doctors?.length > 0 ? (
             doctors
               ?.filter((doctor: UpdateDoctorData) => {
-                 const matchesSearchDoctor =
-    searchDoctor === "" || doctor.experience === searchDoctor;
-    const matchSpeciality = selectedSpeciality === "" || doctor.specialization === selectedSpeciality
+                const matchesSearchDoctor =
+                  searchDoctor === "" || doctor.experience === searchDoctor;
+                const matchSpeciality =
+                  selectedSpeciality === "" ||
+                  doctor.specialization === selectedSpeciality;
                 const matchesOnlineStatus =
                   availability === null
                     ? doctor
                     : availability === true
                       ? doctor.online
                       : !doctor.online;
-                return matchesSearchDoctor && matchSpeciality && matchesOnlineStatus;
+                return (
+                  matchesSearchDoctor && matchSpeciality && matchesOnlineStatus
+                );
               })
               ?.map((doctor: UpdateDoctorData) => {
                 return (

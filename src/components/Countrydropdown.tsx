@@ -8,7 +8,7 @@ interface CountrySelectProps<T extends object> {
   label?: string;
   name: Path<T>;
   control: Control<T>;
-   disabled?: boolean;
+  disabled?: boolean;
   setValue: UseFormSetValue<T>;
 }
 
@@ -29,7 +29,7 @@ export default function CountrySelectComp<T extends object>({
   name,
   control,
   setValue,
-   disabled,
+  disabled,
 }: CountrySelectProps<T>) {
   useEffect(() => {
     setValue(name, "" as PathValue<T, Path<T>>);

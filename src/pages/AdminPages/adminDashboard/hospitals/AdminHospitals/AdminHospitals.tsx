@@ -47,13 +47,15 @@ export default function AdminHospitals() {
   });
 
   const filteredHospitals = data?.filter((hospital: Hospital) =>
-    hospital.name.toLowerCase().includes(search.toLowerCase())
+    hospital.name.toLowerCase().includes(search.toLowerCase()),
   );
 
   return (
     <DashboardSection title="Hospitals">
       {data?.length === 0 ? (
-        <p className="text-center text-primary my-6 text-2xl">No hospitals available</p>
+        <p className="text-center text-primary my-6 text-2xl">
+          No hospitals available
+        </p>
       ) : (
         <>
           <InputField
@@ -106,5 +108,3 @@ export default function AdminHospitals() {
     </DashboardSection>
   );
 }
-
-

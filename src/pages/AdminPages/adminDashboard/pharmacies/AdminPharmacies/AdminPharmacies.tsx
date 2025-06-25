@@ -48,13 +48,15 @@ export default function AdminPharmacies() {
   });
 
   const filteredPharmacies = data?.filter((pharmacy: Pharmacies) =>
-    pharmacy?.pharmacy_name?.toLowerCase().includes(search.toLowerCase())
+    pharmacy?.pharmacy_name?.toLowerCase().includes(search.toLowerCase()),
   );
 
   return (
     <DashboardSection title="Pharmacies">
       {data?.length === 0 ? (
-        <p className="text-center text-primary my-6 text-2xl">No pharmacies available</p>
+        <p className="text-center text-primary my-6 text-2xl">
+          No pharmacies available
+        </p>
       ) : (
         <>
           <InputField
@@ -86,7 +88,11 @@ export default function AdminPharmacies() {
                     </Link>
                   </div>
                   <div className="absolute top-2 right-2">
-                    {pharmacy?.is_verified ? <MdLock size={25} /> : <MdLockOpen size={25} />}
+                    {pharmacy?.is_verified ? (
+                      <MdLock size={25} />
+                    ) : (
+                      <MdLockOpen size={25} />
+                    )}
                   </div>
                 </div>
               ))}

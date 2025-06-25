@@ -78,8 +78,6 @@ export default function TreatmentPlans() {
     return fullName.includes(searchQuery.toLowerCase());
   });
 
-
-
   return (
     <DashboardSection>
       <div className="flex flex-col sm:flex-row justify-between my-4">

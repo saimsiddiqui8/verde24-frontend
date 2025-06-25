@@ -133,110 +133,175 @@ const Qualification = [
 ];
 
 const specializationOptions = [
-  { label: 'Internal Medicine', value: 'Internal Medicine' },
-  { label: 'General Surgery', value: 'General Surgery' },
-  { label: 'Pediatrics', value: 'Pediatrics' },
-  { label: 'Obstetrics and Gynecology (OB/GYN)', value: 'Obstetrics and Gynecology (OB/GYN)' },
-  { label: 'Family Medicine / General Practice', value: 'Family Medicine / General Practice' },
-  { label: 'Psychiatry', value: 'Psychiatry' },
-  { label: 'Anesthesiology', value: 'Anesthesiology' },
-  { label: 'Emergency Medicine', value: 'Emergency Medicine' },
-  { label: 'Radiology', value: 'Radiology' },
-  { label: 'Pathology', value: 'Pathology' },
-  { label: 'General Psychiatry', value: 'General Psychiatry' },
-  { label: 'Child and Adolescent Psychiatry', value: 'Child and Adolescent Psychiatry' },
-  { label: 'Addiction Psychiatry', value: 'Addiction Psychiatry' },
-  { label: 'Geriatric Psychiatry', value: 'Geriatric Psychiatry' },
-  { label: 'Forensic Psychiatry', value: 'Forensic Psychiatry' },
-  { label: 'Neuropsychiatry', value: 'Neuropsychiatry' },
-  { label: 'Clinical Psychology (Allied)', value: 'Clinical Psychology (Allied)' },
-  { label: 'Mental Health Nursing (Advanced Practice)', value: 'Mental Health Nursing (Advanced Practice)' },
-  { label: 'Cardiology', value: 'Cardiology' },
-  { label: 'Gastroenterology', value: 'Gastroenterology' },
-  { label: 'Endocrinology', value: 'Endocrinology' },
-  { label: 'Rheumatology', value: 'Rheumatology' },
-  { label: 'Pulmonology', value: 'Pulmonology' },
-  { label: 'Nephrology', value: 'Nephrology' },
-  { label: 'Hematology', value: 'Hematology' },
-  { label: 'Oncology', value: 'Oncology' },
-  { label: 'Geriatrics', value: 'Geriatrics' },
-  { label: 'Infectious Diseases', value: 'Infectious Diseases' },
-  { label: 'Sleep Medicine', value: 'Sleep Medicine' },
-  { label: 'Clinical Pharmacology', value: 'Clinical Pharmacology' },
-  { label: 'Hospital Medicine', value: 'Hospital Medicine' },
-  { label: 'Allergy & Immunology', value: 'Allergy & Immunology' },
-  { label: 'Cardiothoracic Surgery', value: 'Cardiothoracic Surgery' },
-  { label: 'Neurosurgery', value: 'Neurosurgery' },
-  { label: 'Vascular Surgery', value: 'Vascular Surgery' },
-  { label: 'Orthopedic Surgery', value: 'Orthopedic Surgery' },
-  { label: 'Urology', value: 'Urology' },
-  { label: 'Pediatric Surgery', value: 'Pediatric Surgery' },
-  { label: 'Colorectal Surgery', value: 'Colorectal Surgery' },
-  { label: 'Surgical Oncology', value: 'Surgical Oncology' },
-  { label: 'Trauma Surgery', value: 'Trauma Surgery' },
-  { label: 'Transplant Surgery', value: 'Transplant Surgery' },
-  { label: 'Otolaryngology (ENT)', value: 'Otolaryngology (ENT)' },
-  { label: 'Oral & Maxillofacial Surgery', value: 'Oral & Maxillofacial Surgery' },
-  { label: 'Plastic, Reconstructive & Cosmetic Surgery', value: 'Plastic, Reconstructive & Cosmetic Surgery' },
-  { label: 'Aesthetic Surgery (subspecialty of plastic surgery or standalone in some countries)', value: 'Aesthetic Surgery (subspecialty of plastic surgery or standalone in some countries)' },
-  { label: 'Hair Transplant Surgery (emerging subspecialty)', value: 'Hair Transplant Surgery (emerging subspecialty)' },
-  { label: 'Minimally Invasive / Laparoscopic Surgery', value: 'Minimally Invasive / Laparoscopic Surgery' },
-  { label: 'Maternal-Fetal Medicine', value: 'Maternal-Fetal Medicine' },
-  { label: 'Gynecologic Oncology', value: 'Gynecologic Oncology' },
-  { label: 'Reproductive Endocrinology & Infertility', value: 'Reproductive Endocrinology & Infertility' },
-  { label: 'Urogynecology', value: 'Urogynecology' },
-  { label: 'Family Planning', value: 'Family Planning' },
-  { label: 'Neonatology', value: 'Neonatology' },
-  { label: 'Pediatric Cardiology', value: 'Pediatric Cardiology' },
-  { label: 'Pediatric Neurology', value: 'Pediatric Neurology' },
-  { label: 'Pediatric Oncology', value: 'Pediatric Oncology' },
-  { label: 'Pediatric Gastroenterology', value: 'Pediatric Gastroenterology' },
-  { label: 'Pediatric Infectious Disease', value: 'Pediatric Infectious Disease' },
-  { label: 'Pediatric Endocrinology', value: 'Pediatric Endocrinology' },
-  { label: 'Pediatric Nephrology', value: 'Pediatric Nephrology' },
-  { label: 'Developmental Pediatrics', value: 'Developmental Pediatrics' },
-  { label: 'Aesthetic Medicine (Non-surgical beauty & anti-aging: botox, fillers, lasers)', value: 'Aesthetic Medicine (Non-surgical beauty & anti-aging: botox, fillers, lasers)' },
-  { label: 'Cosmetic Dermatology', value: 'Cosmetic Dermatology' },
-  { label: 'Cosmetic Surgery (Focused on elective procedures for appearance)', value: 'Cosmetic Surgery (Focused on elective procedures for appearance)' },
-  { label: 'Laser Medicine', value: 'Laser Medicine' },
-  { label: 'Hair Restoration Medicine', value: 'Hair Restoration Medicine' },
-  { label: 'Medical Spa / Anti-Aging Medicine (e.g., IV therapy, hormonal therapy)', value: 'Medical Spa / Anti-Aging Medicine (e.g., IV therapy, hormonal therapy)' },
-  { label: 'Regenerative Aesthetic Medicine (PRP, stem cells, etc.)', value: 'Regenerative Aesthetic Medicine (PRP, stem cells, etc.)' },
-  { label: 'Ophthalmology', value: 'Ophthalmology' },
-  { label: 'Dermatology', value: 'Dermatology' },
-  { label: 'Audiology (Allied)', value: 'Audiology (Allied)' },
-  { label: 'Diagnostic Radiology', value: 'Diagnostic Radiology' },
-  { label: 'Interventional Radiology', value: 'Interventional Radiology' },
-  { label: 'Nuclear Medicine', value: 'Nuclear Medicine' },
-  { label: 'Radiation Oncology', value: 'Radiation Oncology' },
-  { label: 'Anatomical Pathology', value: 'Anatomical Pathology' },
-  { label: 'Clinical Pathology', value: 'Clinical Pathology' },
-  { label: 'Forensic Pathology', value: 'Forensic Pathology' },
-  { label: 'Hematopathology', value: 'Hematopathology' },
-  { label: 'Medical Microbiology', value: 'Medical Microbiology' },
-  { label: 'Molecular Pathology', value: 'Molecular Pathology' },
-  { label: 'Cytopathology', value: 'Cytopathology' },
-  { label: 'Public Health Medicine', value: 'Public Health Medicine' },
-  { label: 'Preventive Medicine', value: 'Preventive Medicine' },
-  { label: 'Occupational Medicine', value: 'Occupational Medicine' },
-  { label: 'Environmental Medicine', value: 'Environmental Medicine' },
-  { label: 'Aerospace Medicine', value: 'Aerospace Medicine' },
-  { label: 'Tropical Medicine', value: 'Tropical Medicine' },
-  { label: 'Epidemiology', value: 'Epidemiology' },
-  { label: 'Disaster Medicine', value: 'Disaster Medicine' },
-  { label: 'Travel Medicine', value: 'Travel Medicine' },
-  { label: 'Health Policy & Management', value: 'Health Policy & Management' },
-  { label: 'Neurology', value: 'Neurology' },
-  { label: 'Neurophysiology', value: 'Neurophysiology' },
-  { label: 'Neurocritical Care', value: 'Neurocritical Care' },
-  { label: 'Clinical Neuropsychology (Allied)', value: 'Clinical Neuropsychology (Allied)' },
-  { label: 'Physical Medicine & Rehabilitation (PM&R)', value: 'Physical Medicine & Rehabilitation (PM&R)' },
-  { label: 'Pain Medicine', value: 'Pain Medicine' },
-  { label: 'Palliative Medicine', value: 'Palliative Medicine' },
-  { label: 'Speech & Language Therapy (Allied)', value: 'Speech & Language Therapy (Allied)' },
-  { label: 'Occupational Therapy (Allied)', value: 'Occupational Therapy (Allied)' }
+  { label: "Internal Medicine", value: "Internal Medicine" },
+  { label: "General Surgery", value: "General Surgery" },
+  { label: "Pediatrics", value: "Pediatrics" },
+  {
+    label: "Obstetrics and Gynecology (OB/GYN)",
+    value: "Obstetrics and Gynecology (OB/GYN)",
+  },
+  {
+    label: "Family Medicine / General Practice",
+    value: "Family Medicine / General Practice",
+  },
+  { label: "Psychiatry", value: "Psychiatry" },
+  { label: "Anesthesiology", value: "Anesthesiology" },
+  { label: "Emergency Medicine", value: "Emergency Medicine" },
+  { label: "Radiology", value: "Radiology" },
+  { label: "Pathology", value: "Pathology" },
+  { label: "General Psychiatry", value: "General Psychiatry" },
+  {
+    label: "Child and Adolescent Psychiatry",
+    value: "Child and Adolescent Psychiatry",
+  },
+  { label: "Addiction Psychiatry", value: "Addiction Psychiatry" },
+  { label: "Geriatric Psychiatry", value: "Geriatric Psychiatry" },
+  { label: "Forensic Psychiatry", value: "Forensic Psychiatry" },
+  { label: "Neuropsychiatry", value: "Neuropsychiatry" },
+  {
+    label: "Clinical Psychology (Allied)",
+    value: "Clinical Psychology (Allied)",
+  },
+  {
+    label: "Mental Health Nursing (Advanced Practice)",
+    value: "Mental Health Nursing (Advanced Practice)",
+  },
+  { label: "Cardiology", value: "Cardiology" },
+  { label: "Gastroenterology", value: "Gastroenterology" },
+  { label: "Endocrinology", value: "Endocrinology" },
+  { label: "Rheumatology", value: "Rheumatology" },
+  { label: "Pulmonology", value: "Pulmonology" },
+  { label: "Nephrology", value: "Nephrology" },
+  { label: "Hematology", value: "Hematology" },
+  { label: "Oncology", value: "Oncology" },
+  { label: "Geriatrics", value: "Geriatrics" },
+  { label: "Infectious Diseases", value: "Infectious Diseases" },
+  { label: "Sleep Medicine", value: "Sleep Medicine" },
+  { label: "Clinical Pharmacology", value: "Clinical Pharmacology" },
+  { label: "Hospital Medicine", value: "Hospital Medicine" },
+  { label: "Allergy & Immunology", value: "Allergy & Immunology" },
+  { label: "Cardiothoracic Surgery", value: "Cardiothoracic Surgery" },
+  { label: "Neurosurgery", value: "Neurosurgery" },
+  { label: "Vascular Surgery", value: "Vascular Surgery" },
+  { label: "Orthopedic Surgery", value: "Orthopedic Surgery" },
+  { label: "Urology", value: "Urology" },
+  { label: "Pediatric Surgery", value: "Pediatric Surgery" },
+  { label: "Colorectal Surgery", value: "Colorectal Surgery" },
+  { label: "Surgical Oncology", value: "Surgical Oncology" },
+  { label: "Trauma Surgery", value: "Trauma Surgery" },
+  { label: "Transplant Surgery", value: "Transplant Surgery" },
+  { label: "Otolaryngology (ENT)", value: "Otolaryngology (ENT)" },
+  {
+    label: "Oral & Maxillofacial Surgery",
+    value: "Oral & Maxillofacial Surgery",
+  },
+  {
+    label: "Plastic, Reconstructive & Cosmetic Surgery",
+    value: "Plastic, Reconstructive & Cosmetic Surgery",
+  },
+  {
+    label:
+      "Aesthetic Surgery (subspecialty of plastic surgery or standalone in some countries)",
+    value:
+      "Aesthetic Surgery (subspecialty of plastic surgery or standalone in some countries)",
+  },
+  {
+    label: "Hair Transplant Surgery (emerging subspecialty)",
+    value: "Hair Transplant Surgery (emerging subspecialty)",
+  },
+  {
+    label: "Minimally Invasive / Laparoscopic Surgery",
+    value: "Minimally Invasive / Laparoscopic Surgery",
+  },
+  { label: "Maternal-Fetal Medicine", value: "Maternal-Fetal Medicine" },
+  { label: "Gynecologic Oncology", value: "Gynecologic Oncology" },
+  {
+    label: "Reproductive Endocrinology & Infertility",
+    value: "Reproductive Endocrinology & Infertility",
+  },
+  { label: "Urogynecology", value: "Urogynecology" },
+  { label: "Family Planning", value: "Family Planning" },
+  { label: "Neonatology", value: "Neonatology" },
+  { label: "Pediatric Cardiology", value: "Pediatric Cardiology" },
+  { label: "Pediatric Neurology", value: "Pediatric Neurology" },
+  { label: "Pediatric Oncology", value: "Pediatric Oncology" },
+  { label: "Pediatric Gastroenterology", value: "Pediatric Gastroenterology" },
+  {
+    label: "Pediatric Infectious Disease",
+    value: "Pediatric Infectious Disease",
+  },
+  { label: "Pediatric Endocrinology", value: "Pediatric Endocrinology" },
+  { label: "Pediatric Nephrology", value: "Pediatric Nephrology" },
+  { label: "Developmental Pediatrics", value: "Developmental Pediatrics" },
+  {
+    label:
+      "Aesthetic Medicine (Non-surgical beauty & anti-aging: botox, fillers, lasers)",
+    value:
+      "Aesthetic Medicine (Non-surgical beauty & anti-aging: botox, fillers, lasers)",
+  },
+  { label: "Cosmetic Dermatology", value: "Cosmetic Dermatology" },
+  {
+    label: "Cosmetic Surgery (Focused on elective procedures for appearance)",
+    value: "Cosmetic Surgery (Focused on elective procedures for appearance)",
+  },
+  { label: "Laser Medicine", value: "Laser Medicine" },
+  { label: "Hair Restoration Medicine", value: "Hair Restoration Medicine" },
+  {
+    label:
+      "Medical Spa / Anti-Aging Medicine (e.g., IV therapy, hormonal therapy)",
+    value:
+      "Medical Spa / Anti-Aging Medicine (e.g., IV therapy, hormonal therapy)",
+  },
+  {
+    label: "Regenerative Aesthetic Medicine (PRP, stem cells, etc.)",
+    value: "Regenerative Aesthetic Medicine (PRP, stem cells, etc.)",
+  },
+  { label: "Ophthalmology", value: "Ophthalmology" },
+  { label: "Dermatology", value: "Dermatology" },
+  { label: "Audiology (Allied)", value: "Audiology (Allied)" },
+  { label: "Diagnostic Radiology", value: "Diagnostic Radiology" },
+  { label: "Interventional Radiology", value: "Interventional Radiology" },
+  { label: "Nuclear Medicine", value: "Nuclear Medicine" },
+  { label: "Radiation Oncology", value: "Radiation Oncology" },
+  { label: "Anatomical Pathology", value: "Anatomical Pathology" },
+  { label: "Clinical Pathology", value: "Clinical Pathology" },
+  { label: "Forensic Pathology", value: "Forensic Pathology" },
+  { label: "Hematopathology", value: "Hematopathology" },
+  { label: "Medical Microbiology", value: "Medical Microbiology" },
+  { label: "Molecular Pathology", value: "Molecular Pathology" },
+  { label: "Cytopathology", value: "Cytopathology" },
+  { label: "Public Health Medicine", value: "Public Health Medicine" },
+  { label: "Preventive Medicine", value: "Preventive Medicine" },
+  { label: "Occupational Medicine", value: "Occupational Medicine" },
+  { label: "Environmental Medicine", value: "Environmental Medicine" },
+  { label: "Aerospace Medicine", value: "Aerospace Medicine" },
+  { label: "Tropical Medicine", value: "Tropical Medicine" },
+  { label: "Epidemiology", value: "Epidemiology" },
+  { label: "Disaster Medicine", value: "Disaster Medicine" },
+  { label: "Travel Medicine", value: "Travel Medicine" },
+  { label: "Health Policy & Management", value: "Health Policy & Management" },
+  { label: "Neurology", value: "Neurology" },
+  { label: "Neurophysiology", value: "Neurophysiology" },
+  { label: "Neurocritical Care", value: "Neurocritical Care" },
+  {
+    label: "Clinical Neuropsychology (Allied)",
+    value: "Clinical Neuropsychology (Allied)",
+  },
+  {
+    label: "Physical Medicine & Rehabilitation (PM&R)",
+    value: "Physical Medicine & Rehabilitation (PM&R)",
+  },
+  { label: "Pain Medicine", value: "Pain Medicine" },
+  { label: "Palliative Medicine", value: "Palliative Medicine" },
+  {
+    label: "Speech & Language Therapy (Allied)",
+    value: "Speech & Language Therapy (Allied)",
+  },
+  {
+    label: "Occupational Therapy (Allied)",
+    value: "Occupational Therapy (Allied)",
+  },
 ];
-
 
 const servicesAndSpecializations = [
   {
@@ -250,7 +315,7 @@ const servicesAndSpecializations = [
     type: "dropdown",
     placeholder: "Select Specialization",
     name: "specialization",
-    options: specializationOptions
+    options: specializationOptions,
   },
 ];
 
@@ -304,7 +369,10 @@ const Symptoms = [
       { label: "Blurred vision", value: "blurred_vision" },
       { label: "Breathlessness", value: "breathlessness" },
       { label: "Bruising easily", value: "bruising_easily" },
-      { label: "Burning sensation during urination", value: "burning_urination" },
+      {
+        label: "Burning sensation during urination",
+        value: "burning_urination",
+      },
       { label: "Chest pain", value: "chest_pain" },
       { label: "Chills", value: "chills" },
       { label: "Cough", value: "cough" },
@@ -921,29 +989,28 @@ export default function ConsultationForm() {
       <DashboardSection title={"Services and Specialization"}>
         <>
           <div className="grid grid-cols-12 gap-x-4 gap-y-0">
-          {servicesAndSpecializations.map((input, index) => (
-  <div key={index} className="col-span-4">
-    {input?.type === "dropdown" ? (
-      <DropdownField
-        label={input.label}
-        name={input.name}
-        options={input.options!}
-        placeholder={input.placeholder}
-        properties={{ ...register(input.name) }}
-        error={errors[input.name]}
-      />
-    ) : (
-      <InputField
-        label={input.label}
-        name={input.name}
-        placeholder={input.placeholder}
-        properties={{ ...register(input.name) }}
-        error={errors[input.name]}
-      />
-    )}
-  </div>
-))}
-
+            {servicesAndSpecializations.map((input, index) => (
+              <div key={index} className="col-span-4">
+                {input?.type === "dropdown" ? (
+                  <DropdownField
+                    label={input.label}
+                    name={input.name}
+                    options={input.options!}
+                    placeholder={input.placeholder}
+                    properties={{ ...register(input.name) }}
+                    error={errors[input.name]}
+                  />
+                ) : (
+                  <InputField
+                    label={input.label}
+                    name={input.name}
+                    placeholder={input.placeholder}
+                    properties={{ ...register(input.name) }}
+                    error={errors[input.name]}
+                  />
+                )}
+              </div>
+            ))}
           </div>
           <p>Type and press to add new Services and Specialization.</p>
         </>
@@ -979,18 +1046,18 @@ export default function ConsultationForm() {
           ))}
         </div>
       </DashboardSection>
-       <DashboardSection title={"Symptoms"}>
+      <DashboardSection title={"Symptoms"}>
         <div className="flex items-center gap-2 text-base">
           {Symptoms?.map((input, index) => (
             <div key={index} className="col-span-4">
-             <DropdownField
-        label={input.label}
-        name={input.name}
-        options={input.options!}
-        placeholder={input.placeholder}
-        properties={{ ...register(input.name) }}
-        error={errors[input.name]}
-      />
+              <DropdownField
+                label={input.label}
+                name={input.name}
+                options={input.options!}
+                placeholder={input.placeholder}
+                properties={{ ...register(input.name) }}
+                error={errors[input.name]}
+              />
             </div>
           ))}
         </div>

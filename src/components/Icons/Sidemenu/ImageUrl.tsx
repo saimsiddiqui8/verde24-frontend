@@ -31,18 +31,17 @@ const ImageUrl: React.FC<ImageComponentProp> = ({
   });
   const navigate = useNavigate();
   const user = useSelector((state: RootState) => state.user.currentUser);
-  
 
- const handleOpenFile = (fileType: string) => {
-  const path =
-    user?.role === "7964"
-      ? "/doctor-dashboard/files/view-file"
-      : "/patient-dashboard/files/view-file";
+  const handleOpenFile = (fileType: string) => {
+    const path =
+      user?.role === "7964"
+        ? "/doctor-dashboard/files/view-file"
+        : "/patient-dashboard/files/view-file";
 
-  navigate(path, {
-    state: { fileUrl: data, fileType },
-  });
-};
+    navigate(path, {
+      state: { fileUrl: data, fileType },
+    });
+  };
 
   if (isLoading)
     return (

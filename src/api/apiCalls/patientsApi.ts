@@ -360,7 +360,7 @@ export const createPatientWithGoogle = async (
       query,
       variables,
     });
-     if (response?.data?.errors && response.data.errors.length > 0) {
+    if (response?.data?.errors && response.data.errors.length > 0) {
       throw new Error(response.data.errors[0].message);
     }
     return response?.data?.data?.createPatientWithGoogle;
@@ -378,7 +378,7 @@ export const loginPatientWithGoogle = async (
       query,
       variables,
     });
-     if (response?.data?.errors && response.data.errors.length > 0) {
+    if (response?.data?.errors && response.data.errors.length > 0) {
       throw new Error(response.data.errors[0].message);
     }
     return response?.data?.data?.loginPatientWithGoogle;
@@ -390,14 +390,14 @@ export const loginPatientWithGoogle = async (
 
 export const assignToDoctor = async (
   query: string,
-  variables: { data:assigntodoctorauth },
+  variables: { data: assigntodoctorauth },
 ) => {
   try {
     const response = await publicRequest.post("/graphql", {
       query,
       variables,
     });
-     if (response?.data?.errors && response.data.errors.length > 0) {
+    if (response?.data?.errors && response.data.errors.length > 0) {
       throw new Error(response.data.errors[0].message);
     }
     return response?.data?.data?.assignReportToDoctor;

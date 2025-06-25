@@ -6,7 +6,11 @@ import {
 } from "@react-oauth/google";
 import { useForm } from "react-hook-form";
 import { PhoneInputComp, RadioInput } from "../../../components";
-import { isPhoneValid, notifyFailure, notifySuccess } from "../../../utils/Utils";
+import {
+  isPhoneValid,
+  notifyFailure,
+  notifySuccess,
+} from "../../../utils/Utils";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Toaster } from "react-hot-toast";
@@ -14,7 +18,6 @@ import { useMutation } from "react-query";
 import { CREATE_PATIENT_WITH_GOOGLE } from "../patientSignUp/queries";
 import { createPatientWithGoogle } from "../../../api/apiCalls/patientsApi";
 import { useNavigate } from "react-router-dom";
-
 
 const clientId =
   "1094401600784-kpaksqm0iefum9p9u2en5t82u044tdei.apps.googleusercontent.com";
@@ -66,12 +69,12 @@ const PatientGoogleSignup = () => {
   } = useForm<UserFormType>({
     resolver: zodResolver(UserSchema),
     defaultValues: {
-    phone_number: "",
-    gender: "",
-    idToken: "", 
-    latitude: 0,
-    longitude: 0,
-  },
+      phone_number: "",
+      gender: "",
+      idToken: "",
+      latitude: 0,
+      longitude: 0,
+    },
   });
 
   const getLocation = () => {
@@ -88,9 +91,9 @@ const PatientGoogleSignup = () => {
       (error) => {
         notifyFailure(
           "Location access denied. Please enable it in browser settings. " +
-            error.message
+            error.message,
         );
-      }
+      },
     );
   };
 
@@ -98,29 +101,30 @@ const PatientGoogleSignup = () => {
     const idToken = response.credential;
     if (idToken) {
       setValue("idToken", idToken);
-      getLocation(); 
+      getLocation();
       setShowPopup(true);
     }
   };
 
   const createPatient = async (data: UserFormType) => {
-      const response = await createPatientWithGoogle(CREATE_PATIENT_WITH_GOOGLE, { data });
-      return response;
-    };
+    const response = await createPatientWithGoogle(CREATE_PATIENT_WITH_GOOGLE, {
+      data,
+    });
+    return response;
+  };
 
   const { mutate } = useMutation(createPatient, {
-  onSuccess: () => {
-     notifySuccess("Sign Up Success.");
-        setTimeout(() => {
-          navigate("/patient/sign-in");
-        }, 1000);
-  },
-  onError: (error: Error) => {
-    const errorMessage =
-      error?.message || "❌ Failed to create patient.";
-    notifyFailure(errorMessage);
-  },
-});
+    onSuccess: () => {
+      notifySuccess("Sign Up Success.");
+      setTimeout(() => {
+        navigate("/patient/sign-in");
+      }, 1000);
+    },
+    onError: (error: Error) => {
+      const errorMessage = error?.message || "❌ Failed to create patient.";
+      notifyFailure(errorMessage);
+    },
+  });
 
   const onSubmit = (data: UserFormType) => {
     const authData = {
@@ -129,8 +133,8 @@ const PatientGoogleSignup = () => {
       idToken: data.idToken,
       latitude: data.latitude,
       longitude: data.longitude,
-    }
-    mutate(authData)
+    };
+    mutate(authData);
     setShowPopup(false);
   };
 
@@ -156,13 +160,17 @@ const PatientGoogleSignup = () => {
                       label={input.label}
                       name={input.name}
                       options={input.options}
-                      properties={{ ...register(input.name as keyof UserFormType) }}
+                      properties={{
+                        ...register(input.name as keyof UserFormType),
+                      }}
                       error={errors[input.name as keyof UserFormType]}
                     />
                   ) : input.type === "number" ? (
                     <PhoneInputComp
                       className="my-4"
-                      properties={{ ...register(input.name as keyof UserFormType) }}
+                      properties={{
+                        ...register(input.name as keyof UserFormType),
+                      }}
                       error={errors[input.name as keyof UserFormType]}
                     />
                   ) : null}

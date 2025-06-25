@@ -27,7 +27,10 @@ const Wallet = () => {
             {" "}
             {`$ ${patientData?.data?.wallet == undefined ? "0" : patientData?.data?.wallet}`}
           </p>
-          <Link to={"/patient-dashboard/transaction-history"} className="text-sm text-blue-600 mt-2 block">
+          <Link
+            to={"/patient-dashboard/transaction-history"}
+            className="text-sm text-blue-600 mt-2 block"
+          >
             View Transactions
           </Link>
         </div>

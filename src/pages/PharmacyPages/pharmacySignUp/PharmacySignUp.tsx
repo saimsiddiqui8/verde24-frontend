@@ -302,19 +302,11 @@ export default function PharmacySignUp() {
               {inputs?.map((input, index) => (
                 <div key={index} className="col-span-1">
                   {input.type === "number" ? (
-                   
-<Controller
-  name={input?.name}
-  control={control}
-  render={({ field }) => (
-    <PhoneInputComp
-      className="my-4"
-      value={field.value}
-      onChange={field.onChange}
-      error={errors[input?.name]}
-    />
-  )}
-/>
+                    <PhoneInputComp
+                      className={"my-4"}
+                      properties={{ ...register(input?.name) }}
+                      error={errors[input?.name]}
+                    />
                   ) : (
                     <InputField
                       className={"my-4"}

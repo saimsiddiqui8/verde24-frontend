@@ -17,7 +17,7 @@ export type PrescriptionData = {
 
 export const generateImageBasedPDF = async (
   data: PrescriptionData,
-  imageUrl: string
+  imageUrl: string,
 ): Promise<Blob> => {
   const pdfDoc = await PDFDocument.create();
   const page = pdfDoc.addPage([595, 842]); // A4 size
@@ -42,12 +42,12 @@ export const generateImageBasedPDF = async (
   };
 
   // 🩺 Doctor Info (Top left)
-  drawText(data.doctor_name, 20, 818 - 5, 14);           // Dr Raza
-  drawText(data.qualification, 20, 818 - 30, 10);        // MBBS
+  drawText(data.doctor_name, 20, 818 - 5, 14); // Dr Raza
+  drawText(data.qualification, 20, 818 - 30, 10); // MBBS
 
   drawText(data.patient_name, 340, 782 - 123); // right-[100px]
-  drawText(data.patient_id, 120, 782 - 123);   // left-[120px]
-  drawText(data.gender, 110, 776 - 144);      // left-[100px]
+  drawText(data.patient_id, 120, 782 - 123); // left-[120px]
+  drawText(data.gender, 110, 776 - 144); // left-[100px]
   drawText(data.age, 80, 769 - 163);
   drawText(data.date, 310, 769 - 163);
 

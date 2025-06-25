@@ -158,28 +158,36 @@ export const router = createBrowserRouter(
                 <Route index element={<VerifiedProfile />} />
                 <Route path="calendar" element={<Calendar />} />
                 <Route path="appointments" element={<Appointments />} />
-                <Route path="my-patient" element={<MyPatientsSection />}  >
-                 <Route index element={<AllPatients />} />
-                <Route path="recently-visited" element={<RecentlyVisited />} />
-                <Route path="recently-added" element={<RecentlyAdded />} />
-                <Route path="groups" element={<PatientGroups />} />
-                <Route path="memberships" element={<Memberships />} />
-                <Route path="female-over-30" element={<FemalePatients />} />
-                <Route path="male-over-30" element={<MalePatients />} />
-
+                <Route path="my-patient" element={<MyPatientsSection />}>
+                  <Route index element={<AllPatients />} />
+                  <Route
+                    path="recently-visited"
+                    element={<RecentlyVisited />}
+                  />
+                  <Route path="recently-added" element={<RecentlyAdded />} />
+                  <Route path="groups" element={<PatientGroups />} />
+                  <Route path="memberships" element={<Memberships />} />
+                  <Route path="female-over-30" element={<FemalePatients />} />
+                  <Route path="male-over-30" element={<MalePatients />} />
                 </Route>
-              <Route path="my-patient/:id" element={<SinglePatientProfile />}>
-  <Route index element={<SinglePatientData />} />
-  <Route path="appointments" element={<SingleAppointments />} />
-  <Route path="clinicalnotes" element={<ClinicalNotes />} />
-  <Route path="files" element={<PatientFiles />} />
-  <Route path="prescriptions" element={<PatientPrescription />} />
-</Route>
-    <Route
+                <Route path="my-patient/:id" element={<SinglePatientProfile />}>
+                  <Route index element={<SinglePatientData />} />
+                  <Route path="appointments" element={<SingleAppointments />} />
+                  <Route path="clinicalnotes" element={<ClinicalNotes />} />
+                  <Route path="files" element={<PatientFiles />} />
+                  <Route
+                    path="prescriptions"
+                    element={<PatientPrescription />}
+                  />
+                </Route>
+                <Route
                   path="/doctor-dashboard/files/view-file"
                   element={<FileViewer />}
                 />
-  <Route path="my-patient/:id/communication" element={<Communication />} />
+                <Route
+                  path="my-patient/:id/communication"
+                  element={<Communication />}
+                />
 
                 <Route path="schedule" element={<AddSlots />} />
               </Route>
@@ -203,7 +211,10 @@ export const router = createBrowserRouter(
                   <Route path="checkout" element={<Checkout />} />
                   <Route path="profile/:id" element={<FindDoctorProfile />} />
                 </Route>
-                <Route path="consultation-doctors" element={<TreatmentPlans />} />
+                <Route
+                  path="consultation-doctors"
+                  element={<TreatmentPlans />}
+                />
                 <Route path="consultation-labs" element={<TreatmentLabs />} />
                 <Route path="wallet" element={<Wallet />} />
                 <Route

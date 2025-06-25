@@ -317,8 +317,10 @@ export const getUrl = async (query: string, variables: { fileKey: string }) => {
   }
 };
 
-
-export const createPrescription = async (query: string, variables: { data: CreatePrescriptionData }) => {
+export const createPrescription = async (
+  query: string,
+  variables: { data: CreatePrescriptionData },
+) => {
   try {
     const response = await publicRequest.post("/graphql", {
       query,
@@ -331,11 +333,14 @@ export const createPrescription = async (query: string, variables: { data: Creat
   }
 };
 
-export const getAllPrescription = async (query: string,variables: { patientId: number }) => {
+export const getAllPrescription = async (
+  query: string,
+  variables: { patientId: number },
+) => {
   try {
     const response = await publicRequest.post("/graphql", {
       query,
-         variables,
+      variables,
     });
     return response?.data?.data?.getAllPrescriptionByPatientId;
   } catch (error) {
@@ -343,11 +348,14 @@ export const getAllPrescription = async (query: string,variables: { patientId: n
     throw error;
   }
 };
-export const getReportByPatientDoctorId = async (query: string,variables: { patientId: number , doctorId:number }) => {
+export const getReportByPatientDoctorId = async (
+  query: string,
+  variables: { patientId: number; doctorId: number },
+) => {
   try {
     const response = await publicRequest.post("/graphql", {
       query,
-         variables,
+      variables,
     });
     return response?.data?.data?.getReportByDoctorAndPatientId;
   } catch (error) {

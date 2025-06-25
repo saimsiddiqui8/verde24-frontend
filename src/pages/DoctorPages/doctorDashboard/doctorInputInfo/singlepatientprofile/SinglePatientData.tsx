@@ -3,7 +3,10 @@ import { useParams } from "react-router-dom";
 import { getPatientById } from "../../../../../api/apiCalls/patientsApi";
 import { FIND_PATIENT_QUERY } from "../../../../PatientPages/patientDashboard/patientProfile/queries";
 import { useQuery } from "react-query";
-import { loadingEnd, loadingStart } from "../../../../../redux/slices/loadingSlice";
+import {
+  loadingEnd,
+  loadingStart,
+} from "../../../../../redux/slices/loadingSlice";
 import { notifyFailure } from "../../../../../utils/Utils";
 import ImageUrl from "../../../../../components/Icons/Sidemenu/ImageUrl";
 import { Button } from "../../../../../components";
@@ -43,7 +46,10 @@ const SinglePatientData = () => {
           {/* Patient Info */}
           <div className="col-span-2 space-y-2">
             {[
-              { label: "Patient Name:", value: `${data?.first_name} ${data?.last_name}` },
+              {
+                label: "Patient Name:",
+                value: `${data?.first_name} ${data?.last_name}`,
+              },
               { label: "Patient ID:", value: data?.id },
               { label: "Insurance ID:", value: data?.insurance_id },
               { label: "Gender:", value: data?.gender },
@@ -56,7 +62,9 @@ const SinglePatientData = () => {
               { label: "Other History:", value: data?.other_history },
             ].map((item, index) => (
               <div key={index} className="flex items-start whitespace-nowrap">
-                <span className="w-40 shrink-0 font-semibold">{item.label}</span>
+                <span className="w-40 shrink-0 font-semibold">
+                  {item.label}
+                </span>
                 <span className="flex-1">{item.value}</span>
               </div>
             ))}
@@ -64,32 +72,31 @@ const SinglePatientData = () => {
 
           {/* Image */}
           <div className="flex justify-center items-start pt-2 ms-8">
-           {data?.image ? (
-  data.image.includes("googleusercontent.com") ? (
-    <img
-      src={data.image}
-      alt="Patient"
-      onError={(e) => {
-        const target = e.target as HTMLImageElement;
-        target.onerror = null;
-        target.src = patientui; // fallback if Google image fails
-      }}
-      className="w-24 h-24 rounded-lg object-cover"
-    />
-  ) : (
-    <ImageUrl
-      fileKey={data.image}
-      className="w-24 h-24 rounded-lg object-cover"
-    />
-  )
-) : (
-  <img
-    src={patientui}
-    alt="Patient Icon"
-    className="w-24 h-24 rounded-lg object-cover"
-  />
-)}
-
+            {data?.image ? (
+              data.image.includes("googleusercontent.com") ? (
+                <img
+                  src={data.image}
+                  alt="Patient"
+                  onError={(e) => {
+                    const target = e.target as HTMLImageElement;
+                    target.onerror = null;
+                    target.src = patientui; // fallback if Google image fails
+                  }}
+                  className="w-24 h-24 rounded-lg object-cover"
+                />
+              ) : (
+                <ImageUrl
+                  fileKey={data.image}
+                  className="w-24 h-24 rounded-lg object-cover"
+                />
+              )
+            ) : (
+              <img
+                src={patientui}
+                alt="Patient Icon"
+                className="w-24 h-24 rounded-lg object-cover"
+              />
+            )}
           </div>
         </div>
 
@@ -98,16 +105,14 @@ const SinglePatientData = () => {
       </div>
 
       {/* Right Section */}
-     <div className="w-4/12">
-  {/* Button Actions */}
-  <div className="flex justify-end mb-4 gap-2">
-    <Button title="Edit" className="text-[10px] px-2 py-2 w-24" />
-    <Button title="Cancel" className="text-[10px] px-2 py-2 w-20" />
-    <Button title="Save" className="text-[10px] px-2 py-2 w-20" />
-  </div>
-
-</div>
-
+      <div className="w-4/12">
+        {/* Button Actions */}
+        <div className="flex justify-end mb-4 gap-2">
+          <Button title="Edit" className="text-[10px] px-2 py-2 w-24" />
+          <Button title="Cancel" className="text-[10px] px-2 py-2 w-20" />
+          <Button title="Save" className="text-[10px] px-2 py-2 w-20" />
+        </div>
+      </div>
     </div>
   );
 };

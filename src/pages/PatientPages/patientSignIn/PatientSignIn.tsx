@@ -1,5 +1,5 @@
 import image from "../../../assets/sign-in.png";
-import {  InputField } from "../../../components";
+import { InputField } from "../../../components";
 import { Link, useNavigate } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 import { useDispatch } from "react-redux";
@@ -107,7 +107,6 @@ export default function PatientSignIn() {
     handleLogin(formData);
   };
 
-
   return (
     <main className="grid grid-cols-12 items-center gap-8 mb-6 px-4 md:px-8">
       <section className="col-span-12 md:col-start-3 md:col-span-4 order-2 md:order-1">
@@ -163,7 +162,7 @@ export default function PatientSignIn() {
             <small>Or</small>
             <div className="w-1/2 md:w-[45%] h-[1px] bg-[#E0E0E0]"></div>
           </div>
-          <PatientGoogleAuth/>
+          <PatientGoogleAuth />
           <small className="block my-1 text-primary text-center">
             Do not have an account?{" "}
             <Link to="/patient/sign-up" className="font-bold">

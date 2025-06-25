@@ -10,7 +10,7 @@ import {
 } from "../../../../redux/slices/loadingSlice";
 import { SyntheticEvent, useState } from "react";
 
-  const PATIENT_QUERY = `
+const PATIENT_QUERY = `
   query {
     patients {
       id,
@@ -20,12 +20,11 @@ import { SyntheticEvent, useState } from "react";
   }
 `;
 
-  type Patient = {
-    id: number;
-    first_name: string;
-    last_name: string;
-  };
-
+type Patient = {
+  id: number;
+  first_name: string;
+  last_name: string;
+};
 
 export default function AdminPatients() {
   const [search, setSearch] = useState("");
@@ -56,13 +55,15 @@ export default function AdminPatients() {
   const filteredPatients = data?.filter((patient: Patient) =>
     (patient.first_name + " " + patient.last_name)
       .toLowerCase()
-      .includes(search.toLowerCase())
+      .includes(search.toLowerCase()),
   );
 
   return (
     <DashboardSection title="Patients">
       {data?.length === 0 ? (
-        <p className="text-center text-primary my-6 text-2xl">No patients available</p>
+        <p className="text-center text-primary my-6 text-2xl">
+          No patients available
+        </p>
       ) : (
         <>
           <InputField
@@ -107,4 +108,3 @@ export default function AdminPatients() {
     </DashboardSection>
   );
 }
-

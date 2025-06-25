@@ -24,7 +24,11 @@ const links = [
   { title: "Appointments", href: "/appointments", icon: appointments },
   { title: "My Patients", href: "/my-patient/", icon: mypatients },
   { title: "Schedule Slot", href: "/schedule", icon: calendar },
-  { title: "Payment & Payouts", href: "/payment&payouts", icon: paymentandpayouts },
+  {
+    title: "Payment & Payouts",
+    href: "/payment&payouts",
+    icon: paymentandpayouts,
+  },
   { title: "Reports", href: "/reports", icon: reports },
   { title: "Activities", href: "/activities", icon: activities },
   { title: "Feed Back", href: "/feedback", icon: feedback },
@@ -87,7 +91,9 @@ export default function DoctorDashboardAfterApproval() {
       {/* Sidebar */}
       <section
         className={`transition-all duration-500 ${
-          !isSmallScreen && collapsed ? "col-span-2" : "col-span-12 md:col-span-3"
+          !isSmallScreen && collapsed
+            ? "col-span-2"
+            : "col-span-12 md:col-span-3"
         } pt-10 pb-5 h-fit border border-primary rounded-md`}
       >
         <div className="py-1 px-4">
@@ -149,7 +155,9 @@ export default function DoctorDashboardAfterApproval() {
 
       <section
         className={`transition-all duration-500 ${
-          !isSmallScreen && collapsed ? "col-span-10" : "col-span-12 md:col-span-9"
+          !isSmallScreen && collapsed
+            ? "col-span-10"
+            : "col-span-12 md:col-span-9"
         } min-w-0`}
       >
         <Outlet />
